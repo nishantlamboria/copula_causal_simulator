@@ -39,3 +39,31 @@ Start T4-Sachs: build a graph-agnostic coupling library from the Sachs dataset.
 3. Transform variables to pseudo-observations in `(0, 1)`.
 4. Save the first marginal artifact.
 5. Then fit pairwise copulas for all variable pairs.
+
+## Entry 002, T4b Sachs marginal handling
+
+### Goal
+Build the first marginal-handling artifact for the Sachs dataset.
+
+### Project phase
+T4b: Marginal handling.
+
+### What I implemented
+Created code to:
+1. load and validate the Sachs dataset,
+2. summarize all variables,
+3. transform all variables to pseudo-observations in `(0, 1)` using average ranks,
+4. fit empirical marginal models,
+5. save the marginal library as a pickle artifact.
+
+### Output artifacts
+- `artifacts/sachs_pseudo_observations.csv`
+- `artifacts/sachs_marginals_v1.pkl`
+- `reports/tables/sachs_dataset_summary.csv`
+- `reports/tables/sachs_reconstructed_summary.csv`
+
+### Decision
+The Sachs dataset is currently treated as a continuous calibration dataset. No causal graph is used at this stage.
+
+### Next step
+Implement T4c: fit pairwise copulas for all 55 variable pairs and save a Sachs coupling library.
