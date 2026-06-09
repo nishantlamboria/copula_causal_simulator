@@ -1,0 +1,25 @@
+dataset_id: sachs
+path: data/sachs.data.txt
+file_type: whitespace_csv
+
+data:
+  continuous_columns: all
+  missing_policy: error
+  drop_columns: []
+  clip_eps: 1.0e-6
+
+copula:
+  selection_criterion: bic
+  allow_rotations: true
+  num_threads: 1
+  families:
+    - indep
+    - gaussian
+    - student
+    - clayton
+    - gumbel
+    - frank
+
+outputs:
+  artifact_dir: artifacts/libraries/sachs
+  table_dir: reports/tables/sachs
