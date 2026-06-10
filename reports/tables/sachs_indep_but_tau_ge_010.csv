@@ -1,1 +1,0 @@
-dataset_id,var1,var2,family,rotation,parameters,npars,model_tau,empirical_kendall_tau,empirical_spearman_rho,empirical_lower_tail_q05,empirical_upper_tail_q05,loglik,aic,bic,n_obs,selection_criterion,model_file,status,error,abs_empirical_kendall_tau

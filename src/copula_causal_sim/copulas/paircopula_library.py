@@ -8,7 +8,6 @@ from typing import Any
 
 import numpy as np
 import pandas as pd
-from scipy import stats
 from scipy.stats import spearmanr, kendalltau
 
 
@@ -298,11 +297,11 @@ def fit_one_paircopula(
 
 def build_paircopula_library(
     u_df: pd.DataFrame,
-    dataset_id: str = "sachs",
+    dataset_id: str,
     selection_criterion: str = "bic",
     allow_rotations: bool = True,
     num_threads: int = 1,
-    model_dir: str | Path = "artifacts/paircopula_models_sachs_v1",
+    model_dir: str | Path = "artifacts/paircopula_models",
 ) -> PairCopulaLibrary:
     """
     Fit selected pairwise copulas for all variable pairs in u_df.
