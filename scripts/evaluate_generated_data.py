@@ -21,6 +21,8 @@ from copula_causal_sim.evaluation.realism import (
     matrix_absolute_error,
     summarize_matrix_error,
     top_pairwise_errors,
+    graph_pairwise_dependence_table,
+    summarize_graph_dependence,
     save_dataframe,
     save_json,
 )
@@ -63,7 +65,7 @@ def parse_args():
     return parser.parse_args()
 
 
-def load_graph_summary(graph_path: str | None) -> dict | None:
+def load_graph(graph_path: str | None):
     if graph_path is None:
         return None
 
@@ -72,8 +74,7 @@ def load_graph_summary(graph_path: str | None) -> dict | None:
     if not path.exists():
         raise FileNotFoundError(f"Graph file not found: {path}")
 
-    adjacency = pd.read_csv(path, header=None).to_numpy(dtype=int)
-    return summarize_dag(adjacency)
+    return pd.read_csv(path, header=None).to_numpy(dtype=int)
 
 
 def main() -> None:
@@ -181,14 +182,51 @@ def main() -> None:
     spearman_summary = summarize_matrix_error(spearman_error)
 
     # ------------------------------------------------------------------
-    # 4. Graph metadata
+    # 4. Graph-aware dependence evaluation
     # ------------------------------------------------------------------
     print("Reading graph metadata...")
 
-    graph_summary = load_graph_summary(args.graph)
+    adjacency = load_graph(args.graph)
+    graph_summary = None
+    graph_dependence_summary = None
 
-    if graph_summary is not None:
+    if adjacency is not None:
+        graph_summary = summarize_dag(adjacency)
         save_json(graph_summary, output_dir / "graph_summary.json")
+
+        print("Computing graph-aware edge/non-edge dependence summaries...")
+
+        kendall_graph_table = graph_pairwise_dependence_table(
+            real_matrix=kendall_real,
+            generated_matrix=kendall_generated,
+            adjacency=adjacency,
+        )
+
+        spearman_graph_table = graph_pairwise_dependence_table(
+            real_matrix=spearman_real,
+            generated_matrix=spearman_generated,
+            adjacency=adjacency,
+        )
+
+        kendall_graph_table.to_csv(
+            output_dir / "kendall_graph_pairwise_dependence.csv",
+            index=False,
+        )
+
+        spearman_graph_table.to_csv(
+            output_dir / "spearman_graph_pairwise_dependence.csv",
+            index=False,
+        )
+
+        graph_dependence_summary = {
+            "kendall": summarize_graph_dependence(kendall_graph_table),
+            "spearman": summarize_graph_dependence(spearman_graph_table),
+        }
+
+        save_json(
+            graph_dependence_summary,
+            output_dir / "graph_dependence_summary.json",
+        )
 
     # ------------------------------------------------------------------
     # 5. Overall summary
@@ -209,10 +247,20 @@ def main() -> None:
             "max_abs_quantile_error": float(
                 marginal_errors["absolute_error"].max()
             ),
+            "mean_normalized_abs_quantile_error": float(
+                marginal_errors["normalized_absolute_error"].mean()
+            ),
+            "median_normalized_abs_quantile_error": float(
+                marginal_errors["normalized_absolute_error"].median()
+            ),
+            "max_normalized_abs_quantile_error": float(
+                marginal_errors["normalized_absolute_error"].max()
+            ),
         },
         "kendall": kendall_summary,
         "spearman": spearman_summary,
         "graph": graph_summary,
+        "graph_dependence": graph_dependence_summary,
     }
 
     summary_path = output_dir / "evaluation_summary.json"

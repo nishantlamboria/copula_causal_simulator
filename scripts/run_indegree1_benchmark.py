@@ -235,6 +235,9 @@ def main() -> None:
 
         summary = load_json(evaluation_summary_path)
         graph_summary = summary.get("graph", {})
+        graph_dependence = summary.get("graph_dependence") or {}
+        kendall_graph = graph_dependence.get("kendall") or {}
+        spearman_graph = graph_dependence.get("spearman") or {}
 
         row = {
             "dataset_id": dataset_id,
@@ -245,15 +248,39 @@ def main() -> None:
             "num_edges": graph_summary.get("num_edges"),
             "max_indegree": graph_summary.get("max_indegree"),
             "max_outdegree": graph_summary.get("max_outdegree"),
+
             "marginal_mean_abs_quantile_error": summary["marginal"]["mean_abs_quantile_error"],
             "marginal_median_abs_quantile_error": summary["marginal"]["median_abs_quantile_error"],
             "marginal_max_abs_quantile_error": summary["marginal"]["max_abs_quantile_error"],
+
+            "marginal_mean_normalized_abs_quantile_error": summary["marginal"]["mean_normalized_abs_quantile_error"],
+            "marginal_median_normalized_abs_quantile_error": summary["marginal"]["median_normalized_abs_quantile_error"],
+            "marginal_max_normalized_abs_quantile_error": summary["marginal"]["max_normalized_abs_quantile_error"],
+
             "kendall_mean_abs_error": summary["kendall"]["mean_abs_error"],
             "kendall_median_abs_error": summary["kendall"]["median_abs_error"],
             "kendall_max_abs_error": summary["kendall"]["max_abs_error"],
+
             "spearman_mean_abs_error": summary["spearman"]["mean_abs_error"],
             "spearman_median_abs_error": summary["spearman"]["median_abs_error"],
             "spearman_max_abs_error": summary["spearman"]["max_abs_error"],
+
+            "kendall_num_edge_pairs": kendall_graph.get("num_edge_pairs"),
+            "kendall_num_nonedge_pairs": kendall_graph.get("num_nonedge_pairs"),
+            "kendall_edge_generated_mean_abs_value": kendall_graph.get("edge_generated_mean_abs_value"),
+            "kendall_nonedge_generated_mean_abs_value": kendall_graph.get("nonedge_generated_mean_abs_value"),
+            "kendall_generated_edge_nonedge_abs_gap": kendall_graph.get("generated_edge_nonedge_abs_gap"),
+            "kendall_edge_mean_abs_error": kendall_graph.get("edge_mean_abs_error"),
+            "kendall_nonedge_mean_abs_error": kendall_graph.get("nonedge_mean_abs_error"),
+
+            "spearman_num_edge_pairs": spearman_graph.get("num_edge_pairs"),
+            "spearman_num_nonedge_pairs": spearman_graph.get("num_nonedge_pairs"),
+            "spearman_edge_generated_mean_abs_value": spearman_graph.get("edge_generated_mean_abs_value"),
+            "spearman_nonedge_generated_mean_abs_value": spearman_graph.get("nonedge_generated_mean_abs_value"),
+            "spearman_generated_edge_nonedge_abs_gap": spearman_graph.get("generated_edge_nonedge_abs_gap"),
+            "spearman_edge_mean_abs_error": spearman_graph.get("edge_mean_abs_error"),
+            "spearman_nonedge_mean_abs_error": spearman_graph.get("nonedge_mean_abs_error"),
+
             "generated_x_file": str(generated_x_path.relative_to(PROJECT_ROOT)),
             "evaluation_dir": str(evaluation_dir.relative_to(PROJECT_ROOT)),
         }
