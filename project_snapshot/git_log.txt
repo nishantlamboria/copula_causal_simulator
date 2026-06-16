@@ -1,0 +1,14 @@
+db2c824 (HEAD -> master) Add indegree-two conditional vine generator
+b865df6 Add conditional vine library builder for indegree two
+f967f3d Add normalized and graph-aware evaluation metrics
+b091f96 Add indegree-one benchmark runner
+b17a486 Add generated data evaluation pipeline
+e8c2f45 Add graph-conditioned generator for indegree one DAGs
+a54ab1b Add DAG utilities and random graph generation
+e736362 Clean project structure and remove Sachs-specific prototype
+d7b735c Add second dataset and multi-dataset coupling library build
+1fc571a Generalize coupling library builder with dataset configs
+f38e54f Add Sachs marginal summary reports
+6e606dd Add Sachs marginal summary reports
+6a9ee3b Add initial README and lab notebook
+e6bfda8 Initialize Sachs copula generator project structure

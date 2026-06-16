@@ -1,0 +1,15 @@
+Folder PATH listing for volume Nishant
+Volume serial number is 0000024D 3EC2:107D
+D:\PYTHON PROJECTS\TUD\COPULA_CAUSAL_SIMULATOR\SCRIPTS
+    build_all_libraries.py
+    build_conditional_vine_library.py
+    build_coupling_library.py
+    evaluate_generated_data.py
+    generate_from_graph_indegree1.py
+    generate_from_graph_indegree2.py
+    generate_random_graphs.py
+    prepare_sklearn_diabetes.py
+    run_indegree1_benchmark.py
+    
+No subfolders exist 
+
