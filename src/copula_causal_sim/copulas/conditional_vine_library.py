@@ -11,60 +11,47 @@ import numpy as np
 import pandas as pd
 from scipy.stats import kendalltau, spearmanr
 
-
 try:
     import pyvinecopulib as pv
 except ImportError as exc:
     raise ImportError(
         "pyvinecopulib is not installed. Install it with:\n\n"
-        "    pip install pyvinecopulib\n\n"
-        "If pip fails on Windows, use conda:\n\n"
-        "    conda install -c conda-forge pyvinecopulib\n"
+        "    pip install pyvinecopulib\n"
     ) from exc
 
 
 def _safe_filename(text: str) -> str:
-    """
-    Create a filesystem-safe name from a variable name.
-    """
     text = str(text)
     text = re.sub(r"[^A-Za-z0-9_.-]+", "_", text)
     return text.strip("_")
 
 
 def _enum_to_string(value: Any) -> str:
-    """
-    Convert pyvinecopulib enum values to compact strings.
-    """
     if hasattr(value, "name"):
         return str(value.name)
+    return str(value).split(".")[-1]
 
-    text = str(value)
-    return text.split(".")[-1]
+
+def _parameters_to_list(parameters: Any) -> list:
+    try:
+        return np.asarray(parameters, dtype=float).tolist()
+    except Exception:
+        return []
 
 
 def _safe_float(value: Any) -> float | None:
     try:
         if value is None:
             return None
-
         value = float(value)
-
         if np.isnan(value) or np.isinf(value):
             return None
-
         return value
     except Exception:
         return None
 
 
 def _safe_metric(model: Any, metric_name: str, data: np.ndarray) -> float | None:
-    """
-    Call pyvinecopulib model metrics robustly.
-
-    For pyvinecopulib, loglik/aic/bic usually accept data.
-    This helper also tries no-argument calls for compatibility.
-    """
     try:
         method = getattr(model, metric_name)
         return _safe_float(method(data))
@@ -76,165 +63,75 @@ def _safe_metric(model: Any, metric_name: str, data: np.ndarray) -> float | None
             return None
 
 
-def _safe_attr_float(model: Any, attr_name: str) -> float | None:
-    try:
-        return _safe_float(getattr(model, attr_name))
-    except Exception:
-        return None
+def _model_npars(model: Any) -> float:
+    value = _safe_float(getattr(model, "npars", None))
+    return 0.0 if value is None else value
 
 
-def _safe_string(value: Any) -> str | None:
-    try:
-        if value is None:
-            return None
-        return str(value)
-    except Exception:
-        return None
+def _model_loglik(model: Any, data: np.ndarray) -> float:
+    value = _safe_metric(model, "loglik", data)
+    return 0.0 if value is None else value
 
 
-def _extract_pair_family_summary(model: Any) -> str | None:
-    """
-    Extract a compact summary of pair-copula families inside a vine model.
-
-    This is intentionally robust because pyvinecopulib object attributes can differ
-    across versions.
-    """
-    candidates = ["pair_copulas", "families"]
-
-    for attr in candidates:
-        try:
-            value = getattr(model, attr)
-
-            if callable(value):
-                value = value()
-
-            return str(value)
-        except Exception:
-            continue
-
-    return None
+def _clip_u(values: np.ndarray, eps: float = 1e-6) -> np.ndarray:
+    return np.clip(np.asarray(values, dtype=float), eps, 1.0 - eps)
 
 
-def _extract_structure_summary(model: Any) -> str | None:
-    """
-    Extract a compact structure summary if available.
-    """
-    try:
-        return str(model.structure)
-    except Exception:
-        return None
-
-
-def _try_make_fixed_order_structure(num_variables: int):
-    """
-    Try to create an R-vine structure with fixed variable order.
-
-    For pyvinecopulib versions where this is unavailable or incompatible,
-    the caller falls back to automatic structure selection.
-    """
-    try:
-        # vinecopulib typically uses one-based variable labels in structure order.
-        order = list(range(1, num_variables + 1))
-        return pv.RVineStructure.from_order(order)
-    except Exception:
-        return None
-
-
-def _resolve_bicop_family(family_name: str) -> Any:
-    """
-    Resolve a pyvinecopulib bicopula family enum by name.
-
-    This is done dynamically to support pyvinecopulib versions where enum
-    members are not available as lowercase attributes.
-    """
-    candidates = [family_name, family_name.upper(), family_name.capitalize()]
-
-    for candidate in candidates:
-        try:
-            return getattr(pv.BicopFamily, candidate)
-        except Exception:
-            pass
-
-        # try:
-        #     return pv.BicopFamily.__members__[candidate]
-        # except Exception:
-        #     pass
-
-    raise AttributeError(f"Cannot resolve pyvinecopulib bicopula family '{family_name}'")
-
-
-def build_vine_fit_controls(
+def build_bicop_fit_controls(
     selection_criterion: str = "bic",
     allow_rotations: bool = True,
     num_threads: int = 1,
 ):
-    """
-    Create fitting controls for vine copulas.
-
-    Candidate bivariate families:
-    - independence
-    - Gaussian
-    - Student-t
-    - Clayton
-    - Gumbel
-    - Frank
-    """
+    # Use names and getattr to avoid static analysis attribute access issues
     family_names = [
-        "indep",
-        "gaussian",
-        "student",
-        "clayton",
-        "gumbel",
-        "frank",
+        "INDEP",
+        "GAUSSIAN",
+        "STUDENT",
+        "CLAYTON",
+        "GUMBEL",
+        "FRANK",
     ]
-    family_set = [_resolve_bicop_family(name) for name in family_names]
 
-    controls = pv.FitControlsVinecop(
+    family_set = []
+    for name in family_names:
+        fam = getattr(pv.BicopFamily, name, None)
+        if fam is not None:
+            family_set.append(fam)
+
+    controls = pv.FitControlsBicop(
         family_set=family_set,
         selection_criterion=selection_criterion,
         allow_rotations=allow_rotations,
         num_threads=num_threads,
     )
 
-    family_set_names = [_enum_to_string(family) for family in family_set]
-
+    family_set_names = family_names
     return controls, family_set_names
 
 
-def _fit_vine_from_data(
-    data: np.ndarray,
-    controls: Any,
-    fixed_variable_order: bool = True,
-):
-    """
-    Fit a vine copula model.
-
-    We first try a fixed variable order. This is useful because we store local
-    mechanisms as [parent_1, parent_2, child]. If that is not supported by the
-    installed pyvinecopulib version, we fall back to automatic structure selection.
-    """
+def _fit_bicop(data: np.ndarray, controls: Any):
     data = np.asfortranarray(data)
-    var_types = ["c"] * data.shape[1]
-
-    if fixed_variable_order:
-        structure = _try_make_fixed_order_structure(data.shape[1])
-
-        if structure is not None:
-            try:
-                return pv.Vinecop.from_data(
-                    data,
-                    structure=structure,
-                    controls=controls,
-                    var_types=var_types,
-                )
-            except Exception:
-                pass
-
-    return pv.Vinecop.from_data(
+    return pv.Bicop.from_data(
         data,
         controls=controls,
-        var_types=var_types,
+        var_types=["c", "c"],
     )
+
+
+def _save_bicop(model: Any, path: Path) -> str:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    model.to_file(str(path))
+    return str(path)
+
+
+def _bicop_summary(model: Any) -> dict:
+    return {
+        "family": _enum_to_string(model.family),
+        "rotation": int(model.rotation) if hasattr(model, "rotation") else None,
+        "parameters": _parameters_to_list(model.parameters),
+        "npars": _safe_float(getattr(model, "npars", None)),
+        "tau": _safe_float(getattr(model, "tau", None)),
+    }
 
 
 @dataclass
@@ -250,10 +147,25 @@ class ConditionalVineRecord:
 
     selection_criterion: str
     candidate_families: list[str]
-    fixed_variable_order_requested: bool
 
     model_file: str
     model_format: str
+
+    bicop_parent_1_parent_2_file: str
+    bicop_parent_2_child_file: str
+    bicop_parent_1_child_given_parent_2_file: str
+
+    family_parent_1_parent_2: str | None
+    family_parent_2_child: str | None
+    family_parent_1_child_given_parent_2: str | None
+
+    rotation_parent_1_parent_2: int | None
+    rotation_parent_2_child: int | None
+    rotation_parent_1_child_given_parent_2: int | None
+
+    parameters_parent_1_parent_2: list
+    parameters_parent_2_child: list
+    parameters_parent_1_child_given_parent_2: list
 
     npars: float | None
     loglik: float | None
@@ -268,8 +180,8 @@ class ConditionalVineRecord:
     spearman_parent_2_child: float | None
     spearman_parent_1_parent_2: float | None
 
-    vine_structure: str | None
     pair_family_summary: str | None
+    vine_structure: str | None
 
     status: str
     error: str | None = None
@@ -283,18 +195,12 @@ class ConditionalVineLibrary:
     parent_set_size: int
     selection_criterion: str
     family_set: list[str]
-    fixed_variable_order_requested: bool
     records: list[ConditionalVineRecord]
 
     def to_dataframe(self) -> pd.DataFrame:
         return pd.DataFrame([asdict(record) for record in self.records])
 
     def save_pickle(self, path: str | Path) -> None:
-        """
-        Save lightweight metadata and records.
-
-        Individual pyvinecopulib models are saved separately as JSON files.
-        """
         path = Path(path)
         path.parent.mkdir(parents=True, exist_ok=True)
 
@@ -305,8 +211,8 @@ class ConditionalVineLibrary:
             "parent_set_size": self.parent_set_size,
             "selection_criterion": self.selection_criterion,
             "family_set": self.family_set,
-            "fixed_variable_order_requested": self.fixed_variable_order_requested,
             "records": [asdict(record) for record in self.records],
+            "implementation": "explicit_3d_dvine_bicop_hfunctions",
         }
 
         with open(path, "wb") as f:
@@ -315,24 +221,8 @@ class ConditionalVineLibrary:
     @staticmethod
     def load_pickle(path: str | Path) -> dict:
         path = Path(path)
-
         with open(path, "rb") as f:
             return pickle.load(f)
-
-
-def _save_vine_model(model: Any, model_path: Path) -> tuple[str, str]:
-    """
-    Save a fitted vine model.
-
-    Primary format: pyvinecopulib JSON using model.to_file().
-    """
-    model_path.parent.mkdir(parents=True, exist_ok=True)
-
-    json_path = model_path.with_suffix(".json")
-
-    model.to_file(str(json_path))
-
-    return str(json_path), "json"
 
 
 def fit_one_conditional_vine(
@@ -345,22 +235,29 @@ def fit_one_conditional_vine(
     candidate_families: list[str],
     selection_criterion: str,
     model_dir: str | Path,
-    fixed_variable_order: bool = True,
+    clip_eps: float = 1e-6,
 ) -> ConditionalVineRecord:
     """
-    Fit one 3-variable vine model for:
+    Fit an explicit 3D D-vine local mechanism for:
 
         child | parent_1, parent_2
 
-    The stored variable order is:
+    D-vine order:
+        parent_1 -- parent_2 -- child
 
-        [parent_1, parent_2, child]
+    Fitted bivariate blocks:
+        C12    = C(parent_1, parent_2)
+        C23    = C(parent_2, child)
+        C13|2  = C(F(parent_1|parent_2), F(child|parent_2))
     """
     model_dir = Path(model_dir)
     model_dir.mkdir(parents=True, exist_ok=True)
 
     variables = [parent_1, parent_2, child]
-    data = u_df[variables].to_numpy(dtype=float)
+
+    u1 = _clip_u(u_df[parent_1].to_numpy(dtype=float), eps=clip_eps)
+    u2 = _clip_u(u_df[parent_2].to_numpy(dtype=float), eps=clip_eps)
+    uy = _clip_u(u_df[child].to_numpy(dtype=float), eps=clip_eps)
 
     model_name = (
         f"child_{_safe_filename(child)}"
@@ -368,52 +265,99 @@ def fit_one_conditional_vine(
         f"__{_safe_filename(parent_2)}"
     )
 
-    model_base_path = model_dir / model_name
+    c12_path = model_dir / f"{model_name}__c_parent1_parent2.json"
+    c23_path = model_dir / f"{model_name}__c_parent2_child.json"
+    c13_given_2_path = model_dir / f"{model_name}__c_parent1_child_given_parent2.json"
 
     try:
-        model = _fit_vine_from_data(
-            data=data,
-            controls=controls,
-            fixed_variable_order=fixed_variable_order,
+        data12 = np.asfortranarray(np.column_stack([u1, u2]))
+        data23 = np.asfortranarray(np.column_stack([u2, uy]))
+
+        c12 = _fit_bicop(data12, controls=controls)
+        c23 = _fit_bicop(data23, controls=controls)
+
+        # W1 = F(parent_1 | parent_2)
+        w1 = c12.hfunc2(data12)
+
+        # WY = F(child | parent_2)
+        wy = c23.hfunc1(data23)
+
+        w1 = _clip_u(np.asarray(w1, dtype=float), eps=clip_eps)
+        wy = _clip_u(np.asarray(wy, dtype=float), eps=clip_eps)
+
+        data13_given_2 = np.asfortranarray(np.column_stack([w1, wy]))
+        c13_given_2 = _fit_bicop(data13_given_2, controls=controls)
+
+        c12_file = _save_bicop(c12, c12_path)
+        c23_file = _save_bicop(c23, c23_path)
+        c13_given_2_file = _save_bicop(c13_given_2, c13_given_2_path)
+
+        s12 = _bicop_summary(c12)
+        s23 = _bicop_summary(c23)
+        s13 = _bicop_summary(c13_given_2)
+
+        loglik = (
+            _model_loglik(c12, data12)
+            + _model_loglik(c23, data23)
+            + _model_loglik(c13_given_2, data13_given_2)
         )
 
-        model_file, model_format = _save_vine_model(model, model_base_path)
+        npars = (
+            _model_npars(c12)
+            + _model_npars(c23)
+            + _model_npars(c13_given_2)
+        )
 
-        p1 = data[:, 0]
-        p2 = data[:, 1]
-        y = data[:, 2]
+        n_obs = len(u_df)
+        aic = -2.0 * loglik + 2.0 * npars
+        bic = -2.0 * loglik + np.log(n_obs) * npars
 
-        record = ConditionalVineRecord(
+        pair_family_summary = (
+            f"C({parent_1},{parent_2})={s12['family']}; "
+            f"C({parent_2},{child})={s23['family']}; "
+            f"C({parent_1},{child}|{parent_2})={s13['family']}"
+        )
+
+        return ConditionalVineRecord(
             dataset_id=dataset_id,
             child=child,
             parent_1=parent_1,
             parent_2=parent_2,
             variables=variables,
             parent_set_size=2,
-            n_obs=data.shape[0],
-            n_variables=data.shape[1],
+            n_obs=n_obs,
+            n_variables=3,
             selection_criterion=selection_criterion,
             candidate_families=candidate_families,
-            fixed_variable_order_requested=fixed_variable_order,
-            model_file=model_file,
-            model_format=model_format,
-            npars=_safe_attr_float(model, "npars"),
-            loglik=_safe_metric(model, "loglik", data),
-            aic=_safe_metric(model, "aic", data),
-            bic=_safe_metric(model, "bic", data),
-            kendall_parent_1_child=_safe_float(kendalltau(p1, y)[0]),
-            kendall_parent_2_child=_safe_float(kendalltau(p2, y)[0]),
-            kendall_parent_1_parent_2=_safe_float(kendalltau(p1, p2)[0]),
-            spearman_parent_1_child=_safe_float(spearmanr(p1, y)[0]),
-            spearman_parent_2_child=_safe_float(spearmanr(p2, y)[0]),
-            spearman_parent_1_parent_2=_safe_float(spearmanr(p1, p2)[0]),
-            vine_structure=_extract_structure_summary(model),
-            pair_family_summary=_extract_pair_family_summary(model),
+            model_file=c13_given_2_file,
+            model_format="explicit_3d_dvine_bicop_json",
+            bicop_parent_1_parent_2_file=c12_file,
+            bicop_parent_2_child_file=c23_file,
+            bicop_parent_1_child_given_parent_2_file=c13_given_2_file,
+            family_parent_1_parent_2=s12["family"],
+            family_parent_2_child=s23["family"],
+            family_parent_1_child_given_parent_2=s13["family"],
+            rotation_parent_1_parent_2=s12["rotation"],
+            rotation_parent_2_child=s23["rotation"],
+            rotation_parent_1_child_given_parent_2=s13["rotation"],
+            parameters_parent_1_parent_2=s12["parameters"],
+            parameters_parent_2_child=s23["parameters"],
+            parameters_parent_1_child_given_parent_2=s13["parameters"],
+            npars=float(npars),
+            loglik=float(loglik),
+            aic=float(aic),
+            bic=float(bic),
+            kendall_parent_1_child=_safe_float(kendalltau(u1, uy)[0]),
+            kendall_parent_2_child=_safe_float(kendalltau(u2, uy)[0]),
+            kendall_parent_1_parent_2=_safe_float(kendalltau(u1, u2)[0]),
+            spearman_parent_1_child=_safe_float(spearmanr(u1, uy)[0]),
+            spearman_parent_2_child=_safe_float(spearmanr(u2, uy)[0]),
+            spearman_parent_1_parent_2=_safe_float(spearmanr(u1, u2)[0]),
+            pair_family_summary=pair_family_summary,
+            vine_structure=f"explicit D-vine: {parent_1} -- {parent_2} -- {child}",
             status="ok",
             error=None,
         )
-
-        return record
 
     except Exception as exc:
         return ConditionalVineRecord(
@@ -423,13 +367,24 @@ def fit_one_conditional_vine(
             parent_2=parent_2,
             variables=variables,
             parent_set_size=2,
-            n_obs=data.shape[0],
-            n_variables=data.shape[1],
+            n_obs=len(u_df),
+            n_variables=3,
             selection_criterion=selection_criterion,
             candidate_families=candidate_families,
-            fixed_variable_order_requested=fixed_variable_order,
-            model_file=str(model_base_path.with_suffix(".json")),
-            model_format="json",
+            model_file=str(c13_given_2_path),
+            model_format="explicit_3d_dvine_bicop_json",
+            bicop_parent_1_parent_2_file=str(c12_path),
+            bicop_parent_2_child_file=str(c23_path),
+            bicop_parent_1_child_given_parent_2_file=str(c13_given_2_path),
+            family_parent_1_parent_2=None,
+            family_parent_2_child=None,
+            family_parent_1_child_given_parent_2=None,
+            rotation_parent_1_parent_2=None,
+            rotation_parent_2_child=None,
+            rotation_parent_1_child_given_parent_2=None,
+            parameters_parent_1_parent_2=[],
+            parameters_parent_2_child=[],
+            parameters_parent_1_child_given_parent_2=[],
             npars=None,
             loglik=None,
             aic=None,
@@ -440,8 +395,8 @@ def fit_one_conditional_vine(
             spearman_parent_1_child=None,
             spearman_parent_2_child=None,
             spearman_parent_1_parent_2=None,
-            vine_structure=None,
             pair_family_summary=None,
+            vine_structure=None,
             status="failed",
             error=str(exc),
         )
@@ -459,13 +414,12 @@ def build_conditional_vine_library(
     limit: int | None = None,
 ) -> ConditionalVineLibrary:
     """
-    Fit conditional vine models for all child-parent-parent triples.
-
-    Currently implemented:
-        parent_set_size = 2
+    Fit explicit 3D D-vine conditional mechanisms for all child-parent-parent triples.
 
     For d variables, this fits:
+
         d * C(d - 1, 2)
+
     local mechanisms.
     """
     if parent_set_size != 2:
@@ -476,7 +430,7 @@ def build_conditional_vine_library(
     if u_df.empty:
         raise ValueError("Cannot build conditional vine library from empty data.")
 
-    controls, family_set_names = build_vine_fit_controls(
+    controls, family_set_names = build_bicop_fit_controls(
         selection_criterion=selection_criterion,
         allow_rotations=allow_rotations,
         num_threads=num_threads,
@@ -501,7 +455,7 @@ def build_conditional_vine_library(
     for idx, (child, parent_1, parent_2) in enumerate(tasks, start=1):
         print(
             f"[{idx:04d}/{total:04d}] "
-            f"Fitting conditional vine: {child} | {parent_1}, {parent_2}"
+            f"Fitting explicit D-vine: {child} | {parent_1}, {parent_2}"
         )
 
         record = fit_one_conditional_vine(
@@ -514,7 +468,7 @@ def build_conditional_vine_library(
             candidate_families=family_set_names,
             selection_criterion=selection_criterion,
             model_dir=model_dir,
-            fixed_variable_order=fixed_variable_order,
+            clip_eps=1e-6,
         )
 
         records.append(record)
@@ -526,6 +480,5 @@ def build_conditional_vine_library(
         parent_set_size=parent_set_size,
         selection_criterion=selection_criterion,
         family_set=family_set_names,
-        fixed_variable_order_requested=fixed_variable_order,
         records=records,
     )

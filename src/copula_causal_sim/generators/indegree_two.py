@@ -18,7 +18,6 @@ except ImportError as exc:
 from copula_causal_sim.copulas.marginals import EmpiricalMarginalLibrary
 from copula_causal_sim.generators.indegree_one import (
     IndegreeOneGenerator,
-    load_paircopula_metadata,
 )
 from copula_causal_sim.graphs.dag import (
     parents_of,
@@ -83,10 +82,11 @@ class IndegreeTwoGenerator:
 
         two-parent node:
             U_child ~ C_child|parent1,parent2(. | U_parent1, U_parent2)
-            using fitted 3D vine copula
+            using an explicit 3D D-vine:
 
-    After generating all U variables, empirical inverse marginals map U back
-    to the original data scale.
+                parent_1 -- parent_2 -- child
+
+            with bivariate h-functions.
     """
 
     def __init__(
@@ -135,20 +135,12 @@ class IndegreeTwoGenerator:
             self.conditional_records
         )
 
-        self.vine_model_cache: dict[str, Any] = {}
+        self.bicop_cache: dict[str, Any] = {}
 
     @staticmethod
     def _build_conditional_lookup(
         records: list[dict[str, Any]],
     ) -> dict[tuple[str, frozenset[str]], dict[str, Any]]:
-        """
-        Build lookup:
-
-            (child, frozenset({parent_1, parent_2})) -> record
-
-        The parent set is unordered for graph lookup. The stored record still
-        preserves the fitted model order [parent_1, parent_2, child].
-        """
         lookup: dict[tuple[str, frozenset[str]], dict[str, Any]] = {}
 
         for record in records:
@@ -176,14 +168,14 @@ class IndegreeTwoGenerator:
 
         if key not in self.conditional_lookup:
             raise KeyError(
-                "No fitted conditional vine found for local mechanism:\n"
+                "No fitted conditional D-vine found for local mechanism:\n"
                 f"child={child_name}, parents={parent_names}"
             )
 
         return self.conditional_lookup[key]
 
-    def _resolve_vine_model_path(self, record: dict[str, Any]) -> Path:
-        stored_path = Path(record["model_file"])
+    def _resolve_model_path(self, stored_path: str | Path) -> Path:
+        stored_path = Path(stored_path)
 
         if stored_path.exists():
             return stored_path
@@ -198,21 +190,19 @@ class IndegreeTwoGenerator:
             return fallback_path
 
         raise FileNotFoundError(
-            "Could not find fitted conditional vine model file.\n"
+            "Could not find fitted bivariate copula model file.\n"
             f"Stored path: {stored_path}\n"
             f"Fallback path: {fallback_path}"
         )
 
-    def _load_vine_model(self, record: dict[str, Any]):
-        model_path = self._resolve_vine_model_path(record)
+    def _load_bicop(self, stored_path: str | Path):
+        model_path = self._resolve_model_path(stored_path)
         cache_key = str(model_path)
 
-        if cache_key not in self.vine_model_cache:
-            self.vine_model_cache[cache_key] = pv.Vinecop.from_file(
-                str(model_path)
-            )
+        if cache_key not in self.bicop_cache:
+            self.bicop_cache[cache_key] = pv.Bicop.from_file(str(model_path))
 
-        return self.vine_model_cache[cache_key]
+        return self.bicop_cache[cache_key]
 
     def _sample_child_given_two_parents(
         self,
@@ -222,27 +212,29 @@ class IndegreeTwoGenerator:
         rng: np.random.Generator,
     ) -> np.ndarray:
         """
-        Sample U_child | U_parent1, U_parent2 using a fitted 3D vine.
+        Sample U_child | U_parent1, U_parent2 using explicit D-vine h-functions.
 
-        Each conditional vine was fitted on variables in the stored order:
+        Stored D-vine order:
 
-            [record["parent_1"], record["parent_2"], record["child"]]
+            parent_1 -- parent_2 -- child
 
-        For conditional simulation, we:
-        1. take the already generated parent values,
-        2. compute the first two Rosenblatt coordinates for the parent pair,
-        3. draw a fresh uniform coordinate for the child,
-        4. apply inverse Rosenblatt,
-        5. return the third component as U_child.
+        Stored copulas:
 
-        This relies on the fixed variable order used during fitting.
+            C12      = C(parent_1, parent_2)
+            C23      = C(parent_2, child)
+            C13|2    = C(F(parent_1|parent_2), F(child|parent_2))
+
+        Sampling:
+
+            w1 = F(parent_1 | parent_2)
+            q  ~ Uniform(0, 1)
+            wy = F(child | parent_2) sampled from C13|2 conditional on w1
+            child = inverse F(child | parent_2)
         """
         record = self._get_conditional_record(
             child_name=child_name,
             parent_names=parent_names,
         )
-
-        model = self._load_vine_model(record)
 
         record_parent_1 = record["parent_1"]
         record_parent_2 = record["parent_2"]
@@ -250,51 +242,53 @@ class IndegreeTwoGenerator:
 
         if record_child != child_name:
             raise RuntimeError(
-                "Conditional vine record has unexpected child.\n"
+                "Conditional record has unexpected child.\n"
                 f"Expected: {child_name}\n"
                 f"Got: {record_child}"
             )
 
-        parent_1_idx = self.column_to_index[record_parent_1]
-        parent_2_idx = self.column_to_index[record_parent_2]
-
-        u_parent_1 = u_matrix[:, parent_1_idx]
-        u_parent_2 = u_matrix[:, parent_2_idx]
-
-        n_samples = len(u_parent_1)
-
-        # Dummy child value. In the fixed order [P1, P2, Y], the first two
-        # Rosenblatt coordinates depend only on P1 and P2.
-        dummy_child = np.full(n_samples, 0.5, dtype=float)
-
-        observed_parent_data = np.column_stack(
-            [u_parent_1, u_parent_2, dummy_child]
+        c12 = self._load_bicop(record["bicop_parent_1_parent_2_file"])
+        c23 = self._load_bicop(record["bicop_parent_2_child_file"])
+        c13_given_2 = self._load_bicop(
+            record["bicop_parent_1_child_given_parent_2_file"]
         )
-        observed_parent_data = np.asfortranarray(observed_parent_data)
 
-        rosenblatt_values = model.rosenblatt(observed_parent_data)
+        p1_idx = self.column_to_index[record_parent_1]
+        p2_idx = self.column_to_index[record_parent_2]
 
-        q_child = rng.uniform(
+        u1 = np.asarray(u_matrix[:, p1_idx], dtype=float)
+        u2 = np.asarray(u_matrix[:, p2_idx], dtype=float)
+
+        u1 = np.clip(u1, self.clip_eps, 1.0 - self.clip_eps)
+        u2 = np.clip(u2, self.clip_eps, 1.0 - self.clip_eps)
+
+        n_samples = len(u1)
+
+        # w1 = F(parent_1 | parent_2)
+        data12 = np.asfortranarray(np.column_stack([u1, u2]))
+        w1 = c12.hfunc2(data12)
+        w1 = np.clip(w1, self.clip_eps, 1.0 - self.clip_eps)
+
+        # Sample wy = F(child | parent_2) conditional on w1 using C13|2.
+        q = rng.uniform(
             self.clip_eps,
             1.0 - self.clip_eps,
             size=n_samples,
         )
 
-        conditional_rosenblatt_values = np.array(
-            rosenblatt_values,
-            dtype=float,
-            copy=True,
-            order="F",
-        )
+        data13_inverse = np.asfortranarray(np.column_stack([w1, q]))
 
-        conditional_rosenblatt_values[:, 2] = q_child
-        conditional_rosenblatt_values = np.asfortranarray(
-            conditional_rosenblatt_values
-        )
+        # C13|2 is fitted on [w1, wy].
+        # hinv1 inverts h1(w1, wy) w.r.t. wy.
+        wy = c13_given_2.hinv1(data13_inverse)
+        wy = np.clip(wy, self.clip_eps, 1.0 - self.clip_eps)
 
-        simulated = model.inverse_rosenblatt(conditional_rosenblatt_values)
+        # Invert wy = F(child | parent_2) using C23 fitted on [parent_2, child].
+        data23_inverse = np.asfortranarray(np.column_stack([u2, wy]))
 
-        u_child = np.asarray(simulated[:, 2], dtype=float)
+        # hinv1 inverts h1(parent_2, child) w.r.t. child.
+        u_child = c23.hinv1(data23_inverse)
+        u_child = np.asarray(u_child, dtype=float)
         u_child = np.clip(u_child, self.clip_eps, 1.0 - self.clip_eps)
 
         return u_child
