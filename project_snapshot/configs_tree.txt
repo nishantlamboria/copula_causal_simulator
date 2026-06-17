@@ -1,7 +1,0 @@
-Folder PATH listing for volume Nishant
-Volume serial number is 00000271 3EC2:107D
-D:\PYTHON PROJECTS\TUD\COPULA_CAUSAL_SIMULATOR\CONFIGS
-\---datasets
-        diabetes.yaml
-        sachs.yaml
-        

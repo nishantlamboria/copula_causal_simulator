@@ -1,9 +1,0 @@
-numpy
-pandas
-scipy
-matplotlib
-scikit-learn
-joblib
-pyvinecopulib
-pyyaml
-pytest

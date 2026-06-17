@@ -18,3 +18,8 @@ reports/figures/
 
 # Logs
 *.log
+
+# Project snapshots
+project_snapshot/
+project_snapshot.zip
+*_snapshot.zip
