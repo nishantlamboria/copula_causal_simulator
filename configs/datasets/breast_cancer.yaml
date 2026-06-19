@@ -1,0 +1,25 @@
+dataset_id: breast_cancer
+path: data/breast_cancer.csv
+file_type: csv
+
+data:
+  continuous_columns: all
+  missing_policy: error
+  drop_columns: []
+  clip_eps: 1.0e-6
+
+copula:
+  selection_criterion: bic
+  allow_rotations: true
+  num_threads: 1
+  families:
+    - indep
+    - gaussian
+    - student
+    - clayton
+    - gumbel
+    - frank
+
+outputs:
+  artifact_dir: artifacts/libraries/breast_cancer
+  table_dir: reports/tables/breast_cancer

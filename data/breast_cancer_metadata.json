@@ -1,0 +1,37 @@
+{
+  "dataset_id": "breast_cancer",
+  "source": "sklearn.datasets.load_breast_cancer",
+  "description": "Twelve-feature continuous subset of the Wisconsin Diagnostic Breast Cancer dataset. The diagnosis target is excluded.",
+  "num_rows": 569,
+  "num_columns": 12,
+  "original_selected_features": [
+    "mean radius",
+    "mean texture",
+    "mean smoothness",
+    "mean compactness",
+    "mean concavity",
+    "mean concave points",
+    "mean symmetry",
+    "mean fractal dimension",
+    "radius error",
+    "texture error",
+    "worst radius",
+    "worst texture"
+  ],
+  "saved_columns": [
+    "mean_radius",
+    "mean_texture",
+    "mean_smoothness",
+    "mean_compactness",
+    "mean_concavity",
+    "mean_concave_points",
+    "mean_symmetry",
+    "mean_fractal_dimension",
+    "radius_error",
+    "texture_error",
+    "worst_radius",
+    "worst_texture"
+  ],
+  "target_included": false,
+  "output_file": "data\\breast_cancer.csv"
+}
