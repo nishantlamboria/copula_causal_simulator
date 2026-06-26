@@ -9,6 +9,33 @@ import pandas as pd
 
 
 DEFAULT_QUANTILES = [0.05, 0.25, 0.50, 0.75, 0.95]
+DEFAULT_TAIL_PROBABILITY = 0.05
+
+
+TAIL_DEPENDENCE_COLUMNS = [
+    "var1",
+    "var2",
+    "tail_probability",
+    "lower_threshold",
+    "upper_threshold",
+    "is_graph_edge_pair",
+    "real_n_obs",
+    "generated_n_obs",
+    "real_lower_joint_count",
+    "generated_lower_joint_count",
+    "real_upper_joint_count",
+    "generated_upper_joint_count",
+    "real_lower_joint_probability",
+    "generated_lower_joint_probability",
+    "real_upper_joint_probability",
+    "generated_upper_joint_probability",
+    "real_lower_tail_dependence",
+    "generated_lower_tail_dependence",
+    "lower_tail_absolute_error",
+    "real_upper_tail_dependence",
+    "generated_upper_tail_dependence",
+    "upper_tail_absolute_error",
+]
 
 
 def validate_same_columns(real_df: pd.DataFrame, generated_df: pd.DataFrame) -> None:
@@ -121,7 +148,10 @@ def summarize_marginal_errors(marginal_errors: pd.DataFrame) -> pd.DataFrame:
     return summary
 
 
-def correlation_matrix(df: pd.DataFrame, method: Literal["kendall", "spearman", "pearson"]) -> pd.DataFrame:
+def correlation_matrix(
+    df: pd.DataFrame,
+    method: Literal["kendall", "spearman", "pearson"],
+) -> pd.DataFrame:
     """
     Compute dependence matrix using pandas correlation methods.
 
@@ -204,21 +234,33 @@ def _safe_mean(values: np.ndarray) -> float | None:
     if values.size == 0:
         return None
 
-    return float(np.nanmean(values))
+    finite = values[np.isfinite(values)]
+    if finite.size == 0:
+        return None
+
+    return float(np.mean(finite))
 
 
 def _safe_median(values: np.ndarray) -> float | None:
     if values.size == 0:
         return None
 
-    return float(np.nanmedian(values))
+    finite = values[np.isfinite(values)]
+    if finite.size == 0:
+        return None
+
+    return float(np.median(finite))
 
 
 def _safe_max(values: np.ndarray) -> float | None:
     if values.size == 0:
         return None
 
-    return float(np.nanmax(values))
+    finite = values[np.isfinite(values)]
+    if finite.size == 0:
+        return None
+
+    return float(np.max(finite))
 
 
 def graph_pairwise_dependence_table(
@@ -339,6 +381,345 @@ def summarize_graph_dependence(pairwise_table: pd.DataFrame) -> dict[str, Any]:
             else edge_generated_mean - nonedge_generated_mean
         ),
     }
+
+
+# -----------------------------------------------------------------------------
+# Empirical lower- and upper-tail dependence
+# -----------------------------------------------------------------------------
+
+
+def _validate_tail_probability(tail_probability: float) -> float:
+    try:
+        value = float(tail_probability)
+    except (TypeError, ValueError) as exc:
+        raise ValueError("tail_probability must be a number.") from exc
+
+    if not np.isfinite(value):
+        raise ValueError("tail_probability must be finite.")
+
+    if not 0.0 < value < 0.5:
+        raise ValueError(
+            "tail_probability must satisfy 0 < tail_probability < 0.5."
+        )
+
+    return value
+
+
+def _validate_unit_interval_dataframe(
+    df: pd.DataFrame,
+    dataframe_name: str,
+) -> None:
+    if df.empty:
+        raise ValueError(f"{dataframe_name} is empty.")
+
+    non_numeric = [
+        column
+        for column in df.columns
+        if not pd.api.types.is_numeric_dtype(df[column])
+    ]
+
+    if non_numeric:
+        raise ValueError(
+            f"{dataframe_name} contains non-numeric columns: {non_numeric}"
+        )
+
+    values = df.to_numpy(dtype=float)
+
+    if not np.isfinite(values).all():
+        raise ValueError(
+            f"{dataframe_name} contains NaN or infinite values."
+        )
+
+    if ((values < 0.0) | (values > 1.0)).any():
+        raise ValueError(
+            f"{dataframe_name} must contain pseudo-observations in [0, 1]."
+        )
+
+
+def empirical_tail_dependence(
+    first: pd.Series | np.ndarray,
+    second: pd.Series | np.ndarray,
+    tail_probability: float = DEFAULT_TAIL_PROBABILITY,
+) -> dict[str, float | int]:
+    """
+    Estimate lower- and upper-tail dependence for one variable pair.
+
+    For p = tail_probability:
+
+        lower = P(U <= p, V <= p) / p
+        upper = P(U >= 1-p, V >= 1-p) / p
+
+    The estimator is intended for copula-scale pseudo-observations.
+    """
+    p = _validate_tail_probability(tail_probability)
+
+    first_values = np.asarray(first, dtype=float).reshape(-1)
+    second_values = np.asarray(second, dtype=float).reshape(-1)
+
+    if first_values.size != second_values.size:
+        raise ValueError(
+            "Tail-dependence inputs must have the same number of observations."
+        )
+
+    if first_values.size == 0:
+        raise ValueError("Tail-dependence inputs must not be empty.")
+
+    if not np.isfinite(first_values).all() or not np.isfinite(second_values).all():
+        raise ValueError("Tail-dependence inputs contain NaN or infinite values.")
+
+    if (
+        ((first_values < 0.0) | (first_values > 1.0)).any()
+        or ((second_values < 0.0) | (second_values > 1.0)).any()
+    ):
+        raise ValueError(
+            "Tail-dependence inputs must contain pseudo-observations in [0, 1]."
+        )
+
+    upper_threshold = 1.0 - p
+
+    lower_joint = (first_values <= p) & (second_values <= p)
+    upper_joint = (
+        (first_values >= upper_threshold)
+        & (second_values >= upper_threshold)
+    )
+
+    n_obs = int(first_values.size)
+    lower_joint_count = int(np.count_nonzero(lower_joint))
+    upper_joint_count = int(np.count_nonzero(upper_joint))
+
+    lower_joint_probability = lower_joint_count / n_obs
+    upper_joint_probability = upper_joint_count / n_obs
+
+    return {
+        "n_obs": n_obs,
+        "tail_probability": p,
+        "lower_threshold": p,
+        "upper_threshold": upper_threshold,
+        "lower_joint_count": lower_joint_count,
+        "upper_joint_count": upper_joint_count,
+        "lower_joint_probability": float(lower_joint_probability),
+        "upper_joint_probability": float(upper_joint_probability),
+        "lower_tail_dependence": float(lower_joint_probability / p),
+        "upper_tail_dependence": float(upper_joint_probability / p),
+    }
+
+
+def tail_dependence_table(
+    real_u_df: pd.DataFrame,
+    generated_u_df: pd.DataFrame,
+    adjacency: np.ndarray | None = None,
+    tail_probability: float = DEFAULT_TAIL_PROBABILITY,
+) -> pd.DataFrame:
+    """
+    Compare empirical pairwise tail dependence on copula scale.
+
+    The two dataframes may have different row counts, but they must have the
+    same ordered columns. If adjacency is provided, each unordered variable
+    pair is marked as an edge pair when either i -> j or j -> i is present.
+    """
+    validate_same_columns(real_u_df, generated_u_df)
+    _validate_unit_interval_dataframe(real_u_df, "real_u_df")
+    _validate_unit_interval_dataframe(generated_u_df, "generated_u_df")
+
+    p = _validate_tail_probability(tail_probability)
+    columns = list(real_u_df.columns)
+
+    undirected_edge: np.ndarray | None = None
+
+    if adjacency is not None:
+        adj = np.asarray(adjacency, dtype=int)
+        expected_shape = (len(columns), len(columns))
+
+        if adj.shape != expected_shape:
+            raise ValueError(
+                "Adjacency shape does not match number of variables.\n"
+                f"Adjacency shape: {adj.shape}\n"
+                f"Expected: {expected_shape}"
+            )
+
+        undirected_edge = (adj + adj.T) > 0
+
+    rows: list[dict[str, Any]] = []
+
+    for i in range(len(columns)):
+        for j in range(i + 1, len(columns)):
+            var1 = columns[i]
+            var2 = columns[j]
+
+            real_tail = empirical_tail_dependence(
+                real_u_df[var1],
+                real_u_df[var2],
+                tail_probability=p,
+            )
+
+            generated_tail = empirical_tail_dependence(
+                generated_u_df[var1],
+                generated_u_df[var2],
+                tail_probability=p,
+            )
+
+            is_edge: int | None
+            if undirected_edge is None:
+                is_edge = None
+            else:
+                is_edge = int(bool(undirected_edge[i, j]))
+
+            real_lower = float(real_tail["lower_tail_dependence"])
+            generated_lower = float(generated_tail["lower_tail_dependence"])
+            real_upper = float(real_tail["upper_tail_dependence"])
+            generated_upper = float(generated_tail["upper_tail_dependence"])
+
+            rows.append({
+                "var1": var1,
+                "var2": var2,
+                "tail_probability": p,
+                "lower_threshold": p,
+                "upper_threshold": 1.0 - p,
+                "is_graph_edge_pair": is_edge,
+                "real_n_obs": int(real_tail["n_obs"]),
+                "generated_n_obs": int(generated_tail["n_obs"]),
+                "real_lower_joint_count": int(real_tail["lower_joint_count"]),
+                "generated_lower_joint_count": int(
+                    generated_tail["lower_joint_count"]
+                ),
+                "real_upper_joint_count": int(real_tail["upper_joint_count"]),
+                "generated_upper_joint_count": int(
+                    generated_tail["upper_joint_count"]
+                ),
+                "real_lower_joint_probability": float(
+                    real_tail["lower_joint_probability"]
+                ),
+                "generated_lower_joint_probability": float(
+                    generated_tail["lower_joint_probability"]
+                ),
+                "real_upper_joint_probability": float(
+                    real_tail["upper_joint_probability"]
+                ),
+                "generated_upper_joint_probability": float(
+                    generated_tail["upper_joint_probability"]
+                ),
+                "real_lower_tail_dependence": real_lower,
+                "generated_lower_tail_dependence": generated_lower,
+                "lower_tail_absolute_error": abs(real_lower - generated_lower),
+                "real_upper_tail_dependence": real_upper,
+                "generated_upper_tail_dependence": generated_upper,
+                "upper_tail_absolute_error": abs(real_upper - generated_upper),
+            })
+
+    return pd.DataFrame(rows, columns=TAIL_DEPENDENCE_COLUMNS)
+
+
+def _tail_group_summary(
+    pairwise_table: pd.DataFrame,
+    group_name: str,
+) -> dict[str, Any]:
+    lower_real = pairwise_table[
+        "real_lower_tail_dependence"
+    ].to_numpy(dtype=float)
+    lower_generated = pairwise_table[
+        "generated_lower_tail_dependence"
+    ].to_numpy(dtype=float)
+    lower_error = pairwise_table[
+        "lower_tail_absolute_error"
+    ].to_numpy(dtype=float)
+
+    upper_real = pairwise_table[
+        "real_upper_tail_dependence"
+    ].to_numpy(dtype=float)
+    upper_generated = pairwise_table[
+        "generated_upper_tail_dependence"
+    ].to_numpy(dtype=float)
+    upper_error = pairwise_table[
+        "upper_tail_absolute_error"
+    ].to_numpy(dtype=float)
+
+    return {
+        f"tail_num_{group_name}_pairs": int(len(pairwise_table)),
+        f"tail_lower_{group_name}_real_mean": _safe_mean(lower_real),
+        f"tail_lower_{group_name}_generated_mean": _safe_mean(lower_generated),
+        f"tail_lower_{group_name}_mean_abs_error": _safe_mean(lower_error),
+        f"tail_lower_{group_name}_median_abs_error": _safe_median(lower_error),
+        f"tail_lower_{group_name}_max_abs_error": _safe_max(lower_error),
+        f"tail_upper_{group_name}_real_mean": _safe_mean(upper_real),
+        f"tail_upper_{group_name}_generated_mean": _safe_mean(upper_generated),
+        f"tail_upper_{group_name}_mean_abs_error": _safe_mean(upper_error),
+        f"tail_upper_{group_name}_median_abs_error": _safe_median(upper_error),
+        f"tail_upper_{group_name}_max_abs_error": _safe_max(upper_error),
+    }
+
+
+def summarize_tail_dependence(
+    pairwise_table: pd.DataFrame,
+) -> dict[str, Any]:
+    """
+    Produce benchmark-friendly flat summaries for all, edge, and non-edge pairs.
+
+    The all-pairs summary is always returned. Edge and non-edge summaries are
+    populated when tail_dependence_table() was called with an adjacency matrix.
+    If graph labels are unavailable, the edge and non-edge values are returned
+    as empty-group summaries with None-valued statistics.
+    """
+    required_columns = {
+        "tail_probability",
+        "is_graph_edge_pair",
+        "real_lower_tail_dependence",
+        "generated_lower_tail_dependence",
+        "lower_tail_absolute_error",
+        "real_upper_tail_dependence",
+        "generated_upper_tail_dependence",
+        "upper_tail_absolute_error",
+    }
+
+    missing = sorted(required_columns.difference(pairwise_table.columns))
+    if missing:
+        raise ValueError(
+            f"Tail-dependence table is missing required columns: {missing}"
+        )
+
+    if pairwise_table.empty:
+        tail_probability = None
+    else:
+        unique_probabilities = pairwise_table["tail_probability"].dropna().unique()
+        if len(unique_probabilities) != 1:
+            raise ValueError(
+                "Tail-dependence table must contain exactly one tail_probability."
+            )
+        tail_probability = float(unique_probabilities[0])
+
+    summary: dict[str, Any] = {
+        "tail_probability": tail_probability,
+    }
+
+    summary.update(_tail_group_summary(pairwise_table, "all"))
+
+    if pairwise_table["is_graph_edge_pair"].notna().any():
+        edge = pairwise_table[pairwise_table["is_graph_edge_pair"] == 1]
+        nonedge = pairwise_table[pairwise_table["is_graph_edge_pair"] == 0]
+    else:
+        edge = pairwise_table.iloc[0:0]
+        nonedge = pairwise_table.iloc[0:0]
+
+    summary.update(_tail_group_summary(edge, "edge"))
+    summary.update(_tail_group_summary(nonedge, "nonedge"))
+
+    edge_lower_generated = summary["tail_lower_edge_generated_mean"]
+    nonedge_lower_generated = summary["tail_lower_nonedge_generated_mean"]
+    edge_upper_generated = summary["tail_upper_edge_generated_mean"]
+    nonedge_upper_generated = summary["tail_upper_nonedge_generated_mean"]
+
+    summary["tail_lower_generated_edge_nonedge_gap"] = (
+        None
+        if edge_lower_generated is None or nonedge_lower_generated is None
+        else edge_lower_generated - nonedge_lower_generated
+    )
+
+    summary["tail_upper_generated_edge_nonedge_gap"] = (
+        None
+        if edge_upper_generated is None or nonedge_upper_generated is None
+        else edge_upper_generated - nonedge_upper_generated
+    )
+
+    return summary
 
 
 def _sanitize_for_json(obj: Any) -> Any:

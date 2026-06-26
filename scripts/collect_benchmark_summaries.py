@@ -30,8 +30,26 @@ CORE_METRICS = [
     "spearman_generated_edge_nonedge_abs_gap",
     "spearman_edge_mean_abs_error",
     "spearman_nonedge_mean_abs_error",
+    "tail_lower_all_mean_abs_error",
+    "tail_lower_all_median_abs_error",
+    "tail_upper_all_mean_abs_error",
+    "tail_upper_all_median_abs_error",
+    "tail_lower_edge_generated_mean",
+    "tail_lower_nonedge_generated_mean",
+    "tail_lower_generated_edge_nonedge_gap",
+    "tail_upper_edge_generated_mean",
+    "tail_upper_nonedge_generated_mean",
+    "tail_upper_generated_edge_nonedge_gap",
+    "tail_lower_edge_mean_abs_error",
+    "tail_lower_nonedge_mean_abs_error",
+    "tail_upper_edge_mean_abs_error",
+    "tail_upper_nonedge_mean_abs_error",
+    "generation_runtime_seconds",
+    "evaluation_runtime_seconds",
+    "total_graph_runtime_seconds",
+    "generation_samples_per_second",
+    "end_to_end_samples_per_second",
 ]
-
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
@@ -43,7 +61,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--datasets",
         nargs="+",
-        default=["sachs", "diabetes"],
+        default=["sachs", "diabetes", "breast_cancer"],
         help="Dataset identifiers to include.",
     )
 
@@ -336,9 +354,16 @@ def build_report_table(
         "kendall_edge_generated_mean_abs_value",
         "kendall_nonedge_generated_mean_abs_value",
         "kendall_generated_edge_nonedge_abs_gap",
-        "spearman_edge_generated_mean_abs_value",
-        "spearman_nonedge_generated_mean_abs_value",
-        "spearman_generated_edge_nonedge_abs_gap",
+        "tail_lower_all_mean_abs_error",
+        "tail_upper_all_mean_abs_error",
+        "tail_lower_edge_mean_abs_error",
+        "tail_upper_edge_mean_abs_error",
+        "tail_lower_generated_edge_nonedge_gap",
+        "tail_upper_generated_edge_nonedge_gap",
+        "generation_runtime_seconds",
+        "evaluation_runtime_seconds",
+        "total_graph_runtime_seconds",
+        "generation_samples_per_second",
     ]
 
     selected_metrics = [
@@ -444,10 +469,14 @@ def print_compact_summary(report_table: pd.DataFrame) -> None:
         "num_graphs",
         "mean_num_edges",
         "marginal_median_normalized_abs_quantile_error__mean",
-        "kendall_edge_generated_mean_abs_value__mean",
-        "kendall_nonedge_generated_mean_abs_value__mean",
-        "kendall_generated_edge_nonedge_abs_gap__mean",
-        "spearman_generated_edge_nonedge_abs_gap__mean",
+        "kendall_mean_abs_error__mean",
+        "spearman_mean_abs_error__mean",
+        "tail_lower_all_mean_abs_error__mean",
+        "tail_upper_all_mean_abs_error__mean",
+        "tail_lower_generated_edge_nonedge_gap__mean",
+        "tail_upper_generated_edge_nonedge_gap__mean",
+        "generation_runtime_seconds__mean",
+        "generation_samples_per_second__mean",
     ]
 
     display_columns = [

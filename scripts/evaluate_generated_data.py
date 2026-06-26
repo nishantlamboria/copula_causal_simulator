@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from pathlib import Path
 import argparse
 import json
@@ -23,13 +25,18 @@ from copula_causal_sim.evaluation.realism import (
     top_pairwise_errors,
     graph_pairwise_dependence_table,
     summarize_graph_dependence,
+    tail_dependence_table,
+    summarize_tail_dependence,
     save_dataframe,
     save_json,
 )
 from copula_causal_sim.graphs.dag import summarize_dag
 
 
-def parse_args():
+DEFAULT_TAIL_PROBABILITY = 0.05
+
+
+def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Evaluate generated data against the calibration dataset."
     )
@@ -62,19 +69,82 @@ def parse_args():
         help="Directory where evaluation outputs will be written.",
     )
 
+    parser.add_argument(
+        "--tail-probability",
+        type=float,
+        default=DEFAULT_TAIL_PROBABILITY,
+        help=(
+            "Tail probability p used for empirical lower- and upper-tail "
+            "dependence. Must satisfy 0 < p < 0.5. Default: 0.05."
+        ),
+    )
+
     return parser.parse_args()
+
+
+def resolve_project_path(path_value: str | Path) -> Path:
+    """Resolve relative paths from the project root."""
+    path = Path(path_value)
+
+    if path.is_absolute():
+        return path
+
+    return PROJECT_ROOT / path
 
 
 def load_graph(graph_path: str | None):
     if graph_path is None:
         return None
 
-    path = Path(graph_path)
+    path = resolve_project_path(graph_path)
 
     if not path.exists():
         raise FileNotFoundError(f"Graph file not found: {path}")
 
     return pd.read_csv(path, header=None).to_numpy(dtype=int)
+
+
+def make_empirical_pseudo_observations(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Convert every variable to empirical copula coordinates.
+
+    For n observations, average ranks are divided by n + 1. This keeps all
+    pseudo-observations strictly inside (0, 1), handles ties deterministically,
+    and makes tail-dependence comparisons invariant to marginal scales.
+    """
+    if df.empty:
+        raise ValueError("Cannot construct pseudo-observations from empty data.")
+
+    if df.isna().any().any():
+        raise ValueError("Cannot construct pseudo-observations with missing values.")
+
+    non_numeric = [
+        column
+        for column in df.columns
+        if not pd.api.types.is_numeric_dtype(df[column])
+    ]
+
+    if non_numeric:
+        raise ValueError(
+            f"Cannot construct pseudo-observations from non-numeric columns: "
+            f"{non_numeric}"
+        )
+
+    n_rows = len(df)
+
+    pseudo = df.rank(
+        axis=0,
+        method="average",
+        na_option="keep",
+        pct=False,
+    ) / float(n_rows + 1)
+
+    pseudo = pseudo.astype(float)
+
+    if pseudo.isna().any().any():
+        raise RuntimeError("Pseudo-observation construction produced missing values.")
+
+    return pseudo
 
 
 def main() -> None:
@@ -83,7 +153,7 @@ def main() -> None:
     config = load_config(args.config)
     dataset_id = config["dataset_id"]
 
-    output_dir = PROJECT_ROOT / args.output_dir
+    output_dir = resolve_project_path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
 
     print(f"Evaluating generated data for dataset: {dataset_id}")
@@ -92,10 +162,12 @@ def main() -> None:
     real_df = load_tabular_dataset(config)
 
     print("Loading generated data...")
-    generated_path = Path(args.generated_x)
+    generated_path = resolve_project_path(args.generated_x)
 
     if not generated_path.exists():
-        raise FileNotFoundError(f"Generated data file not found: {generated_path}")
+        raise FileNotFoundError(
+            f"Generated data file not found: {generated_path}"
+        )
 
     generated_df = pd.read_csv(generated_path)
 
@@ -121,11 +193,15 @@ def main() -> None:
 
     marginal_summary = summarize_marginal_errors(marginal_errors)
 
-    marginal_errors_path = output_dir / "marginal_quantile_errors.csv"
-    marginal_summary_path = output_dir / "marginal_error_summary.csv"
+    marginal_errors.to_csv(
+        output_dir / "marginal_quantile_errors.csv",
+        index=False,
+    )
 
-    marginal_errors.to_csv(marginal_errors_path, index=False)
-    marginal_summary.to_csv(marginal_summary_path, index=False)
+    marginal_summary.to_csv(
+        output_dir / "marginal_error_summary.csv",
+        index=False,
+    )
 
     # ------------------------------------------------------------------
     # 2. Kendall tau evaluation
@@ -182,7 +258,7 @@ def main() -> None:
     spearman_summary = summarize_matrix_error(spearman_error)
 
     # ------------------------------------------------------------------
-    # 4. Graph-aware dependence evaluation
+    # 4. Graph metadata and graph-aware rank dependence
     # ------------------------------------------------------------------
     print("Reading graph metadata...")
 
@@ -229,14 +305,68 @@ def main() -> None:
         )
 
     # ------------------------------------------------------------------
-    # 5. Overall summary
+    # 5. Empirical lower- and upper-tail dependence
+    # ------------------------------------------------------------------
+    print(
+        "Computing empirical tail dependence "
+        f"with tail probability p={args.tail_probability:.4f}..."
+    )
+
+    real_u_df = make_empirical_pseudo_observations(real_df)
+    generated_u_df = make_empirical_pseudo_observations(generated_df)
+
+    tail_pairwise = tail_dependence_table(
+        real_u_df=real_u_df,
+        generated_u_df=generated_u_df,
+        adjacency=adjacency,
+        tail_probability=args.tail_probability,
+    )
+
+    tail_summary = summarize_tail_dependence(tail_pairwise)
+
+    tail_pairwise.to_csv(
+        output_dir / "tail_dependence_pairwise.csv",
+        index=False,
+    )
+
+    save_json(
+        tail_summary,
+        output_dir / "tail_dependence_summary.json",
+    )
+
+    lower_tail_top_errors = tail_pairwise.sort_values(
+        "lower_tail_absolute_error",
+        ascending=False,
+    ).head(20)
+
+    upper_tail_top_errors = tail_pairwise.sort_values(
+        "upper_tail_absolute_error",
+        ascending=False,
+    ).head(20)
+
+    lower_tail_top_errors.to_csv(
+        output_dir / "lower_tail_top_pairwise_errors.csv",
+        index=False,
+    )
+
+    upper_tail_top_errors.to_csv(
+        output_dir / "upper_tail_top_pairwise_errors.csv",
+        index=False,
+    )
+
+    # ------------------------------------------------------------------
+    # 6. Overall summary
     # ------------------------------------------------------------------
     summary = {
         "dataset_id": dataset_id,
         "real_shape": list(real_df.shape),
         "generated_shape": list(generated_df.shape),
         "generated_file": str(generated_path),
-        "graph_file": args.graph,
+        "graph_file": (
+            None
+            if args.graph is None
+            else str(resolve_project_path(args.graph))
+        ),
         "marginal": {
             "mean_abs_quantile_error": float(
                 marginal_errors["absolute_error"].mean()
@@ -261,6 +391,10 @@ def main() -> None:
         "spearman": spearman_summary,
         "graph": graph_summary,
         "graph_dependence": graph_dependence_summary,
+        "tail_dependence": {
+            "scale": "empirical_rank_pseudo_observations",
+            **tail_summary,
+        },
     }
 
     summary_path = output_dir / "evaluation_summary.json"
