@@ -1,0 +1,27 @@
+{
+  "baseline_name": "v0.4-indegree2-baseline",
+  "captured_at_utc": "2026-07-02T11:40:01.342191+00:00",
+  "git": {
+    "commit": "3054cad59b18b8d390c9c9bee79be1024d649778",
+    "short_commit": "3054cad59b18",
+    "branch": "master",
+    "tags_at_commit_before_capture": [],
+    "working_tree_dirty": false,
+    "dirty_status": []
+  },
+  "environment": {
+    "python_executable": "D:\\Python Projects\\TUD\\copula_causal_simulator\\.venv\\Scripts\\python.exe",
+    "python_version": "3.11.9",
+    "platform": "Windows-10-10.0.26200-SP0"
+  },
+  "tests": {
+    "status": "PASSED",
+    "returncode": 0,
+    "command": "D:\\Python Projects\\TUD\\copula_causal_simulator\\.venv\\Scripts\\python.exe -m pytest -q"
+  },
+  "files": {
+    "count": 53,
+    "hash_algorithm": "sha256",
+    "manifest_file": "file_hashes.csv"
+  }
+}
