@@ -1,19 +1,18 @@
-"""Run the synthetic pair-copula family-recovery experiment.
+"""Run synthetic pair-copula family-recovery experiments.
 
-The experiment:
+The runner:
 
-1. reads a YAML configuration;
-2. generates samples from known pair-copula families;
-3. splits each sample into training and test observations;
-4. selects a fitted pair copula from the configured candidate set;
-5. records family recovery, parameter recovery, Kendall-tau error,
-   BIC, and held-out log-likelihood;
-6. optionally saves the samples and fitted models.
+1. reads explicit ground-truth scenarios from YAML;
+2. generates samples from known pair-copula models;
+3. splits each sample into training and test data;
+4. selects a candidate copula using the configured criterion;
+5. records family, rotation, Kendall-tau, parameter, and likelihood recovery;
+6. writes detailed and aggregated CSV files.
 
 Run from the project root:
 
-    python scripts/synthetic_validation/run_pair_family_recovery.py \
-        --config configs/synthetic_validation/pair_family_recovery_smoke.yaml
+    python scripts/synthetic_validation/run_pair_family_recovery.py ^
+        --config configs/synthetic_validation/pair_family_recovery_intermediate.yaml
 """
 
 from __future__ import annotations
@@ -37,10 +36,10 @@ from scipy.stats import kendalltau
 # ---------------------------------------------------------------------
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-SRC_DIR = PROJECT_ROOT / "src"
+SRC_DIRECTORY = PROJECT_ROOT / "src"
 
-if str(SRC_DIR) not in sys.path:
-    sys.path.insert(0, str(SRC_DIR))
+if str(SRC_DIRECTORY) not in sys.path:
+    sys.path.insert(0, str(SRC_DIRECTORY))
 
 from copula_causal_sim.synthetic.pair_copula import (  # noqa: E402
     normalize_family_name,
@@ -56,36 +55,33 @@ from copula_causal_sim.synthetic.pair_copula import (  # noqa: E402
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=(
-            "Run synthetic pair-copula family and parameter recovery."
+            "Run pair-copula family and parameter recovery experiments."
         )
     )
 
     parser.add_argument(
         "--config",
-        type=str,
         required=True,
-        help="Path to the synthetic-validation YAML configuration.",
+        type=str,
+        help="Path to the YAML experiment configuration.",
     )
 
     parser.add_argument(
         "--overwrite",
         action="store_true",
-        help=(
-            "Delete an existing experiment output directory before "
-            "running."
-        ),
+        help="Delete an existing output directory before running.",
     )
 
     return parser.parse_args()
 
 
 # ---------------------------------------------------------------------
-# Configuration helpers
+# Configuration
 # ---------------------------------------------------------------------
 
 
 def resolve_project_path(path_value: str | Path) -> Path:
-    """Resolve a path relative to the project root."""
+    """Resolve a path relative to the repository root."""
     path = Path(path_value)
 
     if path.is_absolute():
@@ -95,7 +91,7 @@ def resolve_project_path(path_value: str | Path) -> Path:
 
 
 def load_yaml(path: Path) -> dict[str, Any]:
-    """Load and validate the top-level YAML object."""
+    """Read a YAML file and verify its top-level type."""
     if not path.exists():
         raise FileNotFoundError(
             f"Configuration file does not exist: {path}"
@@ -114,7 +110,7 @@ def load_yaml(path: Path) -> dict[str, Any]:
 
 
 def validate_config(config: dict[str, Any]) -> None:
-    """Validate required configuration sections and values."""
+    """Validate the scenario-based experiment configuration."""
     required_sections = {
         "experiment",
         "data_generation",
@@ -134,79 +130,168 @@ def validate_config(config: dict[str, Any]) -> None:
     generation = config["data_generation"]
     fitting = config["fitting"]
     evaluation = config["evaluation"]
+    output = config["output"]
 
-    required_generation_fields = {
-        "families",
-        "kendall_taus",
-        "sample_sizes",
-        "seeds",
-    }
+    if not isinstance(generation, dict):
+        raise TypeError("data_generation must be a mapping.")
 
-    missing_generation = required_generation_fields.difference(
-        generation
-    )
+    if not isinstance(fitting, dict):
+        raise TypeError("fitting must be a mapping.")
 
-    if missing_generation:
+    if not isinstance(evaluation, dict):
+        raise TypeError("evaluation must be a mapping.")
+
+    if not isinstance(output, dict):
+        raise TypeError("output must be a mapping.")
+
+    scenarios = generation.get("scenarios")
+
+    if not isinstance(scenarios, list) or not scenarios:
         raise ValueError(
-            "Missing data_generation fields: "
-            + ", ".join(sorted(missing_generation))
+            "data_generation.scenarios must be a non-empty list."
         )
 
-    if not generation["families"]:
-        raise ValueError(
-            "data_generation.families must not be empty."
+    for scenario_index, scenario in enumerate(scenarios):
+        if not isinstance(scenario, dict):
+            raise TypeError(
+                f"Scenario {scenario_index} must be a mapping."
+            )
+
+        if "family" not in scenario:
+            raise ValueError(
+                f"Scenario {scenario_index} is missing family."
+            )
+
+        family = normalize_family_name(
+            str(scenario["family"])
         )
 
-    if not generation["kendall_taus"]:
+        taus = scenario.get("kendall_taus")
+
+        if not isinstance(taus, list) or not taus:
+            raise ValueError(
+                f"Scenario {scenario_index} must contain a non-empty "
+                "kendall_taus list."
+            )
+
+        for tau_value in taus:
+            if not isinstance(tau_value, (int, float)):
+                raise TypeError(
+                    f"Scenario {scenario_index} contains a non-numeric "
+                    "Kendall tau."
+                )
+
+            tau = float(tau_value)
+
+            if not np.isfinite(tau):
+                raise ValueError(
+                    f"Scenario {scenario_index} contains a non-finite "
+                    "Kendall tau."
+                )
+
+            if not -1.0 < tau < 1.0:
+                raise ValueError(
+                    f"Scenario {scenario_index} has tau={tau}, but tau "
+                    "must lie strictly between -1 and 1."
+                )
+
+            if family == "indep" and not np.isclose(
+                tau,
+                0.0,
+                atol=1e-12,
+            ):
+                raise ValueError(
+                    "The independence scenario must use tau=0."
+                )
+
+            if family in {"clayton", "gumbel"} and tau <= 0.0:
+                raise ValueError(
+                    f"Unrotated {family} scenarios require positive tau."
+                )
+
+        if family == "student":
+            student_dfs = scenario.get("student_dfs")
+
+            if not isinstance(student_dfs, list) or not student_dfs:
+                raise ValueError(
+                    f"Student scenario {scenario_index} must contain "
+                    "a non-empty student_dfs list."
+                )
+
+            for df_value in student_dfs:
+                if not isinstance(df_value, (int, float)):
+                    raise TypeError(
+                        "Student degrees of freedom must be numeric."
+                    )
+
+                degrees_of_freedom = float(df_value)
+
+                if (
+                    not np.isfinite(degrees_of_freedom)
+                    or degrees_of_freedom <= 2.0
+                ):
+                    raise ValueError(
+                        "Student degrees of freedom must be finite and "
+                        "greater than 2."
+                    )
+
+        elif "student_dfs" in scenario:
+            raise ValueError(
+                f"Scenario {scenario_index} supplies student_dfs for "
+                f"the non-Student family {family!r}."
+            )
+
+    sample_sizes = generation.get("sample_sizes")
+
+    if not isinstance(sample_sizes, list) or not sample_sizes:
         raise ValueError(
-            "data_generation.kendall_taus must not be empty."
+            "data_generation.sample_sizes must be a non-empty list."
         )
 
-    if not generation["sample_sizes"]:
-        raise ValueError(
-            "data_generation.sample_sizes must not be empty."
-        )
-
-    if not generation["seeds"]:
-        raise ValueError(
-            "data_generation.seeds must not be empty."
-        )
-
-    for sample_size in generation["sample_sizes"]:
+    for sample_size in sample_sizes:
         if not isinstance(sample_size, int) or sample_size < 4:
             raise ValueError(
-                "All sample sizes must be integers of at least 4."
+                "Every sample size must be an integer of at least 4."
             )
 
-    for seed in generation["seeds"]:
+    seeds = generation.get("seeds")
+
+    if not isinstance(seeds, list) or not seeds:
+        raise ValueError(
+            "data_generation.seeds must be a non-empty list."
+        )
+
+    for seed in seeds:
         if not isinstance(seed, int) or seed < 0:
             raise ValueError(
-                "All seeds must be non-negative integers."
+                "Every seed must be a non-negative integer."
             )
 
-    train_fraction = float(evaluation["train_fraction"])
+    marginal_mode = str(
+        generation.get("marginal_mode", "uniform")
+    ).lower()
 
-    if not 0.0 < train_fraction < 1.0:
+    if marginal_mode != "uniform":
         raise ValueError(
-            "evaluation.train_fraction must lie strictly between "
-            "0 and 1."
+            "This runner currently supports only "
+            "data_generation.marginal_mode: uniform."
         )
 
-    candidate_families = fitting.get(
-        "candidate_families",
-        [],
-    )
+    candidate_families = fitting.get("candidate_families")
 
-    if not candidate_families:
+    if (
+        not isinstance(candidate_families, list)
+        or not candidate_families
+    ):
         raise ValueError(
-            "fitting.candidate_families must not be empty."
+            "fitting.candidate_families must be a non-empty list."
         )
+
+    for family in candidate_families:
+        normalize_family_name(str(family))
 
     criterion = str(
-        fitting.get(
-            "selection_criterion",
-            "bic",
-        )
+        fitting.get("selection_criterion", "bic")
     ).lower()
 
     allowed_criteria = {
@@ -218,10 +303,101 @@ def validate_config(config: dict[str, Any]) -> None:
 
     if criterion not in allowed_criteria:
         raise ValueError(
-            "Unsupported selection criterion "
-            f"{criterion!r}. Expected one of "
-            f"{sorted(allowed_criteria)}."
+            f"Unsupported selection criterion {criterion!r}. "
+            f"Expected one of {sorted(allowed_criteria)}."
         )
+
+    train_fraction = float(
+        evaluation.get("train_fraction", 0.8)
+    )
+
+    if not 0.0 < train_fraction < 1.0:
+        raise ValueError(
+            "evaluation.train_fraction must lie strictly between "
+            "0 and 1."
+        )
+
+    if "directory" not in output:
+        raise ValueError(
+            "output.directory must be provided."
+        )
+
+
+def format_float_for_identifier(value: float) -> str:
+    """Format a floating-point value for use in directory names."""
+    return (
+        f"{value:.4f}"
+        .rstrip("0")
+        .rstrip(".")
+        .replace("-", "minus")
+        .replace(".", "p")
+    )
+
+
+def make_scenario_id(
+    family: str,
+    tau: float,
+    student_df: float | None,
+) -> str:
+    """Create a unique identifier for one generating scenario."""
+    identifier = (
+        f"family_{family}"
+        f"__tau_{format_float_for_identifier(tau)}"
+    )
+
+    if family == "student":
+        if student_df is None:
+            raise ValueError(
+                "Student scenarios require student_df."
+            )
+
+        identifier += (
+            f"__df_{format_float_for_identifier(student_df)}"
+        )
+
+    return identifier
+
+
+def expand_scenarios(
+    generation_config: dict[str, Any],
+) -> list[dict[str, Any]]:
+    """Expand YAML scenarios into individual ground-truth models."""
+    expanded: list[dict[str, Any]] = []
+
+    for scenario in generation_config["scenarios"]:
+        family = normalize_family_name(
+            str(scenario["family"])
+        )
+
+        taus = [
+            float(value)
+            for value in scenario["kendall_taus"]
+        ]
+
+        if family == "student":
+            student_dfs: list[float | None] = [
+                float(value)
+                for value in scenario["student_dfs"]
+            ]
+        else:
+            student_dfs = [None]
+
+        for tau in taus:
+            for student_df in student_dfs:
+                expanded.append(
+                    {
+                        "scenario_id": make_scenario_id(
+                            family=family,
+                            tau=tau,
+                            student_df=student_df,
+                        ),
+                        "family": family,
+                        "tau": tau,
+                        "student_df": student_df,
+                    }
+                )
+
+    return expanded
 
 
 # ---------------------------------------------------------------------
@@ -230,7 +406,7 @@ def validate_config(config: dict[str, Any]) -> None:
 
 
 def family_enum(family_name: str):
-    """Map a configured family name to the installed family enum."""
+    """Map a configured family name to a pyvinecopulib enum."""
     canonical = normalize_family_name(family_name)
 
     if hasattr(pv, "BicopFamily"):
@@ -241,31 +417,24 @@ def family_enum(family_name: str):
             )
         except AttributeError as error:
             raise ValueError(
-                f"Installed pyvinecopulib does not support "
-                f"{canonical!r}."
+                f"The installed pyvinecopulib version does not expose "
+                f"family {canonical!r}."
             ) from error
 
     try:
-        return getattr(
-            pv,
-            canonical,
-        )
+        return getattr(pv, canonical)
     except AttributeError as error:
         raise ValueError(
-            f"Installed pyvinecopulib does not support "
-            f"{canonical!r}."
+            f"The installed pyvinecopulib version does not expose "
+            f"family {canonical!r}."
         ) from error
 
 
 def family_name_from_model(model: pv.Bicop) -> str:
-    """Extract a stable lowercase family name from a fitted model."""
+    """Extract a canonical family name from a fitted model."""
     family = model.family
 
-    enum_name = getattr(
-        family,
-        "name",
-        None,
-    )
+    enum_name = getattr(family, "name", None)
 
     if isinstance(enum_name, str):
         return normalize_family_name(enum_name)
@@ -283,10 +452,10 @@ def build_fit_controls(
     selection_criterion: str,
     allow_rotations: bool,
 ) -> pv.FitControlsBicop:
-    """Construct fitting controls with version compatibility."""
+    """Construct pair-copula fitting controls."""
     family_set = [
-        family_enum(name)
-        for name in candidate_families
+        family_enum(family)
+        for family in candidate_families
     ]
 
     arguments = {
@@ -297,7 +466,6 @@ def build_fit_controls(
         "num_threads": 1,
     }
 
-    # Recent versions support allow_rotations in the constructor.
     try:
         return pv.FitControlsBicop(
             **arguments,
@@ -306,8 +474,6 @@ def build_fit_controls(
     except TypeError:
         controls = pv.FitControlsBicop(**arguments)
 
-        # Older versions may not expose this option. The smoke config
-        # requests rotations, which was the historical default.
         if hasattr(controls, "allow_rotations"):
             try:
                 controls.allow_rotations = allow_rotations
@@ -321,7 +487,7 @@ def fit_pair_copula(
     train_data: np.ndarray,
     controls: pv.FitControlsBicop,
 ) -> pv.Bicop:
-    """Fit and select a pair copula on training pseudo-observations."""
+    """Fit and select a pair copula."""
     data = np.asfortranarray(
         train_data,
         dtype=float,
@@ -333,7 +499,6 @@ def fit_pair_copula(
             controls=controls,
         )
 
-    # Compatibility with older pyvinecopulib releases.
     model = pv.Bicop()
     model.select(
         data=data,
@@ -353,28 +518,23 @@ def split_train_test(
     train_fraction: float,
     seed: int,
 ) -> tuple[np.ndarray, np.ndarray]:
-    """Create a deterministic shuffled train/test split."""
-    n = data.shape[0]
+    """Create a reproducible shuffled train/test split."""
+    sample_size = data.shape[0]
 
     train_size = int(
-        np.floor(
-            train_fraction * n
-        )
+        np.floor(train_fraction * sample_size)
     )
 
     train_size = max(
         2,
-        min(
-            train_size,
-            n - 2,
-        ),
+        min(train_size, sample_size - 2),
     )
 
     rng = np.random.default_rng(
         seed + 1_000_003
     )
 
-    indices = rng.permutation(n)
+    indices = rng.permutation(sample_size)
 
     train_indices = indices[:train_size]
     test_indices = indices[train_size:]
@@ -393,13 +553,21 @@ def split_train_test(
 
 
 def empirical_kendall_tau(data: np.ndarray) -> float:
-    """Calculate empirical Kendall's tau for a two-column sample."""
-    result = kendalltau(
+    """Calculate empirical Kendall's tau."""
+    # scipy.stats.kendalltau may return a result object or a tuple depending
+    # on versions/type checkers. Unpack to be robust to both.
+    kt = kendalltau(
         data[:, 0],
         data[:, 1],
     )
 
-    tau = float(getattr(result, "statistic"))
+    # kt can be (statistic, pvalue) or an object with .statistic
+    # Prefer attribute access, fall back to tuple indexing
+    tau_val = getattr(kt, "statistic")
+    # if tau_val is None and isinstance(kt, tuple):
+    #     tau_val = kt[0]
+
+    tau = float(tau_val)
 
     if not np.isfinite(tau):
         raise RuntimeError(
@@ -410,7 +578,7 @@ def empirical_kendall_tau(data: np.ndarray) -> float:
 
 
 def flatten_parameters(model: pv.Bicop) -> list[float]:
-    """Return model parameters as a JSON-serializable list."""
+    """Return model parameters as a flat Python list."""
     parameters = np.asarray(
         model.parameters,
         dtype=float,
@@ -422,11 +590,21 @@ def flatten_parameters(model: pv.Bicop) -> list[float]:
     ]
 
 
+def model_parameter_count(model: pv.Bicop) -> int:
+    """Return the model's number of estimated parameters."""
+    value = model.npars
+
+    # if callable(value):
+    #     value = value()
+
+    return int(value)
+
+
 def safe_loglik(
     model: pv.Bicop,
     data: np.ndarray,
 ) -> float:
-    """Evaluate the model log-likelihood."""
+    """Evaluate a finite copula log-likelihood."""
     value = float(
         model.loglik(
             np.asfortranarray(
@@ -448,7 +626,7 @@ def safe_bic(
     model: pv.Bicop,
     data: np.ndarray,
 ) -> float:
-    """Evaluate BIC on the supplied data."""
+    """Evaluate a finite BIC value."""
     value = float(
         model.bic(
             np.asfortranarray(
@@ -466,6 +644,17 @@ def safe_bic(
     return value
 
 
+def extract_student_df(
+    family: str,
+    parameters: list[float],
+) -> float:
+    """Extract Student-t degrees of freedom when available."""
+    if family != "student" or len(parameters) < 2:
+        return float("nan")
+
+    return float(parameters[1])
+
+
 # ---------------------------------------------------------------------
 # Artifact helpers
 # ---------------------------------------------------------------------
@@ -475,15 +664,13 @@ def save_json(
     payload: dict[str, Any],
     path: Path,
 ) -> None:
+    """Save a JSON-serializable dictionary."""
     path.parent.mkdir(
         parents=True,
         exist_ok=True,
     )
 
-    with path.open(
-        "w",
-        encoding="utf-8",
-    ) as file:
+    with path.open("w", encoding="utf-8") as file:
         json.dump(
             payload,
             file,
@@ -495,7 +682,7 @@ def save_model(
     model: pv.Bicop,
     path: Path,
 ) -> None:
-    """Save a pyvinecopulib model as JSON."""
+    """Save a fitted pyvinecopulib model."""
     path.parent.mkdir(
         parents=True,
         exist_ok=True,
@@ -512,20 +699,13 @@ def save_model(
 
 
 def make_run_id(
-    family: str,
-    tau: float,
+    scenario_id: str,
     sample_size: int,
     seed: int,
 ) -> str:
-    tau_text = (
-        f"{tau:.3f}"
-        .replace("-", "minus")
-        .replace(".", "p")
-    )
-
+    """Create a unique identifier for one experimental run."""
     return (
-        f"family_{family}"
-        f"__tau_{tau_text}"
+        f"{scenario_id}"
         f"__n_{sample_size}"
         f"__seed_{seed}"
     )
@@ -538,8 +718,10 @@ def make_run_id(
 
 def run_single_experiment(
     *,
+    scenario_id: str,
     true_family: str,
     true_tau: float,
+    true_student_df: float | None,
     sample_size: int,
     seed: int,
     train_fraction: float,
@@ -548,12 +730,17 @@ def run_single_experiment(
     save_samples: bool,
     runs_directory: Path,
 ) -> dict[str, Any]:
-    """Run one ground-truth generation and recovery experiment."""
+    """Run one known-model generation and recovery experiment."""
     simulation = simulate_pair_copula(
         family=true_family,
         tau=true_tau,
         n=sample_size,
         seed=seed,
+        student_df=(
+            float(true_student_df)
+            if true_student_df is not None
+            else 4.0
+        ),
     )
 
     train_data, test_data = split_train_test(
@@ -579,13 +766,36 @@ def run_single_experiment(
         fitted_model.tau
     )
 
-    train_empirical_tau = empirical_kendall_tau(
-        train_data
+    true_parameters = flatten_parameters(
+        simulation.model
     )
 
-    test_empirical_tau = empirical_kendall_tau(
-        test_data
+    estimated_parameters = flatten_parameters(
+        fitted_model
     )
+
+    true_df_value = (
+        float(true_student_df)
+        if true_student_df is not None
+        else float("nan")
+    )
+
+    estimated_df_value = extract_student_df(
+        family=selected_family,
+        parameters=estimated_parameters,
+    )
+
+    if (
+        np.isfinite(true_df_value)
+        and np.isfinite(estimated_df_value)
+    ):
+        student_df_error = (
+            estimated_df_value - true_df_value
+        )
+        student_df_abs_error = abs(student_df_error)
+    else:
+        student_df_error = float("nan")
+        student_df_abs_error = float("nan")
 
     train_loglik = safe_loglik(
         fitted_model,
@@ -605,28 +815,44 @@ def run_single_experiment(
         test_mean_loglik = (
             test_loglik / test_data.shape[0]
         )
+
+        oracle_test_loglik = safe_loglik(
+            simulation.model,
+            test_data,
+        )
+        oracle_test_mean_loglik = (
+            oracle_test_loglik / test_data.shape[0]
+        )
+
+        test_loglik_gap_from_oracle = (
+            test_mean_loglik
+            - oracle_test_mean_loglik
+        )
     else:
         test_loglik = float("nan")
         test_mean_loglik = float("nan")
+        oracle_test_loglik = float("nan")
+        oracle_test_mean_loglik = float("nan")
+        test_loglik_gap_from_oracle = float("nan")
 
-    true_parameters = flatten_parameters(
-        simulation.model
+    family_correct = (
+        selected_family == true_family
     )
 
-    estimated_parameters = flatten_parameters(
-        fitted_model
+    exact_model_correct = (
+        family_correct
+        and selected_rotation == int(simulation.rotation)
     )
 
     run_id = make_run_id(
-        family=true_family,
-        tau=true_tau,
+        scenario_id=scenario_id,
         sample_size=sample_size,
         seed=seed,
     )
 
-    run_directory = runs_directory / run_id
-
     if save_samples:
+        run_directory = runs_directory / run_id
+
         run_directory.mkdir(
             parents=True,
             exist_ok=True,
@@ -652,10 +878,21 @@ def run_single_experiment(
         save_json(
             {
                 "run_id": run_id,
+                "scenario_id": scenario_id,
                 "true_family": true_family,
                 "selected_family": selected_family,
                 "true_tau": float(true_tau),
                 "estimated_tau": estimated_tau,
+                "true_student_df": (
+                    None
+                    if not np.isfinite(true_df_value)
+                    else true_df_value
+                ),
+                "estimated_student_df": (
+                    None
+                    if not np.isfinite(estimated_df_value)
+                    else estimated_df_value
+                ),
                 "true_rotation": int(simulation.rotation),
                 "selected_rotation": selected_rotation,
                 "true_parameters": true_parameters,
@@ -668,40 +905,40 @@ def run_single_experiment(
             run_directory / "metadata.json",
         )
 
-    result = {
+    return {
         "run_id": run_id,
+        "scenario_id": scenario_id,
         "true_family": true_family,
         "selected_family": selected_family,
-        "family_correct": (
-            selected_family == true_family
-        ),
+        "family_correct": family_correct,
         "true_rotation": int(simulation.rotation),
         "selected_rotation": selected_rotation,
-        "exact_model_correct": (
-            selected_family == true_family
-            and selected_rotation == int(simulation.rotation)
-        ),
+        "exact_model_correct": exact_model_correct,
         "true_tau": float(true_tau),
         "estimated_tau": estimated_tau,
-        "tau_error": (
-            estimated_tau - float(true_tau)
-        ),
+        "tau_error": estimated_tau - float(true_tau),
         "tau_abs_error": abs(
             estimated_tau - float(true_tau)
         ),
         "complete_empirical_tau": empirical_kendall_tau(
             simulation.data
         ),
-        "train_empirical_tau": train_empirical_tau,
-        "test_empirical_tau": test_empirical_tau,
-        "true_parameters": json.dumps(
-            true_parameters
+        "train_empirical_tau": empirical_kendall_tau(
+            train_data
         ),
+        "test_empirical_tau": empirical_kendall_tau(
+            test_data
+        ),
+        "true_student_df": true_df_value,
+        "estimated_student_df": estimated_df_value,
+        "student_df_error": student_df_error,
+        "student_df_abs_error": student_df_abs_error,
+        "true_parameters": json.dumps(true_parameters),
         "estimated_parameters": json.dumps(
             estimated_parameters
         ),
-        "number_estimated_parameters": int(
-            fitted_model.npars
+        "number_estimated_parameters": model_parameter_count(
+            fitted_model
         ),
         "sample_size": int(sample_size),
         "train_size": int(train_data.shape[0]),
@@ -713,10 +950,15 @@ def run_single_experiment(
         ),
         "test_loglik": test_loglik,
         "test_mean_loglik": test_mean_loglik,
+        "oracle_test_loglik": oracle_test_loglik,
+        "oracle_test_mean_loglik": (
+            oracle_test_mean_loglik
+        ),
+        "test_loglik_gap_from_oracle": (
+            test_loglik_gap_from_oracle
+        ),
         "train_bic": train_bic,
     }
-
-    return result
 
 
 # ---------------------------------------------------------------------
@@ -724,21 +966,25 @@ def run_single_experiment(
 # ---------------------------------------------------------------------
 
 
-def create_summary(
+def create_scenario_summary(
     results: pd.DataFrame,
 ) -> pd.DataFrame:
-    """Create a compact summary by true family."""
-    summary = (
+    """Summarize recovery by generating scenario and sample size."""
+    return (
         results
         .groupby(
-            "true_family",
+            [
+                "scenario_id",
+                "true_family",
+                "true_tau",
+                "true_student_df",
+                "sample_size",
+            ],
             as_index=False,
+            dropna=False,
         )
         .agg(
-            number_runs=(
-                "run_id",
-                "count",
-            ),
+            number_runs=("run_id", "count"),
             family_recovery_accuracy=(
                 "family_correct",
                 "mean",
@@ -755,18 +1001,84 @@ def create_summary(
                 "tau_abs_error",
                 "median",
             ),
+            mean_student_df_abs_error=(
+                "student_df_abs_error",
+                "mean",
+            ),
+            median_student_df_abs_error=(
+                "student_df_abs_error",
+                "median",
+            ),
             mean_test_loglik_per_observation=(
                 "test_mean_loglik",
                 "mean",
             ),
+            mean_test_loglik_gap_from_oracle=(
+                "test_loglik_gap_from_oracle",
+                "mean",
+            ),
         )
+        .sort_values(
+            [
+                "true_family",
+                "true_tau",
+                "true_student_df",
+                "sample_size",
+            ],
+            na_position="last",
+        )
+        .reset_index(drop=True)
     )
 
-    return summary
+
+def create_family_summary(
+    results: pd.DataFrame,
+) -> pd.DataFrame:
+    """Summarize recovery by family and sample size."""
+    return (
+        results
+        .groupby(
+            [
+                "true_family",
+                "sample_size",
+            ],
+            as_index=False,
+        )
+        .agg(
+            number_runs=("run_id", "count"),
+            family_recovery_accuracy=(
+                "family_correct",
+                "mean",
+            ),
+            exact_model_recovery_accuracy=(
+                "exact_model_correct",
+                "mean",
+            ),
+            mean_tau_abs_error=(
+                "tau_abs_error",
+                "mean",
+            ),
+            median_tau_abs_error=(
+                "tau_abs_error",
+                "median",
+            ),
+            mean_test_loglik_gap_from_oracle=(
+                "test_loglik_gap_from_oracle",
+                "mean",
+            ),
+        )
+        .sort_values(
+            [
+                "true_family",
+                "sample_size",
+            ]
+        )
+        .reset_index(drop=True)
+    )
 
 
 # ---------------------------------------------------------------------
-# Main experiment loop
+# Main loop
 # ---------------------------------------------------------------------
 
 
@@ -777,13 +1089,8 @@ def main() -> None:
         args.config
     )
 
-    config = load_yaml(
-        config_path
-    )
-
-    validate_config(
-        config
-    )
+    config = load_yaml(config_path)
+    validate_config(config)
 
     experiment_config = config["experiment"]
     generation_config = config["data_generation"]
@@ -797,16 +1104,15 @@ def main() -> None:
 
     runs_directory = output_directory / "runs"
 
-    if output_directory.exists() and args.overwrite:
-        shutil.rmtree(
-            output_directory
-        )
-
-    if output_directory.exists() and not args.overwrite:
-        raise FileExistsError(
-            f"Output directory already exists: {output_directory}\n"
-            "Use --overwrite to replace it."
-        )
+    if output_directory.exists():
+        if args.overwrite:
+            shutil.rmtree(output_directory)
+        else:
+            raise FileExistsError(
+                f"Output directory already exists:\n"
+                f"{output_directory}\n"
+                "Run again with --overwrite to replace it."
+            )
 
     output_directory.mkdir(
         parents=True,
@@ -818,24 +1124,14 @@ def main() -> None:
         exist_ok=True,
     )
 
-    copied_config_path = (
-        output_directory / "experiment_config.yaml"
-    )
-
     shutil.copy2(
         config_path,
-        copied_config_path,
+        output_directory / "experiment_config.yaml",
     )
 
-    true_families = [
-        normalize_family_name(family)
-        for family in generation_config["families"]
-    ]
-
-    true_taus = [
-        float(value)
-        for value in generation_config["kendall_taus"]
-    ]
+    scenarios = expand_scenarios(
+        generation_config
+    )
 
     sample_sizes = [
         int(value)
@@ -848,7 +1144,7 @@ def main() -> None:
     ]
 
     candidate_families = [
-        normalize_family_name(family)
+        normalize_family_name(str(family))
         for family in fitting_config["candidate_families"]
     ]
 
@@ -883,7 +1179,7 @@ def main() -> None:
     save_samples = bool(
         evaluation_config.get(
             "save_generated_samples",
-            True,
+            False,
         )
     )
 
@@ -894,117 +1190,140 @@ def main() -> None:
     )
 
     total_runs = (
-        len(true_families)
-        * len(true_taus)
+        len(scenarios)
         * len(sample_sizes)
         * len(seeds)
     )
 
-    print("=" * 72)
+    print("=" * 78)
     print(
         experiment_config.get(
             "name",
             "pair_family_recovery",
         )
     )
-    print("=" * 72)
-    print(f"Configuration: {config_path}")
-    print(f"Output:        {output_directory}")
-    print(f"True families: {true_families}")
-    print(f"Candidate set: {candidate_families}")
-    print(f"Kendall taus:  {true_taus}")
-    print(f"Sample sizes:  {sample_sizes}")
-    print(f"Seeds:         {seeds}")
-    print(f"Criterion:     {selection_criterion}")
-    print(f"Rotations:     {allow_rotations}")
-    print(f"Total runs:    {total_runs}")
-    print("=" * 72)
+    print("=" * 78)
+    print(f"Configuration:    {config_path}")
+    print(f"Output:           {output_directory}")
+    print(f"Scenarios:        {len(scenarios)}")
+    print(f"Sample sizes:     {sample_sizes}")
+    print(f"Seeds:            {seeds}")
+    print(f"Candidate set:    {candidate_families}")
+    print(f"Criterion:        {selection_criterion}")
+    print(f"Allow rotations:  {allow_rotations}")
+    print(f"Total runs:       {total_runs}")
+    print("=" * 78)
 
     result_rows: list[dict[str, Any]] = []
-
     run_number = 0
 
-    for true_family in true_families:
-        for true_tau in true_taus:
-            for sample_size in sample_sizes:
-                for seed in seeds:
-                    run_number += 1
+    results_path = (
+        output_directory
+        / "pair_family_recovery_results.csv"
+    )
+
+    for scenario in scenarios:
+        for sample_size in sample_sizes:
+            for seed in seeds:
+                run_number += 1
+
+                true_family = str(
+                    scenario["family"]
+                )
+                true_tau = float(
+                    scenario["tau"]
+                )
+                true_student_df = scenario[
+                    "student_df"
+                ]
+                scenario_id = str(
+                    scenario["scenario_id"]
+                )
+
+                df_text = (
+                    ""
+                    if true_student_df is None
+                    else f" df={true_student_df:g}"
+                )
+
+                print(
+                    f"[{run_number:04d}/{total_runs:04d}] "
+                    f"family={true_family:<8} "
+                    f"tau={true_tau:.3f}"
+                    f"{df_text} "
+                    f"n={sample_size} "
+                    f"seed={seed}"
+                )
+
+                try:
+                    result = run_single_experiment(
+                        scenario_id=scenario_id,
+                        true_family=true_family,
+                        true_tau=true_tau,
+                        true_student_df=true_student_df,
+                        sample_size=sample_size,
+                        seed=seed,
+                        train_fraction=train_fraction,
+                        controls=controls,
+                        compute_heldout_loglik=(
+                            compute_heldout_loglik
+                        ),
+                        save_samples=save_samples,
+                        runs_directory=runs_directory,
+                    )
+
+                    result["status"] = "success"
+                    result["error_message"] = ""
 
                     print(
-                        f"[{run_number:02d}/{total_runs:02d}] "
-                        f"family={true_family:<8} "
-                        f"tau={true_tau:.3f} "
-                        f"n={sample_size} "
-                        f"seed={seed}"
+                        "    selected="
+                        f"{result['selected_family']}"
+                        f"[rotation="
+                        f"{result['selected_rotation']}], "
+                        f"tau_hat="
+                        f"{result['estimated_tau']:.4f}, "
+                        f"family_correct="
+                        f"{result['family_correct']}"
                     )
 
-                    try:
-                        result = run_single_experiment(
-                            true_family=true_family,
-                            true_tau=true_tau,
+                except Exception as error:
+                    result = {
+                        "run_id": make_run_id(
+                            scenario_id=scenario_id,
                             sample_size=sample_size,
                             seed=seed,
-                            train_fraction=train_fraction,
-                            controls=controls,
-                            compute_heldout_loglik=(
-                                compute_heldout_loglik
-                            ),
-                            save_samples=save_samples,
-                            runs_directory=runs_directory,
-                        )
+                        ),
+                        "scenario_id": scenario_id,
+                        "true_family": true_family,
+                        "true_tau": true_tau,
+                        "true_student_df": (
+                            float(true_student_df)
+                            if true_student_df is not None
+                            else float("nan")
+                        ),
+                        "sample_size": sample_size,
+                        "seed": seed,
+                        "status": "failed",
+                        "error_message": (
+                            f"{type(error).__name__}: {error}"
+                        ),
+                    }
 
-                        result["status"] = "success"
-                        result["error_message"] = ""
-
-                        print(
-                            "    selected="
-                            f"{result['selected_family']}"
-                            f"[rotation={result['selected_rotation']}], "
-                            f"tau_hat="
-                            f"{result['estimated_tau']:.4f}, "
-                            f"correct="
-                            f"{result['family_correct']}"
-                        )
-
-                    except Exception as error:
-                        result = {
-                            "run_id": make_run_id(
-                                family=true_family,
-                                tau=true_tau,
-                                sample_size=sample_size,
-                                seed=seed,
-                            ),
-                            "true_family": true_family,
-                            "true_tau": true_tau,
-                            "sample_size": sample_size,
-                            "seed": seed,
-                            "status": "failed",
-                            "error_message": (
-                                f"{type(error).__name__}: {error}"
-                            ),
-                        }
-
-                        print(
-                            "    FAILED: "
-                            f"{result['error_message']}"
-                        )
-
-                    result_rows.append(
-                        result
+                    print(
+                        "    FAILED: "
+                        f"{result['error_message']}"
                     )
 
-                    # Save after every run so partial progress is retained.
-                    pd.DataFrame(
-                        result_rows
-                    ).to_csv(
-                        output_directory
-                        / "pair_family_recovery_results.csv",
-                        index=False,
-                    )
+                result_rows.append(result)
 
-    results = pd.DataFrame(
-        result_rows
-    )
+                pd.DataFrame(
+                    result_rows
+                ).to_csv(
+                    results_path,
+                    index=False,
+                )
+
+    results = pd.DataFrame(result_rows)
 
     successful_results = results.loc[
         results["status"] == "success"
@@ -1012,17 +1331,27 @@ def main() -> None:
 
     if successful_results.empty:
         raise RuntimeError(
-            "All synthetic-validation runs failed. "
-            "Inspect pair_family_recovery_results.csv."
+            "All runs failed. Inspect "
+            "pair_family_recovery_results.csv."
         )
 
-    summary = create_summary(
+    scenario_summary = create_scenario_summary(
         successful_results
     )
 
-    summary.to_csv(
+    scenario_summary.to_csv(
         output_directory
-        / "pair_family_recovery_summary.csv",
+        / "pair_family_recovery_scenario_summary.csv",
+        index=False,
+    )
+
+    family_summary = create_family_summary(
+        successful_results
+    )
+
+    family_summary.to_csv(
+        output_directory
+        / "pair_family_recovery_family_summary.csv",
         index=False,
     )
 
@@ -1039,23 +1368,26 @@ def main() -> None:
         / "family_recovery_confusion_matrix.csv"
     )
 
+    failed_runs = int(
+        (results["status"] == "failed").sum()
+    )
+
+    successful_runs = int(
+        (results["status"] == "success").sum()
+    )
+
     save_json(
         {
             "experiment_name": experiment_config.get(
                 "name",
                 "pair_family_recovery",
             ),
+            "number_generating_scenarios": len(
+                scenarios
+            ),
             "total_requested_runs": int(total_runs),
-            "successful_runs": int(
-                (
-                    results["status"] == "success"
-                ).sum()
-            ),
-            "failed_runs": int(
-                (
-                    results["status"] == "failed"
-                ).sum()
-            ),
+            "successful_runs": successful_runs,
+            "failed_runs": failed_runs,
             "overall_family_recovery_accuracy": float(
                 successful_results[
                     "family_correct"
@@ -1071,25 +1403,35 @@ def main() -> None:
                     "tau_abs_error"
                 ].mean()
             ),
+            "overall_mean_test_loglik_gap_from_oracle": float(
+                successful_results[
+                    "test_loglik_gap_from_oracle"
+                ].mean()
+            ),
         },
         output_directory / "experiment_summary.json",
     )
 
-    print("\n" + "=" * 72)
-    print("Experiment complete")
-    print("=" * 72)
-    print(summary.to_string(index=False))
     print()
+    print("=" * 78)
+    print("Experiment complete")
+    print("=" * 78)
+    print(f"Successful runs: {successful_runs}")
+    print(f"Failed runs:     {failed_runs}")
+    print()
+    print(family_summary.to_string(index=False))
+    print()
+    print(f"Detailed results: {results_path}")
     print(
-        "Results:   "
-        f"{output_directory / 'pair_family_recovery_results.csv'}"
+        "Scenario summary: "
+        f"{output_directory / 'pair_family_recovery_scenario_summary.csv'}"
     )
     print(
-        "Summary:   "
-        f"{output_directory / 'pair_family_recovery_summary.csv'}"
+        "Family summary:   "
+        f"{output_directory / 'pair_family_recovery_family_summary.csv'}"
     )
     print(
-        "Confusion: "
+        "Confusion matrix: "
         f"{output_directory / 'family_recovery_confusion_matrix.csv'}"
     )
 

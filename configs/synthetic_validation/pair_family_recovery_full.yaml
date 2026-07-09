@@ -1,8 +1,9 @@
 experiment:
-  name: pair_family_recovery_smoke
+  name: pair_family_recovery_full
   description: >
-    Small synthetic experiment for validating pair-copula family and
-    parameter recovery before running the full benchmark.
+    Full ground-truth validation of pair-copula family and parameter
+    recovery across copula families, dependence strengths, sample
+    sizes, Student degrees of freedom, and random seeds.
 
 data_generation:
   scenarios:
@@ -88,7 +89,7 @@ fitting:
 evaluation:
   train_fraction: 0.8
   compute_heldout_loglik: true
-  save_generated_samples: true
+  save_generated_samples: false
 
 output:
-  directory: outputs/synthetic_validation/pair_family_recovery_smoke
+  directory: outputs/synthetic_validation/pair_family_recovery_full

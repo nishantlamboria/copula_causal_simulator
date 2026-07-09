@@ -1,8 +1,8 @@
 experiment:
-  name: pair_family_recovery_smoke
+  name: pair_family_recovery_intermediate
   description: >
-    Small synthetic experiment for validating pair-copula family and
-    parameter recovery before running the full benchmark.
+    Intermediate ground-truth validation of pair-copula family and
+    parameter recovery before running the complete experiment.
 
 data_generation:
   scenarios:
@@ -45,30 +45,12 @@ data_generation:
 
   sample_sizes:
     - 250
-    - 500
     - 1000
 
   seeds:
     - 0
     - 1
     - 2
-    - 3
-    - 4
-    - 5
-    - 6
-    - 7
-    - 8
-    - 9
-    - 10
-    - 11
-    - 12
-    - 13
-    - 14
-    - 15
-    - 16
-    - 17
-    - 18
-    - 19
 
   marginal_mode: uniform
 
@@ -88,7 +70,7 @@ fitting:
 evaluation:
   train_fraction: 0.8
   compute_heldout_loglik: true
-  save_generated_samples: true
+  save_generated_samples: false
 
 output:
-  directory: outputs/synthetic_validation/pair_family_recovery_smoke
+  directory: outputs/synthetic_validation/pair_family_recovery_intermediate
