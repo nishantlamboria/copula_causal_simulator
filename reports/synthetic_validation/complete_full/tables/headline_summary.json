@@ -1,0 +1,43 @@
+{
+  "pair_family_validation": {
+    "available": true,
+    "path": "D:\\Python Projects\\TUD\\copula_causal_simulator\\outputs\\synthetic_validation\\pair_family_recovery_full\\pair_family_recovery_results.csv",
+    "successful_runs": 1140,
+    "family_recovery_accuracy": 0.7894736842105263,
+    "mean_tau_abs_error": 0.013956014935119856
+  },
+  "marginal_validation": {
+    "number_runs": 2700,
+    "family_recovery_accuracy": 0.8966666666666666,
+    "mean_tau_abs_error": 0.014923487962848966,
+    "mean_marginal_quantile_error": 0.030043567377006954,
+    "max_rank_invariance_error": 0.0
+  },
+  "dvine_validation": {
+    "number_runs": 180,
+    "generating_order_selection_rate": 0.8833333333333333,
+    "first_tree_family_recovery": 0.8611111111111112,
+    "second_first_tree_family_recovery": 0.8055555555555556,
+    "conditional_family_recovery": 0.8611111111111112,
+    "mean_pairwise_kendall_mae": 0.06770927720134069,
+    "mean_energy_distance_3d": 0.003659348655506638,
+    "mean_test_loglik_gap_from_oracle": -0.023738646712351298
+  },
+  "full_dag_validation": {
+    "number_runs": 60,
+    "generating_order_selection_rate": 0.9333333333333333,
+    "one_parent_x2_family_recovery": 0.8666666666666667,
+    "one_parent_x4_family_recovery": 0.9333333333333333,
+    "one_parent_x5_family_recovery": 0.65,
+    "mean_pairwise_kendall_mae": 0.07213785052521592,
+    "mean_energy_distance_5d": 0.0019172824228164279,
+    "mean_marginal_quantile_error": 0.10949759320428795
+  },
+  "non_simplified_validation": {
+    "number_runs": 60,
+    "mean_selected_bins": 4.883333333333334,
+    "mean_test_loglik_improvement": 0.08340203455645308,
+    "mean_simplified_tau_rmse": 0.19008433391033516,
+    "mean_binned_tau_rmse": 0.0588547915380353
+  }
+}

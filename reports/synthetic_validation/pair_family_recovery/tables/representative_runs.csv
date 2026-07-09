@@ -1,0 +1,7 @@
+run_id,true_family,selected_family,family_correct,true_tau,estimated_tau,tau_abs_error,true_student_df,estimated_student_df,sample_size,seed,true_parameters,estimated_parameters
+family_gaussian__tau_0p5__n_1000__seed_6,gaussian,gaussian,True,0.5,0.4943200098271831,0.0056799901728168,,,1000,6,[0.7071067811865476],[0.7007698379518855]
+family_clayton__tau_0p5__n_1000__seed_19,clayton,clayton,True,0.5,0.5052953612115917,0.0052953612115916,,,1000,19,[2.0],[2.0428163457254875]
+family_gumbel__tau_0p5__n_1000__seed_2,gumbel,gumbel,True,0.5,0.5082130641587377,0.0082130641587376,,,1000,2,[2.0],[2.033400904172813]
+family_frank__tau_0p2__n_250__seed_5,frank,gumbel,False,0.2,0.1608602777956712,0.0391397222043287,,,250,5,[1.8608837808575136],[1.1916966549660035]
+family_student__tau_0p5__df_4__n_1000__seed_17,student,student,True,0.5,0.510607614659055,0.010607614659055,4.0,4.2830117299167405,1000,17,"[0.7071067811865476, 4.0]","[0.7187901767988792, 4.2830117299167405]"
+family_student__tau_0p5__df_10__n_1000__seed_7,student,gaussian,False,0.5,0.4894415159191578,0.0105584840808421,10.0,,1000,7,"[0.7071067811865476, 10.0]",[0.6952825420063028]

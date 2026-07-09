@@ -1,0 +1,51 @@
+experiment_name: complete_synthetic_validation_full
+existing_pair_results: outputs/synthetic_validation/pair_family_recovery_full/pair_family_recovery_results.csv
+output_directory: outputs/synthetic_validation/complete_full
+
+fitting:
+  selection_criterion: bic
+  allow_rotations: true
+  candidate_families: [indep, gaussian, student, clayton, gumbel, frank]
+
+marginal_validation:
+  families: [gaussian, student, clayton, gumbel, frank]
+  taus: [0.2, 0.5, 0.8]
+  marginal_pairs:
+    - [normal, gamma]
+    - [lognormal, student]
+    - [beta, lognormal]
+  sample_sizes: [250, 500, 1000]
+  seeds: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
+
+dvine_validation:
+  scenarios:
+    - id: asymmetric_archimedean
+      first_middle: {family: clayton, tau: 0.35}
+      middle_child: {family: gumbel, tau: 0.45}
+      conditional: {family: frank, tau: 0.50}
+    - id: symmetric_tail
+      first_middle: {family: gaussian, tau: 0.30}
+      middle_child: {family: student, tau: 0.45, student_df: 4.0}
+      conditional: {family: clayton, tau: 0.40}
+    - id: mixed_strong
+      first_middle: {family: gumbel, tau: 0.55}
+      middle_child: {family: frank, tau: 0.35}
+      conditional: {family: student, tau: 0.60, student_df: 4.0}
+  sample_sizes: [250, 500, 1000]
+  seeds: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
+
+full_dag_validation:
+  specification:
+    x1_x2: {family: clayton, tau: 0.30}
+    x2_x3: {family: gumbel, tau: 0.45}
+    x1_x3_given_x2: {family: frank, tau: 0.50}
+    x3_x4: {family: gaussian, tau: 0.55}
+    x2_x5: {family: student, tau: 0.40, student_df: 4.0}
+  sample_sizes: [250, 500, 1000]
+  seeds: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
+
+non_simplified_validation:
+  sample_sizes: [500, 1000, 2000]
+  seeds: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
+  candidate_bins: [1, 2, 3, 4, 5, 6]
+  min_bin_size: 50
