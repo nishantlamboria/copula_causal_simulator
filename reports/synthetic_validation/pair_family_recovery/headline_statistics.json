@@ -1,0 +1,12 @@
+{
+  "total_runs": 1140,
+  "overall_family_accuracy": 0.7894736842105263,
+  "overall_tau_mae": 0.013956014935119856,
+  "accuracy_n1000": 0.8605263157894737,
+  "tau_mae_n1000": 0.012154630933740192,
+  "student_accuracy": 0.5777777777777777,
+  "student_df4_accuracy": 0.8333333333333334,
+  "student_df10_accuracy": 0.32222222222222224,
+  "student_to_gaussian_rate": 0.2222222222222222,
+  "minimum_family_recall": 0.5777777777777777
+}

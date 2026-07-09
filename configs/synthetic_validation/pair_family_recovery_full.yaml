@@ -1,0 +1,95 @@
+experiment:
+  name: pair_family_recovery_full
+  description: >
+    Full ground-truth validation of pair-copula family and parameter
+    recovery across copula families, dependence strengths, sample
+    sizes, Student degrees of freedom, and random seeds.
+
+data_generation:
+  scenarios:
+    - family: indep
+      kendall_taus:
+        - 0.0
+
+    - family: gaussian
+      kendall_taus:
+        - 0.2
+        - 0.5
+        - 0.8
+
+    - family: student
+      kendall_taus:
+        - 0.2
+        - 0.5
+        - 0.8
+      student_dfs:
+        - 4.0
+        - 10.0
+
+    - family: clayton
+      kendall_taus:
+        - 0.2
+        - 0.5
+        - 0.8
+
+    - family: gumbel
+      kendall_taus:
+        - 0.2
+        - 0.5
+        - 0.8
+
+    - family: frank
+      kendall_taus:
+        - 0.2
+        - 0.5
+        - 0.8
+
+  sample_sizes:
+    - 250
+    - 500
+    - 1000
+
+  seeds:
+    - 0
+    - 1
+    - 2
+    - 3
+    - 4
+    - 5
+    - 6
+    - 7
+    - 8
+    - 9
+    - 10
+    - 11
+    - 12
+    - 13
+    - 14
+    - 15
+    - 16
+    - 17
+    - 18
+    - 19
+
+  marginal_mode: uniform
+
+fitting:
+  selection_criterion: bic
+
+  candidate_families:
+    - indep
+    - gaussian
+    - student
+    - clayton
+    - gumbel
+    - frank
+
+  allow_rotations: true
+
+evaluation:
+  train_fraction: 0.8
+  compute_heldout_loglik: true
+  save_generated_samples: false
+
+output:
+  directory: outputs/synthetic_validation/pair_family_recovery_full

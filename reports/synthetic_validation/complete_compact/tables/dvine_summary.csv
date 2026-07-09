@@ -1,0 +1,4 @@
+scenario_id,runs,order_selection,conditional_family_recovery,kendall_mae,energy_distance
+asymmetric_archimedean,5,1.0,1.0,0.028877721943048516,0.0016612768285867
+mixed_strong,5,1.0,1.0,0.01667001675041872,0.00181944931107098
+symmetric_tail,5,1.0,1.0,0.03912897822445556,0.00195110318279364

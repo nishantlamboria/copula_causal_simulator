@@ -1,0 +1,7 @@
+true_family,indep,gaussian,student,clayton,gumbel,frank
+indep,58,2,0,0,0,0
+gaussian,0,148,1,3,13,15
+student,0,80,208,5,55,12
+clayton,0,2,0,163,14,1
+gumbel,0,1,0,16,160,3
+frank,0,12,0,1,4,163
