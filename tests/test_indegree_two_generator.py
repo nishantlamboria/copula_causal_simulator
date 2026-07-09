@@ -751,3 +751,73 @@ def test_cyclic_graph_is_rejected(
             n_samples=100,
             seed=72,
         )
+
+def test_generator_record_order_matches_selected_metadata(
+    indegree_two_generator: IndegreeTwoGenerator,
+) -> None:
+    record = indegree_two_generator._get_conditional_record(
+        child_name="child",
+        parent_names=["parent_1", "parent_2"],
+    )
+
+    selected_order = indegree_two_generator._selected_order_from_record(
+        record
+    )
+
+    assert selected_order == [
+        record["parent_1"],
+        record["parent_2"],
+        record["child"],
+    ]
+    assert set(selected_order[:2]) == {"parent_1", "parent_2"}
+
+
+def test_old_fixed_order_record_remains_loadable() -> None:
+    old_record = {
+        "status": "ok",
+        "child": "child",
+        "parent_1": "parent_2",
+        "parent_2": "parent_1",
+    }
+
+    lookup = IndegreeTwoGenerator._build_conditional_lookup([old_record])
+    record = lookup[("child", frozenset({"parent_1", "parent_2"}))]
+
+    assert IndegreeTwoGenerator._selected_order_from_record(record) == [
+        "parent_2",
+        "parent_1",
+        "child",
+    ]
+
+
+def test_inconsistent_selected_order_is_rejected() -> None:
+    record = {
+        "status": "ok",
+        "child": "child",
+        "parent_1": "parent_1",
+        "parent_2": "parent_2",
+        "selected_order": ["parent_2", "parent_1", "child"],
+    }
+
+    with pytest.raises(ValueError, match="inconsistent selected-order"):
+        IndegreeTwoGenerator._selected_order_from_record(record)
+
+
+def test_duplicate_parent_set_records_are_rejected() -> None:
+    records = [
+        {
+            "status": "ok",
+            "child": "child",
+            "parent_1": "parent_1",
+            "parent_2": "parent_2",
+        },
+        {
+            "status": "ok",
+            "child": "child",
+            "parent_1": "parent_2",
+            "parent_2": "parent_1",
+        },
+    ]
+
+    with pytest.raises(ValueError, match="Duplicate conditional D-vine"):
+        IndegreeTwoGenerator._build_conditional_lookup(records)

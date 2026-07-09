@@ -1,25 +1,26 @@
 dataset_id: diabetes
 path: data/diabetes.csv
 file_type: csv
-
 data:
   continuous_columns: all
   missing_policy: error
   drop_columns: []
-  clip_eps: 1.0e-6
-
+  clip_eps: 1.0e-06
 copula:
   selection_criterion: bic
   allow_rotations: true
   num_threads: 1
   families:
-    - indep
-    - gaussian
-    - student
-    - clayton
-    - gumbel
-    - frank
-
+  - indep
+  - gaussian
+  - student
+  - clayton
+  - gumbel
+  - frank
+  vine_order_strategy: heldout_conditional_loglik
+  vine_order_validation_fraction: 0.2
+  vine_order_selection_seed: 42
+  vine_order_minimum_validation_rows: 50
 outputs:
   artifact_dir: artifacts/libraries/diabetes
   table_dir: reports/tables/diabetes

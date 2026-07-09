@@ -15,7 +15,12 @@ pv = pytest.importorskip("pyvinecopulib")
 
 from copula_causal_sim.copulas.conditional_vine_library import (
     ConditionalVineLibrary,
+    _fit_explicit_dvine_order,
+    _joint_loglik_values_for_order,
+    build_bicop_fit_controls,
     build_conditional_vine_library,
+    conditional_loglik_values_for_order,
+    fit_one_conditional_vine,
 )
 from copula_causal_sim.copulas.marginals import (
     make_pseudo_observations,
@@ -325,7 +330,7 @@ def test_saved_metadata_identifies_explicit_hfunction_implementation(
 
     assert (
         metadata["implementation"]
-        == "explicit_3d_dvine_bicop_hfunctions"
+        == "explicit_3d_dvine_bicop_hfunctions_flexible_parent_order_v1"
     )
 
 
@@ -999,3 +1004,202 @@ def test_metadata_loader_rejects_missing_file(
         load_conditional_vine_metadata(
             missing_path
         )
+
+def test_record_contains_flexible_order_selection_metadata(
+    dvine_assets: dict[str, Any],
+) -> None:
+    record = dvine_assets["record"]
+
+    assert record["parent_set"] == ["parent_1", "parent_2"]
+    assert record["selected_order"][-1] == "child"
+    assert record["selected_order"][:2] == [
+        record["parent_1"],
+        record["parent_2"],
+    ]
+
+    assert record["order_strategy_requested"] == (
+        "heldout_conditional_loglik"
+    )
+    assert record["order_selection_method"] == (
+        "heldout_conditional_loglik"
+    )
+    assert record["order_selection_metric"] == (
+        "mean_conditional_loglik"
+    )
+
+    scores = record["candidate_order_scores"]
+    statuses = record["candidate_order_statuses"]
+
+    assert len(scores) == 2
+    assert set(statuses.values()) == {"ok"}
+    assert all(value is not None for value in scores.values())
+
+    assert record["selected_order_score"] is not None
+    assert record["alternative_order_score"] is not None
+    assert record["order_score_margin"] is not None
+
+    assert record["selected_order_score"] >= (
+        record["alternative_order_score"]
+    )
+    assert record["order_score_margin"] == pytest.approx(
+        record["selected_order_score"]
+        - record["alternative_order_score"]
+    )
+
+    assert record["order_training_size"] + record[
+        "order_validation_size"
+    ] == record["n_obs"]
+
+
+def test_saved_metadata_preserves_order_selection_fields(
+    dvine_assets: dict[str, Any],
+) -> None:
+    record = dvine_assets["record"]
+    metadata = dvine_assets["metadata"]
+
+    assert metadata["order_strategy"] == (
+        "heldout_conditional_loglik"
+    )
+    assert metadata["order_validation_fraction"] == pytest.approx(0.20)
+    assert metadata["order_selection_seed"] == 42
+    assert metadata["minimum_validation_rows"] == 50
+
+    reloaded = [
+        candidate
+        for candidate in metadata["records"]
+        if candidate["child"] == "child"
+    ][0]
+
+    for key in (
+        "parent_set",
+        "selected_order",
+        "candidate_order_scores",
+        "candidate_order_statuses",
+        "selected_order_score",
+        "alternative_order_score",
+        "order_score_margin",
+    ):
+        assert reloaded[key] == record[key]
+
+
+def test_conditional_score_matches_joint_minus_parent_log_density(
+    pseudo_dataframe: pd.DataFrame,
+) -> None:
+    controls, _ = build_bicop_fit_controls(
+        selection_criterion="bic",
+        allow_rotations=True,
+        num_threads=1,
+    )
+
+    train = pseudo_dataframe.iloc[:500].reset_index(drop=True)
+    validation = pseudo_dataframe.iloc[500:].reset_index(drop=True)
+
+    fitted = _fit_explicit_dvine_order(
+        u_df=train,
+        child="child",
+        first_parent="parent_1",
+        second_parent="parent_2",
+        controls=controls,
+        clip_eps=CLIP_EPS,
+    )
+
+    conditional_values = conditional_loglik_values_for_order(
+        fitted_order=fitted,
+        validation_df=validation,
+        clip_eps=CLIP_EPS,
+    )
+    joint_values = _joint_loglik_values_for_order(
+        fitted_order=fitted,
+        data_df=validation,
+        clip_eps=CLIP_EPS,
+    )
+
+    u1 = validation["parent_1"].to_numpy(dtype=float)
+    u2 = validation["parent_2"].to_numpy(dtype=float)
+    parent_data = np.asfortranarray(np.column_stack([u1, u2]))
+    parent_density = np.asarray(
+        fitted.c_first_second.pdf(parent_data),
+        dtype=float,
+    ).reshape(-1)
+    parent_log_density = np.log(np.clip(parent_density, 1e-300, None))
+
+    np.testing.assert_allclose(
+        conditional_values,
+        joint_values - parent_log_density,
+        atol=1e-10,
+        rtol=1e-10,
+    )
+
+
+def test_order_selection_is_reproducible_and_input_order_invariant(
+    pseudo_dataframe: pd.DataFrame,
+    tmp_path: Path,
+) -> None:
+    controls, families = build_bicop_fit_controls(
+        selection_criterion="bic",
+        allow_rotations=True,
+        num_threads=1,
+    )
+
+    common = dict(
+        u_df=pseudo_dataframe,
+        child="child",
+        dataset_id="reproducible_order",
+        controls=controls,
+        candidate_families=families,
+        selection_criterion="bic",
+        clip_eps=CLIP_EPS,
+        order_strategy="heldout_conditional_loglik",
+        order_validation_fraction=0.20,
+        order_selection_seed=17,
+        minimum_validation_rows=50,
+    )
+
+    first = fit_one_conditional_vine(
+        parent_1="parent_1",
+        parent_2="parent_2",
+        model_dir=tmp_path / "first",
+        **common,
+    )
+    second = fit_one_conditional_vine(
+        parent_1="parent_2",
+        parent_2="parent_1",
+        model_dir=tmp_path / "second",
+        **common,
+    )
+
+    assert first.status == "ok"
+    assert second.status == "ok"
+    assert first.selected_order == second.selected_order
+    assert first.parent_set == second.parent_set
+    assert first.candidate_order_scores == pytest.approx(
+        second.candidate_order_scores
+    )
+
+
+def test_small_dataset_falls_back_to_bic(
+    pseudo_dataframe: pd.DataFrame,
+    tmp_path: Path,
+) -> None:
+    small = pseudo_dataframe.iloc[:80].reset_index(drop=True)
+
+    library = build_conditional_vine_library(
+        u_df=small,
+        dataset_id="bic_fallback",
+        parent_set_size=2,
+        selection_criterion="bic",
+        model_dir=tmp_path,
+        order_strategy="heldout_conditional_loglik",
+        order_validation_fraction=0.20,
+        minimum_validation_rows=50,
+        limit=1,
+    )
+
+    record = library.records[0]
+    assert record.status == "ok"
+    assert record.order_selection_method == (
+        "bic_fallback_insufficient_validation_rows"
+    )
+    assert record.order_selection_metric == "negative_bic"
+    assert record.order_validation_size is None
+    assert record.selected_order_score >= record.alternative_order_score
