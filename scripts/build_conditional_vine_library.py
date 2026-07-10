@@ -17,6 +17,9 @@ from copula_causal_sim.copulas.marginals import make_pseudo_observations
 from copula_causal_sim.copulas.conditional_vine_library import (
     build_conditional_vine_library,
 )
+from copula_causal_sim.copulas.conditional_vine_indegree3 import (
+    build_conditional_vine_library_indegree3,
+)
 
 
 def parse_args():
@@ -38,7 +41,8 @@ def parse_args():
         "--parent-set-size",
         type=int,
         default=2,
-        help="Number of parents in local conditional mechanism. Currently only 2.",
+        choices=[2, 3],
+        help="Number of parents in the local conditional mechanism.",
     )
 
     parser.add_argument(
@@ -308,28 +312,47 @@ def main() -> None:
     print(f"Pseudo-observation shape: {u_df.shape}")
     print(f"Columns: {list(u_df.columns)}")
 
-    library = build_conditional_vine_library(
-        u_df=u_df,
-        dataset_id=dataset_id,
-        parent_set_size=args.parent_set_size,
-        selection_criterion=selection_criterion,
-        allow_rotations=bool(copula_config.get("allow_rotations", True)),
-        num_threads=int(copula_config.get("num_threads", 1)),
-        model_dir=conditional_model_dir,
-        order_strategy=order_strategy,
-        order_validation_fraction=order_validation_fraction,
-        order_selection_seed=order_selection_seed,
-        minimum_validation_rows=minimum_validation_rows,
-        conditional_model_strategy=conditional_model_strategy,
-        conditional_candidate_bin_counts=conditional_candidate_bin_counts,
-        conditional_minimum_bin_size=conditional_minimum_bin_size,
-        conditional_validation_fraction=conditional_validation_fraction,
-        conditional_selection_seed=conditional_selection_seed,
-        conditional_minimum_score_improvement=(
-            conditional_minimum_score_improvement
-        ),
-        limit=args.limit,
-    )
+    if args.parent_set_size == 2:
+        library = build_conditional_vine_library(
+            u_df=u_df,
+            dataset_id=dataset_id,
+            parent_set_size=2,
+            selection_criterion=selection_criterion,
+            allow_rotations=bool(copula_config.get("allow_rotations", True)),
+            num_threads=int(copula_config.get("num_threads", 1)),
+            model_dir=conditional_model_dir,
+            order_strategy=order_strategy,
+            order_validation_fraction=order_validation_fraction,
+            order_selection_seed=order_selection_seed,
+            minimum_validation_rows=minimum_validation_rows,
+            conditional_model_strategy=conditional_model_strategy,
+            conditional_candidate_bin_counts=conditional_candidate_bin_counts,
+            conditional_minimum_bin_size=conditional_minimum_bin_size,
+            conditional_validation_fraction=conditional_validation_fraction,
+            conditional_selection_seed=conditional_selection_seed,
+            conditional_minimum_score_improvement=(
+                conditional_minimum_score_improvement
+            ),
+            limit=args.limit,
+        )
+    else:
+        print(
+            "Indegree-three uses a simplified four-dimensional D-vine; "
+            "adaptive quantile bins remain restricted to indegree two."
+        )
+        library = build_conditional_vine_library_indegree3(
+            u_df=u_df,
+            dataset_id=dataset_id,
+            selection_criterion=selection_criterion,
+            allow_rotations=bool(copula_config.get("allow_rotations", True)),
+            num_threads=int(copula_config.get("num_threads", 1)),
+            model_dir=conditional_model_dir,
+            order_strategy=order_strategy,
+            order_validation_fraction=order_validation_fraction,
+            order_selection_seed=order_selection_seed,
+            minimum_validation_rows=minimum_validation_rows,
+            limit=args.limit,
+        )
 
     summary_df = library.to_dataframe()
 
@@ -348,20 +371,33 @@ def main() -> None:
     print(f"Individual vine models saved in: {conditional_model_dir}")
 
     if n_ok > 0:
-        display_columns = [
-            "child",
-            "parent_set",
-            "selected_order",
-            "order_selection_method",
-            "selected_order_score",
-            "alternative_order_score",
-            "order_score_margin",
-            "conditional_model_type",
-            "selected_number_bins",
-            "simplified_validation_score",
-            "selected_validation_score",
-            "score_improvement_over_simplified",
-        ]
+        if args.parent_set_size == 2:
+            display_columns = [
+                "child",
+                "parent_set",
+                "selected_order",
+                "order_selection_method",
+                "selected_order_score",
+                "alternative_order_score",
+                "order_score_margin",
+                "conditional_model_type",
+                "selected_number_bins",
+                "simplified_validation_score",
+                "selected_validation_score",
+                "score_improvement_over_simplified",
+            ]
+        else:
+            display_columns = [
+                "child",
+                "parent_set",
+                "selected_order",
+                "order_selection_method",
+                "selected_order_score",
+                "second_best_order_score",
+                "order_score_margin",
+                "conditional_model_type",
+                "conditional_bic",
+            ]
         print("\nSelected-order examples:")
         print(summary_df.loc[summary_df["status"] == "ok", display_columns].head(10))
 
