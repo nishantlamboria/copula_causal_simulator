@@ -296,9 +296,12 @@ class IndegreeTwoGenerator:
 
         c12 = self._load_bicop(record["bicop_parent_1_parent_2_file"])
         c23 = self._load_bicop(record["bicop_parent_2_child_file"])
-        c13_given_2 = self._load_bicop(
-            record["bicop_parent_1_child_given_parent_2_file"]
+
+        conditional_model_type = record.get(
+            "conditional_model_type",
+            "simplified",
         )
+        selected_number_bins = int(record.get("selected_number_bins", 1))
 
         p1_idx = self.column_to_index[record_parent_1]
         p2_idx = self.column_to_index[record_parent_2]
@@ -323,11 +326,52 @@ class IndegreeTwoGenerator:
             size=n_samples,
         )
 
-        data13_inverse = np.asfortranarray(np.column_stack([w1, q]))
+        if conditional_model_type == "quantile_binned" and selected_number_bins > 1:
+            bin_edges = np.asarray(
+                record.get("conditional_bin_edges", []),
+                dtype=float,
+            ).reshape(-1)
+            bin_model_files = list(
+                record.get("conditional_bin_model_files", [])
+            )
+            if len(bin_edges) != selected_number_bins + 1:
+                raise ValueError(
+                    "Binned conditional record has inconsistent bin edges: "
+                    f"expected {selected_number_bins + 1}, got {len(bin_edges)}."
+                )
+            if len(bin_model_files) != selected_number_bins:
+                raise ValueError(
+                    "Binned conditional record has inconsistent model files: "
+                    f"expected {selected_number_bins}, got {len(bin_model_files)}."
+                )
+            if np.any(np.diff(bin_edges) <= 0.0):
+                raise ValueError("Conditional bin edges must be strictly increasing.")
 
-        # C13|2 is fitted on [w1, wy].
-        # hinv1 inverts h1(w1, wy) w.r.t. wy.
-        wy = c13_given_2.hinv1(data13_inverse)
+            bin_indices = np.clip(
+                np.searchsorted(bin_edges[1:-1], u2, side="right"),
+                0,
+                selected_number_bins - 1,
+            ).astype(int)
+            wy = np.empty(n_samples, dtype=float)
+            for bin_index, model_file in enumerate(bin_model_files):
+                mask = bin_indices == bin_index
+                if not np.any(mask):
+                    continue
+                conditional_model = self._load_bicop(model_file)
+                inverse_data = np.asfortranarray(
+                    np.column_stack([w1[mask], q[mask]])
+                )
+                wy[mask] = conditional_model.hinv1(inverse_data)
+        else:
+            c13_given_2 = self._load_bicop(
+                record["bicop_parent_1_child_given_parent_2_file"]
+            )
+            data13_inverse = np.asfortranarray(np.column_stack([w1, q]))
+
+            # C13|2 is fitted on [w1, wy].
+            # hinv1 inverts h1(w1, wy) w.r.t. wy.
+            wy = c13_given_2.hinv1(data13_inverse)
+
         wy = np.clip(wy, self.clip_eps, 1.0 - self.clip_eps)
 
         # Invert wy = F(child | parent_2) using C23 fitted on [parent_2, child].

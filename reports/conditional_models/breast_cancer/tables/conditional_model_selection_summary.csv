@@ -1,0 +1,661 @@
+child,parent_set,selected_order,conditional_model_type,selected_number_bins,simplified_validation_score,selected_validation_score,score_improvement_over_simplified,conditional_family,conditional_rotation,conditional_bin_counts
+mean_radius,"['mean_smoothness', 'mean_texture']","['mean_texture', 'mean_smoothness', 'mean_radius']",quantile_binned,4,0.0404963556553543,0.0495520263772664,0.0090556707219121,frank,0,"[142, 142, 141, 144]"
+mean_radius,"['mean_compactness', 'mean_texture']","['mean_texture', 'mean_compactness', 'mean_radius']",quantile_binned,6,0.0180521426029119,0.035418071136306,0.017365928533394,gaussian,0,"[95, 95, 94, 95, 95, 95]"
+mean_radius,"['mean_concavity', 'mean_texture']","['mean_concavity', 'mean_texture', 'mean_radius']",quantile_binned,2,0.1782062079325577,0.1854105460407979,0.0072043381082402,gumbel,0,"[284, 285]"
+mean_radius,"['mean_concave_points', 'mean_texture']","['mean_texture', 'mean_concave_points', 'mean_radius']",simplified,1,0.0087056171626056,0.0087056171626056,0.0037870927602551,gaussian,0,[569]
+mean_radius,"['mean_symmetry', 'mean_texture']","['mean_texture', 'mean_symmetry', 'mean_radius']",simplified,1,0.043995372118002,0.043995372118002,0.0,frank,0,[569]
+mean_radius,"['mean_fractal_dimension', 'mean_texture']","['mean_texture', 'mean_fractal_dimension', 'mean_radius']",simplified,1,0.0559251185734288,0.0559251185734288,0.0,frank,0,[569]
+mean_radius,"['mean_texture', 'radius_error']","['mean_texture', 'radius_error', 'mean_radius']",quantile_binned,5,0.0288925705734249,0.0389466767442436,0.0100541061708186,frank,0,"[114, 114, 113, 114, 114]"
+mean_radius,"['mean_texture', 'texture_error']","['mean_texture', 'texture_error', 'mean_radius']",simplified,1,0.1079160379229045,0.1079160379229045,0.0021673394811427,frank,0,[569]
+mean_radius,"['mean_texture', 'worst_radius']","['mean_texture', 'worst_radius', 'mean_radius']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_radius,"['mean_texture', 'worst_texture']","['worst_texture', 'mean_texture', 'mean_radius']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_radius,"['mean_compactness', 'mean_smoothness']","['mean_compactness', 'mean_smoothness', 'mean_radius']",quantile_binned,2,0.1328580386450667,0.1386832531362572,0.0058252144911904,frank,0,"[284, 285]"
+mean_radius,"['mean_concavity', 'mean_smoothness']","['mean_smoothness', 'mean_concavity', 'mean_radius']",simplified,1,0.0308314326776543,0.0308314326776543,0.0,frank,0,[569]
+mean_radius,"['mean_concave_points', 'mean_smoothness']","['mean_smoothness', 'mean_concave_points', 'mean_radius']",quantile_binned,2,0.2079998175448179,0.2367161724308971,0.0287163548860792,frank,0,"[284, 285]"
+mean_radius,"['mean_smoothness', 'mean_symmetry']","['mean_smoothness', 'mean_symmetry', 'mean_radius']",simplified,1,0.0058121326486544,0.0058121326486544,0.0030799627994877,gumbel,180,[569]
+mean_radius,"['mean_fractal_dimension', 'mean_smoothness']","['mean_fractal_dimension', 'mean_smoothness', 'mean_radius']",quantile_binned,4,0.3336251243394783,0.3572367842218014,0.023611659882323,gaussian,0,"[142, 142, 141, 144]"
+mean_radius,"['mean_smoothness', 'radius_error']","['mean_smoothness', 'radius_error', 'mean_radius']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_radius,"['mean_smoothness', 'texture_error']","['mean_smoothness', 'texture_error', 'mean_radius']",quantile_binned,5,0.0205760696636784,0.0292586875296362,0.0086826178659578,clayton,180,"[114, 114, 113, 114, 114]"
+mean_radius,"['mean_smoothness', 'worst_radius']","['mean_smoothness', 'worst_radius', 'mean_radius']",quantile_binned,4,0.0190661307875264,0.0252929116132061,0.0062267808256797,clayton,90,"[141, 143, 142, 143]"
+mean_radius,"['mean_smoothness', 'worst_texture']","['worst_texture', 'mean_smoothness', 'mean_radius']",quantile_binned,6,0.028968094139594,0.0384143284063302,0.0094462342667361,frank,0,"[95, 95, 94, 95, 94, 96]"
+mean_radius,"['mean_compactness', 'mean_concavity']","['mean_compactness', 'mean_concavity', 'mean_radius']",quantile_binned,6,0.0370225919044091,0.0632074185671933,0.0261848266627842,frank,0,"[95, 95, 94, 95, 95, 95]"
+mean_radius,"['mean_compactness', 'mean_concave_points']","['mean_compactness', 'mean_concave_points', 'mean_radius']",quantile_binned,4,0.1582210270932569,0.175731449751008,0.017510422657751,gaussian,0,"[141, 143, 142, 143]"
+mean_radius,"['mean_compactness', 'mean_symmetry']","['mean_symmetry', 'mean_compactness', 'mean_radius']",simplified,1,-0.0013450963179494,-0.0013450963179494,0.0,gaussian,0,[569]
+mean_radius,"['mean_compactness', 'mean_fractal_dimension']","['mean_fractal_dimension', 'mean_compactness', 'mean_radius']",quantile_binned,6,0.7631987951788908,0.7754808673737001,0.0122820721948093,gaussian,0,"[95, 95, 94, 95, 95, 95]"
+mean_radius,"['mean_compactness', 'radius_error']","['mean_compactness', 'radius_error', 'mean_radius']",simplified,1,-0.0063848003353708,-0.0063848003353708,0.0036759857948027,gaussian,0,[569]
+mean_radius,"['mean_compactness', 'texture_error']","['texture_error', 'mean_compactness', 'mean_radius']",quantile_binned,4,-0.0038326687871806,0.0028854075964949,0.0067180763836756,clayton,90,"[142, 142, 141, 144]"
+mean_radius,"['mean_compactness', 'worst_radius']","['mean_compactness', 'worst_radius', 'mean_radius']",simplified,1,0.0204111112834592,0.0204111112834592,0.0008252537936274,gumbel,270,[569]
+mean_radius,"['mean_compactness', 'worst_texture']","['worst_texture', 'mean_compactness', 'mean_radius']",quantile_binned,6,0.0158534118789747,0.0228465867612578,0.0069931748822831,gaussian,0,"[95, 95, 94, 95, 95, 95]"
+mean_radius,"['mean_concave_points', 'mean_concavity']","['mean_concavity', 'mean_concave_points', 'mean_radius']",quantile_binned,4,0.0454715604732433,0.0530313164620943,0.007559755988851,clayton,90,"[141, 143, 142, 143]"
+mean_radius,"['mean_concavity', 'mean_symmetry']","['mean_symmetry', 'mean_concavity', 'mean_radius']",quantile_binned,6,0.0213982817016875,0.0382170754829981,0.0168187937813106,frank,0,"[95, 95, 94, 95, 95, 95]"
+mean_radius,"['mean_concavity', 'mean_fractal_dimension']","['mean_fractal_dimension', 'mean_concavity', 'mean_radius']",quantile_binned,6,0.4953470801595292,0.5080146698482445,0.0126675896887152,gaussian,0,"[95, 95, 94, 95, 95, 95]"
+mean_radius,"['mean_concavity', 'radius_error']","['mean_concavity', 'radius_error', 'mean_radius']",simplified,1,0.0565482790342521,0.0565482790342521,0.0,student,0,[569]
+mean_radius,"['mean_concavity', 'texture_error']","['texture_error', 'mean_concavity', 'mean_radius']",simplified,1,0.0289312733183401,0.0289312733183401,0.0017403283306625,gaussian,0,[569]
+mean_radius,"['mean_concavity', 'worst_radius']","['mean_concavity', 'worst_radius', 'mean_radius']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_radius,"['mean_concavity', 'worst_texture']","['mean_concavity', 'worst_texture', 'mean_radius']",simplified,1,0.188846983589228,0.188846983589228,0.0,gumbel,0,[569]
+mean_radius,"['mean_concave_points', 'mean_symmetry']","['mean_concave_points', 'mean_symmetry', 'mean_radius']",quantile_binned,3,0.4707160325740518,0.4785670630649291,0.0078510304908772,gumbel,0,"[190, 189, 190]"
+mean_radius,"['mean_concave_points', 'mean_fractal_dimension']","['mean_fractal_dimension', 'mean_concave_points', 'mean_radius']",quantile_binned,4,0.594907938815479,0.6073037162795839,0.0123957774641049,gumbel,270,"[141, 143, 142, 143]"
+mean_radius,"['mean_concave_points', 'radius_error']","['radius_error', 'mean_concave_points', 'mean_radius']",quantile_binned,2,0.0119155758577071,0.0307686337660551,0.018853057908348,gumbel,0,"[284, 285]"
+mean_radius,"['mean_concave_points', 'texture_error']","['texture_error', 'mean_concave_points', 'mean_radius']",simplified,1,0.0372105826588578,0.0372105826588578,0.0011773911285366,gaussian,0,[569]
+mean_radius,"['mean_concave_points', 'worst_radius']","['mean_concave_points', 'worst_radius', 'mean_radius']",quantile_binned,2,-0.0161325191923976,-0.010781290136075,0.0053512290563225,gumbel,0,"[284, 285]"
+mean_radius,"['mean_concave_points', 'worst_texture']","['worst_texture', 'mean_concave_points', 'mean_radius']",simplified,1,0.0093193368271169,0.0093193368271169,0.0,clayton,0,[569]
+mean_radius,"['mean_fractal_dimension', 'mean_symmetry']","['mean_fractal_dimension', 'mean_symmetry', 'mean_radius']",simplified,1,0.2177412874364996,0.2177412874364996,0.0016940304817331,gaussian,0,[569]
+mean_radius,"['mean_symmetry', 'radius_error']","['mean_symmetry', 'radius_error', 'mean_radius']",quantile_binned,5,0.0190321964969869,0.0245680549493132,0.0055358584523263,clayton,90,"[114, 114, 113, 114, 114]"
+mean_radius,"['mean_symmetry', 'texture_error']","['mean_symmetry', 'texture_error', 'mean_radius']",quantile_binned,3,0.007399368089709,0.0154638062754672,0.0080644381857581,clayton,180,"[190, 189, 190]"
+mean_radius,"['mean_symmetry', 'worst_radius']","['mean_symmetry', 'worst_radius', 'mean_radius']",simplified,1,0.0196403346172173,0.0196403346172173,0.0,clayton,90,[569]
+mean_radius,"['mean_symmetry', 'worst_texture']","['worst_texture', 'mean_symmetry', 'mean_radius']",simplified,1,0.0309675105448263,0.0309675105448263,0.0,frank,0,[569]
+mean_radius,"['mean_fractal_dimension', 'radius_error']","['mean_fractal_dimension', 'radius_error', 'mean_radius']",quantile_binned,4,0.1563193676412874,0.1639799006311988,0.0076605329899114,gumbel,270,"[142, 142, 142, 143]"
+mean_radius,"['mean_fractal_dimension', 'texture_error']","['mean_fractal_dimension', 'texture_error', 'mean_radius']",simplified,1,0.1259646206296338,0.1259646206296338,0.0039467380166584,gaussian,0,[569]
+mean_radius,"['mean_fractal_dimension', 'worst_radius']","['worst_radius', 'mean_fractal_dimension', 'mean_radius']",quantile_binned,5,1.6321967969546,1.6408082163983972,0.0086114194437971,gumbel,180,"[114, 114, 113, 114, 114]"
+mean_radius,"['mean_fractal_dimension', 'worst_texture']","['worst_texture', 'mean_fractal_dimension', 'mean_radius']",simplified,1,0.0380048419643966,0.0380048419643966,0.0,frank,0,[569]
+mean_radius,"['radius_error', 'texture_error']","['texture_error', 'radius_error', 'mean_radius']",simplified,1,0.0435890844047788,0.0435890844047788,0.0,frank,0,[569]
+mean_radius,"['radius_error', 'worst_radius']","['radius_error', 'worst_radius', 'mean_radius']",simplified,1,0.0324572983596237,0.0324572983596237,0.003253029404897,student,0,[569]
+mean_radius,"['radius_error', 'worst_texture']","['worst_texture', 'radius_error', 'mean_radius']",quantile_binned,5,0.0218638553892036,0.0420051320213872,0.0201412766321835,gaussian,0,"[114, 114, 113, 114, 114]"
+mean_radius,"['texture_error', 'worst_radius']","['texture_error', 'worst_radius', 'mean_radius']",simplified,1,0.0123167046045975,0.0123167046045975,0.002795832208373,clayton,180,[569]
+mean_radius,"['texture_error', 'worst_texture']","['worst_texture', 'texture_error', 'mean_radius']",quantile_binned,5,0.0909494426049336,0.1026169077181752,0.0116674651132416,frank,0,"[114, 114, 113, 114, 114]"
+mean_radius,"['worst_radius', 'worst_texture']","['worst_texture', 'worst_radius', 'mean_radius']",simplified,1,-0.0052390383642248,-0.0052390383642248,0.0,gaussian,0,[569]
+mean_texture,"['mean_radius', 'mean_smoothness']","['mean_smoothness', 'mean_radius', 'mean_texture']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_texture,"['mean_compactness', 'mean_radius']","['mean_radius', 'mean_compactness', 'mean_texture']",quantile_binned,6,0.0180521426028021,0.0354180711360944,0.0173659285332923,gaussian,0,"[95, 95, 94, 95, 95, 95]"
+mean_texture,"['mean_concavity', 'mean_radius']","['mean_concavity', 'mean_radius', 'mean_texture']",simplified,1,0.0248460106021196,0.0248460106021196,0.0013731549922198,frank,0,[569]
+mean_texture,"['mean_concave_points', 'mean_radius']","['mean_concave_points', 'mean_radius', 'mean_texture']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_texture,"['mean_radius', 'mean_symmetry']","['mean_symmetry', 'mean_radius', 'mean_texture']",simplified,1,-0.0177731981039348,-0.0177731981039348,0.0,gumbel,180,[569]
+mean_texture,"['mean_fractal_dimension', 'mean_radius']","['mean_radius', 'mean_fractal_dimension', 'mean_texture']",simplified,1,0.0559251185735307,0.0559251185735307,0.0,frank,0,[569]
+mean_texture,"['mean_radius', 'radius_error']","['mean_radius', 'radius_error', 'mean_texture']",quantile_binned,5,0.0288925705695054,0.0389466767422855,0.0100541061727801,frank,0,"[114, 114, 113, 114, 114]"
+mean_texture,"['mean_radius', 'texture_error']","['mean_radius', 'texture_error', 'mean_texture']",simplified,1,0.1079160379229086,0.1079160379229086,0.0021673394811548,frank,0,[569]
+mean_texture,"['mean_radius', 'worst_radius']","['mean_radius', 'worst_radius', 'mean_texture']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_texture,"['mean_radius', 'worst_texture']","['worst_texture', 'mean_radius', 'mean_texture']",quantile_binned,3,0.8185386947259702,0.8320173363961121,0.0134786416701419,gaussian,0,"[189, 190, 190]"
+mean_texture,"['mean_compactness', 'mean_smoothness']","['mean_smoothness', 'mean_compactness', 'mean_texture']",simplified,1,0.0040795793886005,0.0040795793886005,0.0038502892063013,clayton,90,[569]
+mean_texture,"['mean_concavity', 'mean_smoothness']","['mean_smoothness', 'mean_concavity', 'mean_texture']",quantile_binned,6,-0.0112708975589928,-0.0023668376350656,0.0089040599239272,frank,0,"[95, 95, 94, 95, 95, 95]"
+mean_texture,"['mean_concave_points', 'mean_smoothness']","['mean_smoothness', 'mean_concave_points', 'mean_texture']",quantile_binned,2,0.001856267965614,0.0079943707362453,0.0061381027706313,gaussian,0,"[284, 285]"
+mean_texture,"['mean_smoothness', 'mean_symmetry']","['mean_smoothness', 'mean_symmetry', 'mean_texture']",quantile_binned,5,-0.0166755989477832,-0.0019374754280522,0.014738123519731,clayton,90,"[114, 112, 115, 114, 114]"
+mean_texture,"['mean_fractal_dimension', 'mean_smoothness']","['mean_fractal_dimension', 'mean_smoothness', 'mean_texture']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_texture,"['mean_smoothness', 'radius_error']","['radius_error', 'mean_smoothness', 'mean_texture']",simplified,1,0.0109950036239487,0.0109950036239487,0.0040288931803582,frank,0,[569]
+mean_texture,"['mean_smoothness', 'texture_error']","['mean_smoothness', 'texture_error', 'mean_texture']",simplified,1,0.0053308604508566,0.0053308604508566,0.0,gumbel,270,[569]
+mean_texture,"['mean_smoothness', 'worst_radius']","['mean_smoothness', 'worst_radius', 'mean_texture']",quantile_binned,4,-0.0053430027216395,0.0068385632214154,0.0121815659430549,clayton,270,"[141, 143, 142, 143]"
+mean_texture,"['mean_smoothness', 'worst_texture']","['worst_texture', 'mean_smoothness', 'mean_texture']",quantile_binned,4,0.8435697108568941,0.8679887830122845,0.0244190721553904,gaussian,0,"[142, 142, 141, 144]"
+mean_texture,"['mean_compactness', 'mean_concavity']","['mean_compactness', 'mean_concavity', 'mean_texture']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_texture,"['mean_compactness', 'mean_concave_points']","['mean_concave_points', 'mean_compactness', 'mean_texture']",simplified,1,-0.0065888122470144,-0.0065888122470144,0.0034514680109992,frank,0,[569]
+mean_texture,"['mean_compactness', 'mean_symmetry']","['mean_symmetry', 'mean_compactness', 'mean_texture']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_texture,"['mean_compactness', 'mean_fractal_dimension']","['mean_compactness', 'mean_fractal_dimension', 'mean_texture']",simplified,1,0.0648409943920863,0.0648409943920863,0.0,frank,0,[569]
+mean_texture,"['mean_compactness', 'radius_error']","['radius_error', 'mean_compactness', 'mean_texture']",quantile_binned,4,-0.0025907054232762,0.0078131639612637,0.0104038693845399,frank,0,"[142, 142, 141, 144]"
+mean_texture,"['mean_compactness', 'texture_error']","['texture_error', 'mean_compactness', 'mean_texture']",simplified,1,0.1370381825103723,0.1370381825103723,0.004149798656849,gumbel,180,[569]
+mean_texture,"['mean_compactness', 'worst_radius']","['mean_compactness', 'worst_radius', 'mean_texture']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_texture,"['mean_compactness', 'worst_texture']","['worst_texture', 'mean_compactness', 'mean_texture']",quantile_binned,5,0.8079950443130804,0.8136019590246152,0.0056069147115347,gaussian,0,"[114, 114, 113, 114, 114]"
+mean_texture,"['mean_concave_points', 'mean_concavity']","['mean_concavity', 'mean_concave_points', 'mean_texture']",quantile_binned,5,0.0316363994841511,0.0442532943029252,0.0126168948187741,frank,0,"[114, 114, 113, 114, 114]"
+mean_texture,"['mean_concavity', 'mean_symmetry']","['mean_symmetry', 'mean_concavity', 'mean_texture']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_texture,"['mean_concavity', 'mean_fractal_dimension']","['mean_fractal_dimension', 'mean_concavity', 'mean_texture']",simplified,1,0.005385185206496,0.005385185206496,0.0014156005765104,gaussian,0,[569]
+mean_texture,"['mean_concavity', 'radius_error']","['mean_concavity', 'radius_error', 'mean_texture']",simplified,1,0.031143513393991,0.031143513393991,0.0036843849648347,frank,0,[569]
+mean_texture,"['mean_concavity', 'texture_error']","['mean_concavity', 'texture_error', 'mean_texture']",simplified,1,0.0482214299948727,0.0482214299948727,0.0046354693146474,frank,0,[569]
+mean_texture,"['mean_concavity', 'worst_radius']","['worst_radius', 'mean_concavity', 'mean_texture']",simplified,1,-0.0040615863589302,-0.0040615863589302,0.0007963829831521,gaussian,0,[569]
+mean_texture,"['mean_concavity', 'worst_texture']","['worst_texture', 'mean_concavity', 'mean_texture']",quantile_binned,6,0.792686451597437,0.8193187826117307,0.0266323310142937,gaussian,0,"[95, 95, 94, 95, 95, 95]"
+mean_texture,"['mean_concave_points', 'mean_symmetry']","['mean_symmetry', 'mean_concave_points', 'mean_texture']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_texture,"['mean_concave_points', 'mean_fractal_dimension']","['mean_concave_points', 'mean_fractal_dimension', 'mean_texture']",simplified,1,0.0401183025931337,0.0401183025931337,0.0,frank,0,[569]
+mean_texture,"['mean_concave_points', 'radius_error']","['mean_concave_points', 'radius_error', 'mean_texture']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_texture,"['mean_concave_points', 'texture_error']","['mean_concave_points', 'texture_error', 'mean_texture']",simplified,1,0.0322291135634397,0.0322291135634397,0.0005925005723479,frank,0,[569]
+mean_texture,"['mean_concave_points', 'worst_radius']","['mean_concave_points', 'worst_radius', 'mean_texture']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_texture,"['mean_concave_points', 'worst_texture']","['worst_texture', 'mean_concave_points', 'mean_texture']",quantile_binned,6,0.8209741302493927,0.8273518352809931,0.0063777050316004,gaussian,0,"[95, 95, 94, 95, 95, 95]"
+mean_texture,"['mean_fractal_dimension', 'mean_symmetry']","['mean_fractal_dimension', 'mean_symmetry', 'mean_texture']",simplified,1,-0.0063435115739314,-0.0063435115739314,0.0,gaussian,0,[569]
+mean_texture,"['mean_symmetry', 'radius_error']","['mean_symmetry', 'radius_error', 'mean_texture']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_texture,"['mean_symmetry', 'texture_error']","['mean_symmetry', 'texture_error', 'mean_texture']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_texture,"['mean_symmetry', 'worst_radius']","['mean_symmetry', 'worst_radius', 'mean_texture']",simplified,1,-0.0188490681063828,-0.0188490681063828,0.0,gumbel,180,[569]
+mean_texture,"['mean_symmetry', 'worst_texture']","['mean_symmetry', 'worst_texture', 'mean_texture']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_texture,"['mean_fractal_dimension', 'radius_error']","['mean_fractal_dimension', 'radius_error', 'mean_texture']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_texture,"['mean_fractal_dimension', 'texture_error']","['mean_fractal_dimension', 'texture_error', 'mean_texture']",simplified,1,0.0219678099581789,0.0219678099581789,0.002670437305123,gaussian,0,[569]
+mean_texture,"['mean_fractal_dimension', 'worst_radius']","['worst_radius', 'mean_fractal_dimension', 'mean_texture']",simplified,1,0.0549410043367172,0.0549410043367172,0.0,frank,0,[569]
+mean_texture,"['mean_fractal_dimension', 'worst_texture']","['mean_fractal_dimension', 'worst_texture', 'mean_texture']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_texture,"['radius_error', 'texture_error']","['texture_error', 'radius_error', 'mean_texture']",simplified,1,0.1289347399316536,0.1289347399316536,0.0,gaussian,0,[569]
+mean_texture,"['radius_error', 'worst_radius']","['worst_radius', 'radius_error', 'mean_texture']",quantile_binned,5,0.0118519633430441,0.0260534515119954,0.0142014881689512,gaussian,0,"[114, 114, 113, 114, 114]"
+mean_texture,"['radius_error', 'worst_texture']","['worst_texture', 'radius_error', 'mean_texture']",simplified,1,0.8584043756755169,0.8584043756755169,0.0,gaussian,0,[569]
+mean_texture,"['texture_error', 'worst_radius']","['worst_radius', 'texture_error', 'mean_texture']",simplified,1,0.1060782298916751,0.1060782298916751,0.0,frank,0,[569]
+mean_texture,"['texture_error', 'worst_texture']","['texture_error', 'worst_texture', 'mean_texture']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_texture,"['worst_radius', 'worst_texture']","['worst_texture', 'worst_radius', 'mean_texture']",quantile_binned,5,0.8215773019005943,0.8432117934915201,0.0216344915909257,gaussian,0,"[114, 114, 113, 114, 114]"
+mean_smoothness,"['mean_radius', 'mean_texture']","['mean_texture', 'mean_radius', 'mean_smoothness']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_smoothness,"['mean_compactness', 'mean_radius']","['mean_compactness', 'mean_radius', 'mean_smoothness']",quantile_binned,3,0.3867530280096247,0.4049394543071156,0.0181864262974909,gumbel,180,"[189, 190, 190]"
+mean_smoothness,"['mean_concavity', 'mean_radius']","['mean_concavity', 'mean_radius', 'mean_smoothness']",quantile_binned,2,0.2105883762355362,0.2758183913886095,0.0652300151530732,frank,0,"[284, 285]"
+mean_smoothness,"['mean_concave_points', 'mean_radius']","['mean_radius', 'mean_concave_points', 'mean_smoothness']",quantile_binned,2,0.2079998175448608,0.2367161724310772,0.0287163548862163,frank,0,"[284, 285]"
+mean_smoothness,"['mean_radius', 'mean_symmetry']","['mean_radius', 'mean_symmetry', 'mean_smoothness']",simplified,1,0.0058121326486749,0.0058121326486749,0.0030799627994927,gumbel,180,[569]
+mean_smoothness,"['mean_fractal_dimension', 'mean_radius']","['mean_radius', 'mean_fractal_dimension', 'mean_smoothness']",simplified,1,0.1889524749294503,0.1889524749294503,0.0,frank,0,[569]
+mean_smoothness,"['mean_radius', 'radius_error']","['mean_radius', 'radius_error', 'mean_smoothness']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_smoothness,"['mean_radius', 'texture_error']","['mean_radius', 'texture_error', 'mean_smoothness']",quantile_binned,5,0.0205760696636784,0.0292586875296362,0.0086826178659578,clayton,180,"[114, 114, 113, 114, 114]"
+mean_smoothness,"['mean_radius', 'worst_radius']","['worst_radius', 'mean_radius', 'mean_smoothness']",simplified,1,0.039568279453946,0.039568279453946,0.0012866145377714,gumbel,0,[569]
+mean_smoothness,"['mean_radius', 'worst_texture']","['worst_texture', 'mean_radius', 'mean_smoothness']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_smoothness,"['mean_compactness', 'mean_texture']","['mean_compactness', 'mean_texture', 'mean_smoothness']",quantile_binned,6,0.4240756306643323,0.4319037536977412,0.0078281230334088,gaussian,0,"[95, 95, 94, 94, 96, 95]"
+mean_smoothness,"['mean_concavity', 'mean_texture']","['mean_texture', 'mean_concavity', 'mean_smoothness']",quantile_binned,6,-0.0112708975599303,-0.0023668376359744,0.0089040599239558,frank,0,"[95, 95, 94, 95, 95, 95]"
+mean_smoothness,"['mean_concave_points', 'mean_texture']","['mean_texture', 'mean_concave_points', 'mean_smoothness']",quantile_binned,2,0.0018562679655818,0.0079943707361484,0.0061381027705666,gaussian,0,"[284, 285]"
+mean_smoothness,"['mean_symmetry', 'mean_texture']","['mean_symmetry', 'mean_texture', 'mean_smoothness']",simplified,1,0.1761977112857008,0.1761977112857008,0.0,gaussian,0,[569]
+mean_smoothness,"['mean_fractal_dimension', 'mean_texture']","['mean_fractal_dimension', 'mean_texture', 'mean_smoothness']",simplified,1,0.1638297431197225,0.1638297431197225,0.0022898704275537,frank,0,[569]
+mean_smoothness,"['mean_texture', 'radius_error']","['radius_error', 'mean_texture', 'mean_smoothness']",simplified,1,0.1104029552100703,0.1104029552100703,0.0039289937774393,gaussian,0,[569]
+mean_smoothness,"['mean_texture', 'texture_error']","['mean_texture', 'texture_error', 'mean_smoothness']",simplified,1,0.0053308604508566,0.0053308604508566,0.0,gumbel,90,[569]
+mean_smoothness,"['mean_texture', 'worst_radius']","['mean_texture', 'worst_radius', 'mean_smoothness']",quantile_binned,4,-0.0053430027230731,0.0068385632223158,0.0121815659453889,clayton,90,"[141, 143, 142, 143]"
+mean_smoothness,"['mean_texture', 'worst_texture']","['worst_texture', 'mean_texture', 'mean_smoothness']",quantile_binned,3,0.0021282551694631,0.0098385545175336,0.0077102993480705,gaussian,0,"[190, 188, 191]"
+mean_smoothness,"['mean_compactness', 'mean_concavity']","['mean_concavity', 'mean_compactness', 'mean_smoothness']",quantile_binned,3,0.0594162216454183,0.0652789030234458,0.0058626813780275,clayton,270,"[190, 189, 190]"
+mean_smoothness,"['mean_compactness', 'mean_concave_points']","['mean_compactness', 'mean_concave_points', 'mean_smoothness']",simplified,1,0.1255520825843992,0.1255520825843992,0.0,gumbel,0,[569]
+mean_smoothness,"['mean_compactness', 'mean_symmetry']","['mean_symmetry', 'mean_compactness', 'mean_smoothness']",quantile_binned,3,0.0389345483546871,0.0443115088005701,0.005376960445883,gumbel,180,"[190, 189, 190]"
+mean_smoothness,"['mean_compactness', 'mean_fractal_dimension']","['mean_fractal_dimension', 'mean_compactness', 'mean_smoothness']",simplified,1,0.0343723850097965,0.0343723850097965,0.0016629556960606,gumbel,0,[569]
+mean_smoothness,"['mean_compactness', 'radius_error']","['radius_error', 'mean_compactness', 'mean_smoothness']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_smoothness,"['mean_compactness', 'texture_error']","['mean_compactness', 'texture_error', 'mean_smoothness']",simplified,1,0.4115066212826543,0.4115066212826543,0.0,gaussian,0,[569]
+mean_smoothness,"['mean_compactness', 'worst_radius']","['mean_compactness', 'worst_radius', 'mean_smoothness']",quantile_binned,3,0.3953400296721383,0.4103818328750803,0.0150418032029419,gumbel,180,"[190, 189, 190]"
+mean_smoothness,"['mean_compactness', 'worst_texture']","['worst_texture', 'mean_compactness', 'mean_smoothness']",simplified,1,0.01507393933038,0.01507393933038,0.0023306069502558,clayton,270,[569]
+mean_smoothness,"['mean_concave_points', 'mean_concavity']","['mean_concave_points', 'mean_concavity', 'mean_smoothness']",simplified,1,0.0928781622738735,0.0928781622738735,0.0036967120546285,clayton,0,[569]
+mean_smoothness,"['mean_concavity', 'mean_symmetry']","['mean_concavity', 'mean_symmetry', 'mean_smoothness']",simplified,1,0.0996200223507281,0.0996200223507281,0.0049515557310012,gaussian,0,[569]
+mean_smoothness,"['mean_concavity', 'mean_fractal_dimension']","['mean_concavity', 'mean_fractal_dimension', 'mean_smoothness']",quantile_binned,2,0.1891763143026347,0.2061642591234464,0.0169879448208117,gumbel,0,"[284, 285]"
+mean_smoothness,"['mean_concavity', 'radius_error']","['mean_concavity', 'radius_error', 'mean_smoothness']",quantile_binned,3,0.0908700580189854,0.1028427685076009,0.0119727104886154,frank,0,"[190, 189, 190]"
+mean_smoothness,"['mean_concavity', 'texture_error']","['mean_concavity', 'texture_error', 'mean_smoothness']",simplified,1,0.191057059140269,0.191057059140269,0.0,gaussian,0,[569]
+mean_smoothness,"['mean_concavity', 'worst_radius']","['mean_concavity', 'worst_radius', 'mean_smoothness']",quantile_binned,4,0.1991719070094064,0.2473553019179921,0.0481833949085857,frank,0,"[141, 143, 142, 143]"
+mean_smoothness,"['mean_concavity', 'worst_texture']","['worst_texture', 'mean_concavity', 'mean_smoothness']",simplified,1,0.0101563125298725,0.0101563125298725,0.0019773974336484,clayton,270,[569]
+mean_smoothness,"['mean_concave_points', 'mean_symmetry']","['mean_symmetry', 'mean_concave_points', 'mean_smoothness']",quantile_binned,5,0.0986376584774628,0.1106480751723071,0.0120104166948443,gaussian,0,"[114, 114, 113, 114, 114]"
+mean_smoothness,"['mean_concave_points', 'mean_fractal_dimension']","['mean_fractal_dimension', 'mean_concave_points', 'mean_smoothness']",simplified,1,0.2404391340847707,0.2404391340847707,0.0,frank,0,[569]
+mean_smoothness,"['mean_concave_points', 'radius_error']","['mean_concave_points', 'radius_error', 'mean_smoothness']",simplified,1,0.1731560499806698,0.1731560499806698,0.0002855743745882,frank,0,[569]
+mean_smoothness,"['mean_concave_points', 'texture_error']","['mean_concave_points', 'texture_error', 'mean_smoothness']",simplified,1,0.2908658518686282,0.2908658518686282,0.0,gaussian,0,[569]
+mean_smoothness,"['mean_concave_points', 'worst_radius']","['worst_radius', 'mean_concave_points', 'mean_smoothness']",quantile_binned,4,0.1700790736371651,0.1821120446358986,0.0120329709987335,frank,0,"[141, 143, 142, 143]"
+mean_smoothness,"['mean_concave_points', 'worst_texture']","['worst_texture', 'mean_concave_points', 'mean_smoothness']",simplified,1,0.0101602258031272,0.0101602258031272,0.0006819928436603,clayton,270,[569]
+mean_smoothness,"['mean_fractal_dimension', 'mean_symmetry']","['mean_symmetry', 'mean_fractal_dimension', 'mean_smoothness']",simplified,1,0.1091682761609741,0.1091682761609741,0.0019286563731292,frank,0,[569]
+mean_smoothness,"['mean_symmetry', 'radius_error']","['mean_symmetry', 'radius_error', 'mean_smoothness']",simplified,1,0.1339453840242249,0.1339453840242249,0.0033186887276978,frank,0,[569]
+mean_smoothness,"['mean_symmetry', 'texture_error']","['texture_error', 'mean_symmetry', 'mean_smoothness']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_smoothness,"['mean_symmetry', 'worst_radius']","['worst_radius', 'mean_symmetry', 'mean_smoothness']",simplified,1,0.0166994899244643,0.0166994899244643,0.0036169769967253,clayton,0,[569]
+mean_smoothness,"['mean_symmetry', 'worst_texture']","['worst_texture', 'mean_symmetry', 'mean_smoothness']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_smoothness,"['mean_fractal_dimension', 'radius_error']","['mean_fractal_dimension', 'radius_error', 'mean_smoothness']",simplified,1,0.2536009558388122,0.2536009558388122,0.0,frank,0,[569]
+mean_smoothness,"['mean_fractal_dimension', 'texture_error']","['texture_error', 'mean_fractal_dimension', 'mean_smoothness']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_smoothness,"['mean_fractal_dimension', 'worst_radius']","['worst_radius', 'mean_fractal_dimension', 'mean_smoothness']",quantile_binned,2,0.2082898403415724,0.214426823475279,0.0061369831337066,frank,0,"[284, 285]"
+mean_smoothness,"['mean_fractal_dimension', 'worst_texture']","['worst_texture', 'mean_fractal_dimension', 'mean_smoothness']",simplified,1,0.0104041233837924,0.0104041233837924,0.0,frank,0,[569]
+mean_smoothness,"['radius_error', 'texture_error']","['texture_error', 'radius_error', 'mean_smoothness']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_smoothness,"['radius_error', 'worst_radius']","['worst_radius', 'radius_error', 'mean_smoothness']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_smoothness,"['radius_error', 'worst_texture']","['worst_texture', 'radius_error', 'mean_smoothness']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_smoothness,"['texture_error', 'worst_radius']","['worst_radius', 'texture_error', 'mean_smoothness']",simplified,1,0.0352191745228323,0.0352191745228323,0.0043416045078818,frank,0,[569]
+mean_smoothness,"['texture_error', 'worst_texture']","['texture_error', 'worst_texture', 'mean_smoothness']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_smoothness,"['worst_radius', 'worst_texture']","['worst_texture', 'worst_radius', 'mean_smoothness']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_compactness,"['mean_radius', 'mean_texture']","['mean_radius', 'mean_texture', 'mean_compactness']",quantile_binned,2,0.0580715160869586,0.0673603173044421,0.0092888012174834,gaussian,0,"[284, 285]"
+mean_compactness,"['mean_radius', 'mean_smoothness']","['mean_radius', 'mean_smoothness', 'mean_compactness']",quantile_binned,2,0.1328580386450534,0.1386832531362079,0.0058252144911544,frank,0,"[284, 285]"
+mean_compactness,"['mean_concavity', 'mean_radius']","['mean_radius', 'mean_concavity', 'mean_compactness']",quantile_binned,6,0.0370225919046633,0.0632074185675062,0.0261848266628428,frank,0,"[95, 95, 94, 95, 95, 95]"
+mean_compactness,"['mean_concave_points', 'mean_radius']","['mean_radius', 'mean_concave_points', 'mean_compactness']",quantile_binned,4,0.1582210270932812,0.1757314497510201,0.0175104226577388,gaussian,0,"[141, 143, 142, 143]"
+mean_compactness,"['mean_radius', 'mean_symmetry']","['mean_symmetry', 'mean_radius', 'mean_compactness']",simplified,1,0.18208953380194,0.18208953380194,0.0031906952056564,gumbel,0,[569]
+mean_compactness,"['mean_fractal_dimension', 'mean_radius']","['mean_radius', 'mean_fractal_dimension', 'mean_compactness']",simplified,1,0.6691052532997022,0.6691052532997022,0.0024736841259237,gumbel,0,[569]
+mean_compactness,"['mean_radius', 'radius_error']","['mean_radius', 'radius_error', 'mean_compactness']",simplified,1,-0.0063848003353576,-0.0063848003353576,0.0036759857949167,gaussian,0,[569]
+mean_compactness,"['mean_radius', 'texture_error']","['texture_error', 'mean_radius', 'mean_compactness']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_compactness,"['mean_radius', 'worst_radius']","['mean_radius', 'worst_radius', 'mean_compactness']",simplified,1,0.0204111112834859,0.0204111112834859,0.0008252537936271,gumbel,90,[569]
+mean_compactness,"['mean_radius', 'worst_texture']","['mean_radius', 'worst_texture', 'mean_compactness']",simplified,1,0.0824649366713119,0.0824649366713119,0.0006321852665248,gumbel,0,[569]
+mean_compactness,"['mean_smoothness', 'mean_texture']","['mean_smoothness', 'mean_texture', 'mean_compactness']",quantile_binned,6,0.4240756306637877,0.4319037536973089,0.0078281230335211,gaussian,0,"[95, 95, 94, 94, 96, 95]"
+mean_compactness,"['mean_concavity', 'mean_texture']","['mean_texture', 'mean_concavity', 'mean_compactness']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_compactness,"['mean_concave_points', 'mean_texture']","['mean_texture', 'mean_concave_points', 'mean_compactness']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_compactness,"['mean_symmetry', 'mean_texture']","['mean_symmetry', 'mean_texture', 'mean_compactness']",simplified,1,0.2115181813401012,0.2115181813401012,0.0,gumbel,0,[569]
+mean_compactness,"['mean_fractal_dimension', 'mean_texture']","['mean_texture', 'mean_fractal_dimension', 'mean_compactness']",simplified,1,0.0648409943920948,0.0648409943920948,0.0,frank,0,[569]
+mean_compactness,"['mean_texture', 'radius_error']","['radius_error', 'mean_texture', 'mean_compactness']",simplified,1,0.1495926147152593,0.1495926147152593,0.0013830488571605,gumbel,0,[569]
+mean_compactness,"['mean_texture', 'texture_error']","['texture_error', 'mean_texture', 'mean_compactness']",simplified,1,0.0112284900218513,0.0112284900218513,0.0007693167885462,gumbel,270,[569]
+mean_compactness,"['mean_texture', 'worst_radius']","['mean_texture', 'worst_radius', 'mean_compactness']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_compactness,"['mean_texture', 'worst_texture']","['worst_texture', 'mean_texture', 'mean_compactness']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_compactness,"['mean_concavity', 'mean_smoothness']","['mean_concavity', 'mean_smoothness', 'mean_compactness']",simplified,1,0.5930885812371323,0.5930885812371323,0.0,frank,0,[569]
+mean_compactness,"['mean_concave_points', 'mean_smoothness']","['mean_concave_points', 'mean_smoothness', 'mean_compactness']",simplified,1,0.2960060463271303,0.2960060463271303,0.0,gaussian,0,[569]
+mean_compactness,"['mean_smoothness', 'mean_symmetry']","['mean_smoothness', 'mean_symmetry', 'mean_compactness']",simplified,1,0.2278244700215587,0.2278244700215587,0.0,gumbel,180,[569]
+mean_compactness,"['mean_fractal_dimension', 'mean_smoothness']","['mean_fractal_dimension', 'mean_smoothness', 'mean_compactness']",simplified,1,0.0189153067323547,0.0189153067323547,0.0010953242093122,clayton,180,[569]
+mean_compactness,"['mean_smoothness', 'radius_error']","['mean_smoothness', 'radius_error', 'mean_compactness']",simplified,1,0.2932425841709978,0.2932425841709978,0.0,gaussian,0,[569]
+mean_compactness,"['mean_smoothness', 'texture_error']","['texture_error', 'mean_smoothness', 'mean_compactness']",quantile_binned,5,0.0107165028851073,0.0230048111012806,0.0122883082161733,clayton,90,"[114, 114, 113, 113, 115]"
+mean_compactness,"['mean_smoothness', 'worst_radius']","['worst_radius', 'mean_smoothness', 'mean_compactness']",quantile_binned,2,0.1469329169322518,0.1578076566418144,0.0108747397095626,frank,0,"[284, 285]"
+mean_compactness,"['mean_smoothness', 'worst_texture']","['worst_texture', 'mean_smoothness', 'mean_compactness']",simplified,1,0.0422327672393929,0.0422327672393929,0.0004457620978986,clayton,0,[569]
+mean_compactness,"['mean_concave_points', 'mean_concavity']","['mean_concavity', 'mean_concave_points', 'mean_compactness']",quantile_binned,4,0.1614528613575878,0.1841187509637738,0.022665889606186,student,0,"[141, 143, 142, 143]"
+mean_compactness,"['mean_concavity', 'mean_symmetry']","['mean_concavity', 'mean_symmetry', 'mean_compactness']",quantile_binned,4,0.5815634938431219,0.6001890263002708,0.0186255324571489,gaussian,0,"[140, 143, 143, 143]"
+mean_compactness,"['mean_concavity', 'mean_fractal_dimension']","['mean_concavity', 'mean_fractal_dimension', 'mean_compactness']",simplified,1,0.7984137634759054,0.7984137634759054,0.0028711172570996,frank,0,[569]
+mean_compactness,"['mean_concavity', 'radius_error']","['mean_concavity', 'radius_error', 'mean_compactness']",simplified,1,0.5712753375959662,0.5712753375959662,0.0,student,0,[569]
+mean_compactness,"['mean_concavity', 'texture_error']","['mean_concavity', 'texture_error', 'mean_compactness']",simplified,1,0.7087041472004703,0.7087041472004703,0.000206618220598,frank,0,[569]
+mean_compactness,"['mean_concavity', 'worst_radius']","['worst_radius', 'mean_concavity', 'mean_compactness']",quantile_binned,6,0.0297607230799967,0.0468836882096009,0.0171229651296042,frank,0,"[95, 95, 94, 95, 95, 95]"
+mean_compactness,"['mean_concavity', 'worst_texture']","['worst_texture', 'mean_concavity', 'mean_compactness']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_compactness,"['mean_concave_points', 'mean_symmetry']","['mean_concave_points', 'mean_symmetry', 'mean_compactness']",quantile_binned,5,0.4646981636639625,0.4735292266860546,0.0088310630220921,gaussian,0,"[114, 112, 115, 114, 114]"
+mean_compactness,"['mean_concave_points', 'mean_fractal_dimension']","['mean_concave_points', 'mean_fractal_dimension', 'mean_compactness']",simplified,1,0.8097877707875019,0.8097877707875019,0.0013161946292528,gaussian,0,[569]
+mean_compactness,"['mean_concave_points', 'radius_error']","['mean_concave_points', 'radius_error', 'mean_compactness']",simplified,1,0.4366780394297153,0.4366780394297153,0.0,gaussian,0,[569]
+mean_compactness,"['mean_concave_points', 'texture_error']","['texture_error', 'mean_concave_points', 'mean_compactness']",simplified,1,-0.0002802477301652,-0.0002802477301652,0.0037902589267803,clayton,180,[569]
+mean_compactness,"['mean_concave_points', 'worst_radius']","['worst_radius', 'mean_concave_points', 'mean_compactness']",simplified,1,0.1304741686205918,0.1304741686205918,0.0041191977696937,gaussian,0,[569]
+mean_compactness,"['mean_concave_points', 'worst_texture']","['worst_texture', 'mean_concave_points', 'mean_compactness']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_compactness,"['mean_fractal_dimension', 'mean_symmetry']","['mean_fractal_dimension', 'mean_symmetry', 'mean_compactness']",simplified,1,0.0560247041443202,0.0560247041443202,0.0039621418055816,gaussian,0,[569]
+mean_compactness,"['mean_symmetry', 'radius_error']","['mean_symmetry', 'radius_error', 'mean_compactness']",quantile_binned,6,0.1133028663168358,0.1189638315257199,0.005660965208884,gumbel,0,"[95, 95, 94, 95, 94, 96]"
+mean_compactness,"['mean_symmetry', 'texture_error']","['mean_symmetry', 'texture_error', 'mean_compactness']",quantile_binned,2,0.1979050178712478,0.2063542237933973,0.0084492059221494,gumbel,0,"[283, 286]"
+mean_compactness,"['mean_symmetry', 'worst_radius']","['mean_symmetry', 'worst_radius', 'mean_compactness']",quantile_binned,3,0.1717803713637087,0.1895476124831124,0.0177672411194037,gumbel,0,"[190, 189, 190]"
+mean_compactness,"['mean_symmetry', 'worst_texture']","['worst_texture', 'mean_symmetry', 'mean_compactness']",simplified,1,0.037190393204639,0.037190393204639,0.0,frank,0,[569]
+mean_compactness,"['mean_fractal_dimension', 'radius_error']","['mean_fractal_dimension', 'radius_error', 'mean_compactness']",simplified,1,0.2603547540527536,0.2603547540527536,0.0044647756445839,gumbel,0,[569]
+mean_compactness,"['mean_fractal_dimension', 'texture_error']","['texture_error', 'mean_fractal_dimension', 'mean_compactness']",simplified,1,-0.0018936268188016,-0.0018936268188016,0.0,gumbel,270,[569]
+mean_compactness,"['mean_fractal_dimension', 'worst_radius']","['mean_fractal_dimension', 'worst_radius', 'mean_compactness']",quantile_binned,6,0.6826935069482339,0.7115981624042697,0.0289046554560357,gumbel,0,"[95, 95, 94, 95, 94, 96]"
+mean_compactness,"['mean_fractal_dimension', 'worst_texture']","['mean_fractal_dimension', 'worst_texture', 'mean_compactness']",simplified,1,0.1413677553486067,0.1413677553486067,0.0016229575205037,clayton,180,[569]
+mean_compactness,"['radius_error', 'texture_error']","['texture_error', 'radius_error', 'mean_compactness']",simplified,1,0.0069623903399501,0.0069623903399501,0.0018651998719396,gumbel,270,[569]
+mean_compactness,"['radius_error', 'worst_radius']","['worst_radius', 'radius_error', 'mean_compactness']",simplified,1,0.00249826491015,0.00249826491015,0.0,gaussian,0,[569]
+mean_compactness,"['radius_error', 'worst_texture']","['radius_error', 'worst_texture', 'mean_compactness']",simplified,1,0.1599231180489912,0.1599231180489912,0.0037536346195248,gumbel,0,[569]
+mean_compactness,"['texture_error', 'worst_radius']","['texture_error', 'worst_radius', 'mean_compactness']",quantile_binned,2,0.0027303995531509,0.0124997054533508,0.0097693059001998,gumbel,0,"[284, 285]"
+mean_compactness,"['texture_error', 'worst_texture']","['texture_error', 'worst_texture', 'mean_compactness']",simplified,1,0.011719106321865,0.011719106321865,0.0047111183450454,gumbel,270,[569]
+mean_compactness,"['worst_radius', 'worst_texture']","['worst_texture', 'worst_radius', 'mean_compactness']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_concavity,"['mean_radius', 'mean_texture']","['mean_texture', 'mean_radius', 'mean_concavity']",simplified,1,0.0248460105642162,0.0248460105642162,0.0013731550496421,frank,0,[569]
+mean_concavity,"['mean_radius', 'mean_smoothness']","['mean_smoothness', 'mean_radius', 'mean_concavity']",quantile_binned,2,0.2105883762354903,0.2758183913886506,0.0652300151531603,frank,0,"[284, 285]"
+mean_concavity,"['mean_compactness', 'mean_radius']","['mean_compactness', 'mean_radius', 'mean_concavity']",quantile_binned,6,0.6408603060134566,0.6821542844699473,0.0412939784564907,student,0,"[95, 94, 95, 95, 95, 95]"
+mean_concavity,"['mean_concave_points', 'mean_radius']","['mean_radius', 'mean_concave_points', 'mean_concavity']",quantile_binned,4,0.0454715604732433,0.0530313164620943,0.007559755988851,clayton,270,"[141, 143, 142, 143]"
+mean_concavity,"['mean_radius', 'mean_symmetry']","['mean_radius', 'mean_symmetry', 'mean_concavity']",quantile_binned,5,0.2183447570611663,0.2375780051814787,0.0192332481203123,gumbel,0,"[114, 112, 115, 114, 114]"
+mean_concavity,"['mean_fractal_dimension', 'mean_radius']","['mean_radius', 'mean_fractal_dimension', 'mean_concavity']",quantile_binned,4,0.5693488121565945,0.5867454336293244,0.0173966214727299,gumbel,0,"[142, 142, 141, 144]"
+mean_concavity,"['mean_radius', 'radius_error']","['mean_radius', 'radius_error', 'mean_concavity']",simplified,1,0.0565482790342521,0.0565482790342521,0.0,student,0,[569]
+mean_concavity,"['mean_radius', 'texture_error']","['texture_error', 'mean_radius', 'mean_concavity']",quantile_binned,6,0.0142962880647801,0.0307181274043831,0.0164218393396029,gaussian,0,"[95, 94, 95, 95, 95, 95]"
+mean_concavity,"['mean_radius', 'worst_radius']","['mean_radius', 'worst_radius', 'mean_concavity']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_concavity,"['mean_radius', 'worst_texture']","['mean_radius', 'worst_texture', 'mean_concavity']",simplified,1,0.1888469835892831,0.1888469835892831,0.0,gumbel,0,[569]
+mean_concavity,"['mean_smoothness', 'mean_texture']","['mean_texture', 'mean_smoothness', 'mean_concavity']",simplified,1,0.0432759738167211,0.0432759738167211,0.0017536116342437,frank,0,[569]
+mean_concavity,"['mean_compactness', 'mean_texture']","['mean_texture', 'mean_compactness', 'mean_concavity']",quantile_binned,4,-0.001697033897953,0.0171060728475055,0.0188031067454586,gaussian,0,"[142, 142, 141, 144]"
+mean_concavity,"['mean_concave_points', 'mean_texture']","['mean_concave_points', 'mean_texture', 'mean_concavity']",simplified,1,0.753360598827853,0.753360598827853,0.0,student,0,[569]
+mean_concavity,"['mean_symmetry', 'mean_texture']","['mean_symmetry', 'mean_texture', 'mean_concavity']",simplified,1,0.1450792583427605,0.1450792583427605,0.0,gumbel,0,[569]
+mean_concavity,"['mean_fractal_dimension', 'mean_texture']","['mean_fractal_dimension', 'mean_texture', 'mean_concavity']",simplified,1,0.0494408951898164,0.0494408951898164,0.0011311820140138,clayton,180,[569]
+mean_concavity,"['mean_texture', 'radius_error']","['radius_error', 'mean_texture', 'mean_concavity']",simplified,1,0.1895196945688485,0.1895196945688485,0.0021536090681429,clayton,180,[569]
+mean_concavity,"['mean_texture', 'texture_error']","['texture_error', 'mean_texture', 'mean_concavity']",simplified,1,0.0062941083597316,0.0062941083597316,0.0005572633974627,gumbel,270,[569]
+mean_concavity,"['mean_texture', 'worst_radius']","['worst_radius', 'mean_texture', 'mean_concavity']",simplified,1,0.2203055377095121,0.2203055377095121,0.0016964121224758,gumbel,0,[569]
+mean_concavity,"['mean_texture', 'worst_texture']","['worst_texture', 'mean_texture', 'mean_concavity']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_concavity,"['mean_compactness', 'mean_smoothness']","['mean_compactness', 'mean_smoothness', 'mean_concavity']",simplified,1,0.5930885812369836,0.5930885812369836,0.0,frank,0,[569]
+mean_concavity,"['mean_concave_points', 'mean_smoothness']","['mean_smoothness', 'mean_concave_points', 'mean_concavity']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_concavity,"['mean_smoothness', 'mean_symmetry']","['mean_smoothness', 'mean_symmetry', 'mean_concavity']",simplified,1,0.0996200223506848,0.0996200223506848,0.0049515557310623,gaussian,0,[569]
+mean_concavity,"['mean_fractal_dimension', 'mean_smoothness']","['mean_smoothness', 'mean_fractal_dimension', 'mean_concavity']",quantile_binned,2,0.189176314302661,0.2061642591238976,0.0169879448212366,gumbel,0,"[284, 285]"
+mean_concavity,"['mean_smoothness', 'radius_error']","['mean_smoothness', 'radius_error', 'mean_concavity']",quantile_binned,3,0.090870058019042,0.1028427685074994,0.0119727104884573,frank,0,"[190, 189, 190]"
+mean_concavity,"['mean_smoothness', 'texture_error']","['mean_smoothness', 'texture_error', 'mean_concavity']",simplified,1,0.1910570591402821,0.1910570591402821,0.0,gaussian,0,[569]
+mean_concavity,"['mean_smoothness', 'worst_radius']","['mean_smoothness', 'worst_radius', 'mean_concavity']",quantile_binned,4,0.1991719070094016,0.2473553019175652,0.0481833949081635,frank,0,"[141, 143, 142, 143]"
+mean_concavity,"['mean_smoothness', 'worst_texture']","['worst_texture', 'mean_smoothness', 'mean_concavity']",quantile_binned,2,0.042612574955997,0.0478672264688553,0.0052546515128582,frank,0,"[284, 285]"
+mean_concavity,"['mean_compactness', 'mean_concave_points']","['mean_compactness', 'mean_concave_points', 'mean_concavity']",quantile_binned,4,0.1614528613179685,0.1841187636943921,0.0226659023764236,student,0,"[141, 143, 142, 143]"
+mean_concavity,"['mean_compactness', 'mean_symmetry']","['mean_compactness', 'mean_symmetry', 'mean_concavity']",quantile_binned,4,0.5815634938431216,0.6001890263002948,0.0186255324571732,gaussian,0,"[140, 143, 143, 143]"
+mean_concavity,"['mean_compactness', 'mean_fractal_dimension']","['mean_fractal_dimension', 'mean_compactness', 'mean_concavity']",quantile_binned,6,0.1371303084513466,0.1500155160482769,0.0128852075969303,gumbel,90,"[95, 95, 94, 95, 95, 95]"
+mean_concavity,"['mean_compactness', 'radius_error']","['mean_compactness', 'radius_error', 'mean_concavity']",simplified,1,0.5712753375959662,0.5712753375959662,0.0,student,0,[569]
+mean_concavity,"['mean_compactness', 'texture_error']","['mean_compactness', 'texture_error', 'mean_concavity']",simplified,1,0.7087041471998765,0.7087041471998765,0.0002066182212767,frank,0,[569]
+mean_concavity,"['mean_compactness', 'worst_radius']","['worst_radius', 'mean_compactness', 'mean_concavity']",quantile_binned,3,0.1857983775062164,0.1970116420635856,0.0112132645573692,gumbel,0,"[190, 189, 190]"
+mean_concavity,"['mean_compactness', 'worst_texture']","['mean_compactness', 'worst_texture', 'mean_concavity']",simplified,1,0.6710243277214836,0.6710243277214836,0.0017082720830005,frank,0,[569]
+mean_concavity,"['mean_concave_points', 'mean_symmetry']","['mean_symmetry', 'mean_concave_points', 'mean_concavity']",quantile_binned,5,0.0281949012707616,0.0435341130196138,0.0153392117488521,student,0,"[114, 114, 113, 114, 114]"
+mean_concavity,"['mean_concave_points', 'mean_fractal_dimension']","['mean_concave_points', 'mean_fractal_dimension', 'mean_concavity']",quantile_binned,4,0.7672208645309059,0.7940826859134849,0.0268618213825789,student,0,"[142, 142, 141, 144]"
+mean_concavity,"['mean_concave_points', 'radius_error']","['mean_concave_points', 'radius_error', 'mean_concavity']",simplified,1,0.5713718918482985,0.5713718918482985,0.0,gumbel,180,[569]
+mean_concavity,"['mean_concave_points', 'texture_error']","['texture_error', 'mean_concave_points', 'mean_concavity']",quantile_binned,5,-0.0127817594013843,0.0020810636686116,0.0148628230699959,clayton,180,"[114, 114, 113, 114, 114]"
+mean_concavity,"['mean_concave_points', 'worst_radius']","['worst_radius', 'mean_concave_points', 'mean_concavity']",quantile_binned,4,0.043819877724108,0.0508751962701867,0.0070553185460786,clayton,270,"[141, 143, 142, 143]"
+mean_concavity,"['mean_concave_points', 'worst_texture']","['worst_texture', 'mean_concave_points', 'mean_concavity']",quantile_binned,5,0.0389991863453533,0.0608954929454387,0.0218963066000854,frank,0,"[114, 114, 113, 114, 114]"
+mean_concavity,"['mean_fractal_dimension', 'mean_symmetry']","['mean_fractal_dimension', 'mean_symmetry', 'mean_concavity']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_concavity,"['mean_symmetry', 'radius_error']","['radius_error', 'mean_symmetry', 'mean_concavity']",quantile_binned,5,0.1566608639271639,0.179195161571647,0.022534297644483,clayton,180,"[114, 112, 115, 114, 114]"
+mean_concavity,"['mean_symmetry', 'texture_error']","['mean_symmetry', 'texture_error', 'mean_concavity']",simplified,1,0.1205414375236189,0.1205414375236189,0.0,gumbel,0,[569]
+mean_concavity,"['mean_symmetry', 'worst_radius']","['worst_radius', 'mean_symmetry', 'mean_concavity']",quantile_binned,5,0.2497433563724259,0.2882891462336691,0.0385457898612432,gumbel,0,"[114, 112, 115, 114, 114]"
+mean_concavity,"['mean_symmetry', 'worst_texture']","['mean_symmetry', 'worst_texture', 'mean_concavity']",simplified,1,0.1350117140668925,0.1350117140668925,0.0,gumbel,0,[569]
+mean_concavity,"['mean_fractal_dimension', 'radius_error']","['radius_error', 'mean_fractal_dimension', 'mean_concavity']",quantile_binned,4,0.2695722404011504,0.2770446976675132,0.0074724572663628,clayton,180,"[142, 142, 141, 144]"
+mean_concavity,"['mean_fractal_dimension', 'texture_error']","['texture_error', 'mean_fractal_dimension', 'mean_concavity']",simplified,1,0.0014311916085266,0.0014311916085266,0.0,clayton,90,[569]
+mean_concavity,"['mean_fractal_dimension', 'worst_radius']","['mean_fractal_dimension', 'worst_radius', 'mean_concavity']",quantile_binned,6,0.3695641182483707,0.3758990990935562,0.0063349808451854,gaussian,0,"[95, 95, 94, 95, 94, 96]"
+mean_concavity,"['mean_fractal_dimension', 'worst_texture']","['mean_fractal_dimension', 'worst_texture', 'mean_concavity']",simplified,1,0.0441820590199041,0.0441820590199041,0.0,clayton,180,[569]
+mean_concavity,"['radius_error', 'texture_error']","['texture_error', 'radius_error', 'mean_concavity']",quantile_binned,4,0.0019819530031542,0.0113806948151324,0.0093987418119782,clayton,90,"[142, 142, 142, 143]"
+mean_concavity,"['radius_error', 'worst_radius']","['worst_radius', 'radius_error', 'mean_concavity']",simplified,1,0.0708970303086804,0.0708970303086804,0.0029693060134521,gumbel,180,[569]
+mean_concavity,"['radius_error', 'worst_texture']","['radius_error', 'worst_texture', 'mean_concavity']",quantile_binned,3,0.2080470033515474,0.2171309268030102,0.0090839234514627,clayton,180,"[190, 189, 190]"
+mean_concavity,"['texture_error', 'worst_radius']","['worst_radius', 'texture_error', 'mean_concavity']",quantile_binned,5,0.2756326342526647,0.3000500093523843,0.0244173750997196,gumbel,0,"[114, 114, 113, 114, 114]"
+mean_concavity,"['texture_error', 'worst_texture']","['texture_error', 'worst_texture', 'mean_concavity']",quantile_binned,6,0.0104789467925343,0.0179345507518949,0.0074556039593606,gumbel,270,"[95, 95, 94, 95, 95, 95]"
+mean_concavity,"['worst_radius', 'worst_texture']","['worst_radius', 'worst_texture', 'mean_concavity']",simplified,1,0.2259322210380443,0.2259322210380443,0.0,gumbel,0,[569]
+mean_concave_points,"['mean_radius', 'mean_texture']","['mean_texture', 'mean_radius', 'mean_concave_points']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_concave_points,"['mean_radius', 'mean_smoothness']","['mean_radius', 'mean_smoothness', 'mean_concave_points']",quantile_binned,2,0.5824126285566406,0.6053429064155836,0.022930277858943,gumbel,0,"[284, 285]"
+mean_concave_points,"['mean_compactness', 'mean_radius']","['mean_compactness', 'mean_radius', 'mean_concave_points']",quantile_binned,3,0.6237521540854252,0.6327251065861881,0.0089729525007629,gaussian,0,"[189, 190, 190]"
+mean_concave_points,"['mean_concavity', 'mean_radius']","['mean_concavity', 'mean_radius', 'mean_concave_points']",quantile_binned,3,0.5861339158416903,0.6051424927718538,0.0190085769301635,gumbel,180,"[189, 190, 190]"
+mean_concave_points,"['mean_radius', 'mean_symmetry']","['mean_radius', 'mean_symmetry', 'mean_concave_points']",quantile_binned,3,0.4707160325740518,0.4785670630649291,0.0078510304908772,gumbel,0,"[190, 189, 190]"
+mean_concave_points,"['mean_fractal_dimension', 'mean_radius']","['mean_fractal_dimension', 'mean_radius', 'mean_concave_points']",simplified,1,0.4918542094635996,0.4918542094635996,0.0013662853562713,gumbel,0,[569]
+mean_concave_points,"['mean_radius', 'radius_error']","['mean_radius', 'radius_error', 'mean_concave_points']",quantile_binned,3,0.1236994629794571,0.1341031714686383,0.0104037084891812,gaussian,0,"[190, 189, 190]"
+mean_concave_points,"['mean_radius', 'texture_error']","['texture_error', 'mean_radius', 'mean_concave_points']",quantile_binned,6,0.0206941138128043,0.0344046484162651,0.0137105346034608,gumbel,0,"[95, 94, 95, 95, 95, 95]"
+mean_concave_points,"['mean_radius', 'worst_radius']","['worst_radius', 'mean_radius', 'mean_concave_points']",quantile_binned,3,0.0449883520861562,0.0515652171544148,0.0065768650682585,gumbel,0,"[189, 190, 190]"
+mean_concave_points,"['mean_radius', 'worst_texture']","['worst_texture', 'mean_radius', 'mean_concave_points']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_concave_points,"['mean_smoothness', 'mean_texture']","['mean_smoothness', 'mean_texture', 'mean_concave_points']",quantile_binned,5,0.274177021090748,0.290315489766916,0.016138468676168,gaussian,0,"[114, 114, 113, 113, 115]"
+mean_concave_points,"['mean_compactness', 'mean_texture']","['mean_texture', 'mean_compactness', 'mean_concave_points']",simplified,1,-0.0065888122325482,-0.0065888122325482,0.0034514679913997,frank,0,[569]
+mean_concave_points,"['mean_concavity', 'mean_texture']","['mean_concavity', 'mean_texture', 'mean_concave_points']",simplified,1,0.7533605988019311,0.7533605988019311,0.0,student,0,[569]
+mean_concave_points,"['mean_symmetry', 'mean_texture']","['mean_symmetry', 'mean_texture', 'mean_concave_points']",simplified,1,0.1382509816797103,0.1382509816797103,0.0,gumbel,0,[569]
+mean_concave_points,"['mean_fractal_dimension', 'mean_texture']","['mean_fractal_dimension', 'mean_texture', 'mean_concave_points']",quantile_binned,3,0.0141525977281451,0.0194084764914463,0.0052558787633011,clayton,180,"[190, 188, 191]"
+mean_concave_points,"['mean_texture', 'radius_error']","['mean_texture', 'radius_error', 'mean_concave_points']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_concave_points,"['mean_texture', 'texture_error']","['texture_error', 'mean_texture', 'mean_concave_points']",simplified,1,0.002275182794424,0.002275182794424,0.0043173383087195,gumbel,270,[569]
+mean_concave_points,"['mean_texture', 'worst_radius']","['mean_texture', 'worst_radius', 'mean_concave_points']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_concave_points,"['mean_texture', 'worst_texture']","['worst_texture', 'mean_texture', 'mean_concave_points']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_concave_points,"['mean_compactness', 'mean_smoothness']","['mean_compactness', 'mean_smoothness', 'mean_concave_points']",simplified,1,0.2960060463272338,0.2960060463272338,0.0,gaussian,0,[569]
+mean_concave_points,"['mean_concavity', 'mean_smoothness']","['mean_smoothness', 'mean_concavity', 'mean_concave_points']",simplified,1,0.0928781622733771,0.0928781622733771,0.0036967120554531,clayton,0,[569]
+mean_concave_points,"['mean_smoothness', 'mean_symmetry']","['mean_smoothness', 'mean_symmetry', 'mean_concave_points']",quantile_binned,6,0.1657413392554318,0.1757522108302234,0.0100108715747915,gaussian,0,"[95, 95, 93, 96, 95, 95]"
+mean_concave_points,"['mean_fractal_dimension', 'mean_smoothness']","['mean_fractal_dimension', 'mean_smoothness', 'mean_concave_points']",simplified,1,0.0830352451481031,0.0830352451481031,0.0007468139741419,clayton,270,[569]
+mean_concave_points,"['mean_smoothness', 'radius_error']","['radius_error', 'mean_smoothness', 'mean_concave_points']",quantile_binned,4,0.2590418592885119,0.2670304039591459,0.007988544670634,clayton,180,"[142, 142, 141, 144]"
+mean_concave_points,"['mean_smoothness', 'texture_error']","['mean_smoothness', 'texture_error', 'mean_concave_points']",simplified,1,0.2908658518686119,0.2908658518686119,0.0,gaussian,0,[569]
+mean_concave_points,"['mean_smoothness', 'worst_radius']","['worst_radius', 'mean_smoothness', 'mean_concave_points']",quantile_binned,2,0.5898692652468619,0.6131695659656011,0.0233003007187392,gumbel,0,"[284, 285]"
+mean_concave_points,"['mean_smoothness', 'worst_texture']","['mean_smoothness', 'worst_texture', 'mean_concave_points']",simplified,1,0.2662071666983516,0.2662071666983516,0.0016284716985697,gaussian,0,[569]
+mean_concave_points,"['mean_compactness', 'mean_concavity']","['mean_compactness', 'mean_concavity', 'mean_concave_points']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_concave_points,"['mean_compactness', 'mean_symmetry']","['mean_compactness', 'mean_symmetry', 'mean_concave_points']",quantile_binned,5,0.4646981636639752,0.4735292266860774,0.0088310630221021,gaussian,0,"[114, 112, 115, 114, 114]"
+mean_concave_points,"['mean_compactness', 'mean_fractal_dimension']","['mean_fractal_dimension', 'mean_compactness', 'mean_concave_points']",quantile_binned,3,0.2383835271868242,0.2684072373635399,0.0300237101767156,gaussian,0,"[190, 189, 190]"
+mean_concave_points,"['mean_compactness', 'radius_error']","['mean_compactness', 'radius_error', 'mean_concave_points']",simplified,1,0.4366780394297178,0.4366780394297178,0.0,gaussian,0,[569]
+mean_concave_points,"['mean_compactness', 'texture_error']","['texture_error', 'mean_compactness', 'mean_concave_points']",simplified,1,-0.0020869101926658,-0.0020869101926658,0.0,clayton,90,[569]
+mean_concave_points,"['mean_compactness', 'worst_radius']","['mean_compactness', 'worst_radius', 'mean_concave_points']",quantile_binned,3,0.5594944244989815,0.5706886782534152,0.0111942537544337,gaussian,0,"[190, 189, 190]"
+mean_concave_points,"['mean_compactness', 'worst_texture']","['worst_texture', 'mean_compactness', 'mean_concave_points']",quantile_binned,5,-0.0098779032256281,-0.0039149720462507,0.0059629311793773,frank,0,"[114, 114, 113, 114, 114]"
+mean_concave_points,"['mean_concavity', 'mean_symmetry']","['mean_concavity', 'mean_symmetry', 'mean_concave_points']",quantile_binned,4,0.6597643088447436,0.6874366049801258,0.0276722961353822,student,0,"[140, 143, 143, 143]"
+mean_concave_points,"['mean_concavity', 'mean_fractal_dimension']","['mean_fractal_dimension', 'mean_concavity', 'mean_concave_points']",quantile_binned,2,-0.0028716051556744,0.0430376918262257,0.0459092969819002,gaussian,0,"[284, 285]"
+mean_concave_points,"['mean_concavity', 'radius_error']","['mean_concavity', 'radius_error', 'mean_concave_points']",simplified,1,0.5713718918482985,0.5713718918482985,0.0,gumbel,180,[569]
+mean_concave_points,"['mean_concavity', 'texture_error']","['texture_error', 'mean_concavity', 'mean_concave_points']",quantile_binned,3,-0.0186480154261194,-0.0089698077042794,0.0096782077218399,clayton,90,"[190, 189, 190]"
+mean_concave_points,"['mean_concavity', 'worst_radius']","['mean_concavity', 'worst_radius', 'mean_concave_points']",quantile_binned,3,0.5588414303675059,0.5781429783517691,0.0193015479842632,gumbel,180,"[190, 189, 190]"
+mean_concave_points,"['mean_concavity', 'worst_texture']","['mean_concavity', 'worst_texture', 'mean_concave_points']",simplified,1,0.7629878572186549,0.7629878572186549,0.0,student,0,[569]
+mean_concave_points,"['mean_fractal_dimension', 'mean_symmetry']","['mean_fractal_dimension', 'mean_symmetry', 'mean_concave_points']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_concave_points,"['mean_symmetry', 'radius_error']","['mean_symmetry', 'radius_error', 'mean_concave_points']",quantile_binned,4,0.0331979906799728,0.0457564714737892,0.0125584807938164,gumbel,0,"[142, 142, 142, 143]"
+mean_concave_points,"['mean_symmetry', 'texture_error']","['texture_error', 'mean_symmetry', 'mean_concave_points']",simplified,1,-0.0163199336390173,-0.0163199336390173,0.0023318152953338,clayton,90,[569]
+mean_concave_points,"['mean_symmetry', 'worst_radius']","['mean_symmetry', 'worst_radius', 'mean_concave_points']",simplified,1,0.1406220645881606,0.1406220645881606,0.0,gumbel,0,[569]
+mean_concave_points,"['mean_symmetry', 'worst_texture']","['mean_symmetry', 'worst_texture', 'mean_concave_points']",simplified,1,0.1308672663261934,0.1308672663261934,0.0,gumbel,0,[569]
+mean_concave_points,"['mean_fractal_dimension', 'radius_error']","['mean_fractal_dimension', 'radius_error', 'mean_concave_points']",simplified,1,0.0305002278649294,0.0305002278649294,0.0,clayton,180,[569]
+mean_concave_points,"['mean_fractal_dimension', 'texture_error']","['texture_error', 'mean_fractal_dimension', 'mean_concave_points']",simplified,1,-0.0046042765549579,-0.0046042765549579,0.0,clayton,90,[569]
+mean_concave_points,"['mean_fractal_dimension', 'worst_radius']","['mean_fractal_dimension', 'worst_radius', 'mean_concave_points']",quantile_binned,3,0.3821183187530436,0.3889715859321593,0.0068532671791157,gumbel,0,"[190, 189, 190]"
+mean_concave_points,"['mean_fractal_dimension', 'worst_texture']","['mean_fractal_dimension', 'worst_texture', 'mean_concave_points']",simplified,1,0.0119175195185343,0.0119175195185343,0.0,clayton,180,[569]
+mean_concave_points,"['radius_error', 'texture_error']","['texture_error', 'radius_error', 'mean_concave_points']",simplified,1,0.0127790664115903,0.0127790664115903,0.0,gumbel,270,[569]
+mean_concave_points,"['radius_error', 'worst_radius']","['radius_error', 'worst_radius', 'mean_concave_points']",quantile_binned,4,0.0582587583168468,0.0661831451521734,0.0079243868353266,gumbel,0,"[141, 143, 142, 143]"
+mean_concave_points,"['radius_error', 'worst_texture']","['worst_texture', 'radius_error', 'mean_concave_points']",quantile_binned,2,0.0092302548523729,0.0191429705037932,0.0099127156514203,frank,0,"[284, 285]"
+mean_concave_points,"['texture_error', 'worst_radius']","['texture_error', 'worst_radius', 'mean_concave_points']",quantile_binned,3,0.0294025349560654,0.0421845475221769,0.0127820125661115,clayton,180,"[190, 189, 190]"
+mean_concave_points,"['texture_error', 'worst_texture']","['texture_error', 'worst_texture', 'mean_concave_points']",quantile_binned,6,0.0017526153508369,0.0083642298718908,0.0066116145210538,gumbel,270,"[95, 95, 94, 95, 95, 95]"
+mean_concave_points,"['worst_radius', 'worst_texture']","['worst_texture', 'worst_radius', 'mean_concave_points']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_symmetry,"['mean_radius', 'mean_texture']","['mean_texture', 'mean_radius', 'mean_symmetry']",simplified,1,-0.0177731981039281,-0.0177731981039281,0.0,gumbel,180,[569]
+mean_symmetry,"['mean_radius', 'mean_smoothness']","['mean_radius', 'mean_smoothness', 'mean_symmetry']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_symmetry,"['mean_compactness', 'mean_radius']","['mean_radius', 'mean_compactness', 'mean_symmetry']",simplified,1,-0.0013450963179656,-0.0013450963179656,0.0,gaussian,0,[569]
+mean_symmetry,"['mean_concavity', 'mean_radius']","['mean_radius', 'mean_concavity', 'mean_symmetry']",quantile_binned,6,0.0213982817046126,0.0382170754820519,0.0168187937774392,frank,0,"[95, 95, 94, 95, 95, 95]"
+mean_symmetry,"['mean_concave_points', 'mean_radius']","['mean_concave_points', 'mean_radius', 'mean_symmetry']",simplified,1,0.1829832916253207,0.1829832916253207,0.0,gumbel,0,[569]
+mean_symmetry,"['mean_fractal_dimension', 'mean_radius']","['mean_fractal_dimension', 'mean_radius', 'mean_symmetry']",simplified,1,0.1684361812510187,0.1684361812510187,0.0,gumbel,0,[569]
+mean_symmetry,"['mean_radius', 'radius_error']","['mean_radius', 'radius_error', 'mean_symmetry']",quantile_binned,5,0.0190321964982644,0.02456805494916,0.0055358584508956,clayton,270,"[114, 114, 113, 114, 114]"
+mean_symmetry,"['mean_radius', 'texture_error']","['mean_radius', 'texture_error', 'mean_symmetry']",quantile_binned,3,0.007399368089709,0.0154638062754672,0.0080644381857581,clayton,180,"[190, 189, 190]"
+mean_symmetry,"['mean_radius', 'worst_radius']","['worst_radius', 'mean_radius', 'mean_symmetry']",simplified,1,0.0267652647038371,0.0267652647038371,0.0,clayton,180,[569]
+mean_symmetry,"['mean_radius', 'worst_texture']","['worst_texture', 'mean_radius', 'mean_symmetry']",simplified,1,-0.020096997637006,-0.020096997637006,0.0,gumbel,180,[569]
+mean_symmetry,"['mean_smoothness', 'mean_texture']","['mean_smoothness', 'mean_texture', 'mean_symmetry']",simplified,1,0.1761977112857326,0.1761977112857326,0.0,gaussian,0,[569]
+mean_symmetry,"['mean_compactness', 'mean_texture']","['mean_texture', 'mean_compactness', 'mean_symmetry']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_symmetry,"['mean_concavity', 'mean_texture']","['mean_texture', 'mean_concavity', 'mean_symmetry']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_symmetry,"['mean_concave_points', 'mean_texture']","['mean_texture', 'mean_concave_points', 'mean_symmetry']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_symmetry,"['mean_fractal_dimension', 'mean_texture']","['mean_fractal_dimension', 'mean_texture', 'mean_symmetry']",simplified,1,0.0769926576519023,0.0769926576519023,0.0033934859664015,gumbel,0,[569]
+mean_symmetry,"['mean_texture', 'radius_error']","['radius_error', 'mean_texture', 'mean_symmetry']",simplified,1,0.0836459974005832,0.0836459974005832,0.0,gumbel,0,[569]
+mean_symmetry,"['mean_texture', 'texture_error']","['mean_texture', 'texture_error', 'mean_symmetry']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_symmetry,"['mean_texture', 'worst_radius']","['mean_texture', 'worst_radius', 'mean_symmetry']",simplified,1,-0.0188490681061152,-0.0188490681061152,0.0,gumbel,180,[569]
+mean_symmetry,"['mean_texture', 'worst_texture']","['mean_texture', 'worst_texture', 'mean_symmetry']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_symmetry,"['mean_compactness', 'mean_smoothness']","['mean_smoothness', 'mean_compactness', 'mean_symmetry']",quantile_binned,3,0.0389345483546898,0.0443115088005936,0.0053769604459038,gumbel,180,"[190, 189, 190]"
+mean_symmetry,"['mean_concavity', 'mean_smoothness']","['mean_smoothness', 'mean_concavity', 'mean_symmetry']",quantile_binned,2,0.099222802107047,0.1059553556512014,0.0067325535441544,student,0,"[284, 285]"
+mean_symmetry,"['mean_concave_points', 'mean_smoothness']","['mean_smoothness', 'mean_concave_points', 'mean_symmetry']",quantile_binned,5,0.0986376584774628,0.1106480751723533,0.0120104166948905,gaussian,0,"[114, 114, 113, 114, 114]"
+mean_symmetry,"['mean_fractal_dimension', 'mean_smoothness']","['mean_fractal_dimension', 'mean_smoothness', 'mean_symmetry']",simplified,1,0.0111506313202246,0.0111506313202246,0.0,clayton,180,[569]
+mean_symmetry,"['mean_smoothness', 'radius_error']","['mean_smoothness', 'radius_error', 'mean_symmetry']",simplified,1,0.1339453840240889,0.1339453840240889,0.0033186887274864,frank,0,[569]
+mean_symmetry,"['mean_smoothness', 'texture_error']","['texture_error', 'mean_smoothness', 'mean_symmetry']",quantile_binned,5,-0.0338097189669093,-0.0243872933928156,0.0094224255740936,clayton,180,"[114, 114, 113, 113, 115]"
+mean_symmetry,"['mean_smoothness', 'worst_radius']","['worst_radius', 'mean_smoothness', 'mean_symmetry']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_symmetry,"['mean_smoothness', 'worst_texture']","['worst_texture', 'mean_smoothness', 'mean_symmetry']",simplified,1,-0.0271893103718294,-0.0271893103718294,0.0008639089751208,clayton,0,[569]
+mean_symmetry,"['mean_compactness', 'mean_concavity']","['mean_concavity', 'mean_compactness', 'mean_symmetry']",quantile_binned,5,-0.00321913129626,0.0024566604006069,0.005675791696867,gumbel,90,"[114, 114, 113, 114, 114]"
+mean_symmetry,"['mean_compactness', 'mean_concave_points']","['mean_concave_points', 'mean_compactness', 'mean_symmetry']",quantile_binned,5,0.0014185915144216,0.0070879143263094,0.0056693228118877,clayton,270,"[114, 114, 113, 114, 114]"
+mean_symmetry,"['mean_compactness', 'mean_fractal_dimension']","['mean_fractal_dimension', 'mean_compactness', 'mean_symmetry']",simplified,1,0.0166009383987104,0.0166009383987104,0.0001165284859224,clayton,180,[569]
+mean_symmetry,"['mean_compactness', 'radius_error']","['radius_error', 'mean_compactness', 'mean_symmetry']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_symmetry,"['mean_compactness', 'texture_error']","['texture_error', 'mean_compactness', 'mean_symmetry']",simplified,1,-0.0155378197839996,-0.0155378197839996,0.0043024596594124,clayton,180,[569]
+mean_symmetry,"['mean_compactness', 'worst_radius']","['worst_radius', 'mean_compactness', 'mean_symmetry']",simplified,1,-0.0197332552876712,-0.0197332552876712,0.0019059134861682,gaussian,0,[569]
+mean_symmetry,"['mean_compactness', 'worst_texture']","['worst_texture', 'mean_compactness', 'mean_symmetry']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_symmetry,"['mean_concave_points', 'mean_concavity']","['mean_concavity', 'mean_concave_points', 'mean_symmetry']",quantile_binned,5,0.0281949012707616,0.0435341130196138,0.0153392117488521,student,0,"[114, 114, 113, 114, 114]"
+mean_symmetry,"['mean_concavity', 'mean_fractal_dimension']","['mean_fractal_dimension', 'mean_concavity', 'mean_symmetry']",quantile_binned,4,0.045413039712624,0.0727586674593584,0.0273456277467344,gaussian,0,"[142, 142, 142, 143]"
+mean_symmetry,"['mean_concavity', 'radius_error']","['radius_error', 'mean_concavity', 'mean_symmetry']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_symmetry,"['mean_concavity', 'texture_error']","['texture_error', 'mean_concavity', 'mean_symmetry']",simplified,1,-0.0148203115937022,-0.0148203115937022,0.0,clayton,180,[569]
+mean_symmetry,"['mean_concavity', 'worst_radius']","['worst_radius', 'mean_concavity', 'mean_symmetry']",quantile_binned,4,0.0078697133909614,0.0137978291494518,0.0059281157584903,frank,0,"[142, 142, 142, 143]"
+mean_symmetry,"['mean_concavity', 'worst_texture']","['worst_texture', 'mean_concavity', 'mean_symmetry']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_symmetry,"['mean_concave_points', 'mean_fractal_dimension']","['mean_fractal_dimension', 'mean_concave_points', 'mean_symmetry']",quantile_binned,6,0.0851937448361525,0.1036120874035389,0.0184183425673864,gumbel,0,"[95, 95, 94, 95, 95, 95]"
+mean_symmetry,"['mean_concave_points', 'radius_error']","['radius_error', 'mean_concave_points', 'mean_symmetry']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_symmetry,"['mean_concave_points', 'texture_error']","['texture_error', 'mean_concave_points', 'mean_symmetry']",simplified,1,-0.0121547048955255,-0.0121547048955255,0.0048301225870163,clayton,180,[569]
+mean_symmetry,"['mean_concave_points', 'worst_radius']","['worst_radius', 'mean_concave_points', 'mean_symmetry']",quantile_binned,4,0.0341422855028977,0.0427202648367038,0.008577979333806,gaussian,0,"[141, 143, 142, 143]"
+mean_symmetry,"['mean_concave_points', 'worst_texture']","['worst_texture', 'mean_concave_points', 'mean_symmetry']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_symmetry,"['mean_fractal_dimension', 'radius_error']","['mean_fractal_dimension', 'radius_error', 'mean_symmetry']",simplified,1,0.1252175969588257,0.1252175969588257,0.0024108435017861,gumbel,0,[569]
+mean_symmetry,"['mean_fractal_dimension', 'texture_error']","['mean_fractal_dimension', 'texture_error', 'mean_symmetry']",simplified,1,0.0730834095053667,0.0730834095053667,0.0041846220706066,gumbel,0,[569]
+mean_symmetry,"['mean_fractal_dimension', 'worst_radius']","['mean_fractal_dimension', 'worst_radius', 'mean_symmetry']",simplified,1,0.180477264623784,0.180477264623784,0.0,gumbel,0,[569]
+mean_symmetry,"['mean_fractal_dimension', 'worst_texture']","['mean_fractal_dimension', 'worst_texture', 'mean_symmetry']",simplified,1,0.0755311419401235,0.0755311419401235,0.0,gumbel,0,[569]
+mean_symmetry,"['radius_error', 'texture_error']","['texture_error', 'radius_error', 'mean_symmetry']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_symmetry,"['radius_error', 'worst_radius']","['worst_radius', 'radius_error', 'mean_symmetry']",quantile_binned,5,0.0130477955014491,0.0203505306869925,0.0073027351855433,clayton,270,"[114, 114, 113, 114, 114]"
+mean_symmetry,"['radius_error', 'worst_texture']","['radius_error', 'worst_texture', 'mean_symmetry']",simplified,1,0.0805919355318394,0.0805919355318394,0.004998080398663,gumbel,0,[569]
+mean_symmetry,"['texture_error', 'worst_radius']","['worst_radius', 'texture_error', 'mean_symmetry']",quantile_binned,3,0.0033409164701791,0.0191339571711372,0.0157930407009581,frank,0,"[190, 189, 190]"
+mean_symmetry,"['texture_error', 'worst_texture']","['worst_texture', 'texture_error', 'mean_symmetry']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_symmetry,"['worst_radius', 'worst_texture']","['worst_texture', 'worst_radius', 'mean_symmetry']",simplified,1,-0.0200224299674114,-0.0200224299674114,0.0,gumbel,180,[569]
+mean_fractal_dimension,"['mean_radius', 'mean_texture']","['mean_radius', 'mean_texture', 'mean_fractal_dimension']",simplified,1,0.1289030232863567,0.1289030232863567,0.0021487710694152,gaussian,0,[569]
+mean_fractal_dimension,"['mean_radius', 'mean_smoothness']","['mean_radius', 'mean_smoothness', 'mean_fractal_dimension']",quantile_binned,4,0.333625124339565,0.3572367842218036,0.0236116598822386,gaussian,0,"[142, 142, 141, 144]"
+mean_fractal_dimension,"['mean_compactness', 'mean_radius']","['mean_radius', 'mean_compactness', 'mean_fractal_dimension']",quantile_binned,6,0.763198795178898,0.7754808673744618,0.0122820721955637,gaussian,0,"[95, 95, 94, 95, 95, 95]"
+mean_fractal_dimension,"['mean_concavity', 'mean_radius']","['mean_radius', 'mean_concavity', 'mean_fractal_dimension']",quantile_binned,6,0.4953470801595295,0.5080146698482108,0.0126675896886812,gaussian,0,"[95, 95, 94, 95, 95, 95]"
+mean_fractal_dimension,"['mean_concave_points', 'mean_radius']","['mean_concave_points', 'mean_radius', 'mean_fractal_dimension']",simplified,1,0.4918542094637635,0.4918542094637635,0.0013662853561086,gumbel,0,[569]
+mean_fractal_dimension,"['mean_radius', 'mean_symmetry']","['mean_radius', 'mean_symmetry', 'mean_fractal_dimension']",simplified,1,0.2177412874364957,0.2177412874364957,0.0016940304818328,gaussian,0,[569]
+mean_fractal_dimension,"['mean_radius', 'radius_error']","['radius_error', 'mean_radius', 'mean_fractal_dimension']",quantile_binned,3,0.0348305672644119,0.0400885923192767,0.0052580250548648,clayton,180,"[189, 190, 190]"
+mean_fractal_dimension,"['mean_radius', 'texture_error']","['mean_radius', 'texture_error', 'mean_fractal_dimension']",simplified,1,0.1259646206296316,0.1259646206296316,0.0039467380166597,gaussian,0,[569]
+mean_fractal_dimension,"['mean_radius', 'worst_radius']","['worst_radius', 'mean_radius', 'mean_fractal_dimension']",quantile_binned,3,0.021227475895642,0.0322378037545223,0.0110103278588802,frank,0,"[189, 190, 190]"
+mean_fractal_dimension,"['mean_radius', 'worst_texture']","['mean_radius', 'worst_texture', 'mean_fractal_dimension']",simplified,1,0.128899168093054,0.128899168093054,0.0,gaussian,0,[569]
+mean_fractal_dimension,"['mean_smoothness', 'mean_texture']","['mean_smoothness', 'mean_texture', 'mean_fractal_dimension']",simplified,1,0.1638297431196441,0.1638297431196441,0.0022898704281119,frank,0,[569]
+mean_fractal_dimension,"['mean_compactness', 'mean_texture']","['mean_compactness', 'mean_texture', 'mean_fractal_dimension']",simplified,1,0.1478626485826859,0.1478626485826859,0.0017504100816909,clayton,180,[569]
+mean_fractal_dimension,"['mean_concavity', 'mean_texture']","['mean_concavity', 'mean_texture', 'mean_fractal_dimension']",simplified,1,0.0494408951897669,0.0494408951897669,0.0011311820141133,clayton,180,[569]
+mean_fractal_dimension,"['mean_concave_points', 'mean_texture']","['mean_concave_points', 'mean_texture', 'mean_fractal_dimension']",quantile_binned,3,0.0141525977280994,0.0194084764915859,0.0052558787634865,clayton,180,"[190, 188, 191]"
+mean_fractal_dimension,"['mean_symmetry', 'mean_texture']","['mean_symmetry', 'mean_texture', 'mean_fractal_dimension']",simplified,1,0.0769926576519023,0.0769926576519023,0.0033934859664015,gumbel,0,[569]
+mean_fractal_dimension,"['mean_texture', 'radius_error']","['mean_texture', 'radius_error', 'mean_fractal_dimension']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_fractal_dimension,"['mean_texture', 'texture_error']","['texture_error', 'mean_texture', 'mean_fractal_dimension']",simplified,1,0.0382984081169971,0.0382984081169971,0.0,gaussian,0,[569]
+mean_fractal_dimension,"['mean_texture', 'worst_radius']","['worst_radius', 'mean_texture', 'mean_fractal_dimension']",simplified,1,0.1017248091283556,0.1017248091283556,0.0002905623141196,gaussian,0,[569]
+mean_fractal_dimension,"['mean_texture', 'worst_texture']","['mean_texture', 'worst_texture', 'mean_fractal_dimension']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_fractal_dimension,"['mean_compactness', 'mean_smoothness']","['mean_compactness', 'mean_smoothness', 'mean_fractal_dimension']",simplified,1,0.0189153067322268,0.0189153067322268,0.0010953242092138,clayton,180,[569]
+mean_fractal_dimension,"['mean_concavity', 'mean_smoothness']","['mean_smoothness', 'mean_concavity', 'mean_fractal_dimension']",simplified,1,0.1460862493727994,0.1460862493727994,0.003830611292529,gumbel,0,[569]
+mean_fractal_dimension,"['mean_concave_points', 'mean_smoothness']","['mean_concave_points', 'mean_smoothness', 'mean_fractal_dimension']",simplified,1,0.0830352451482835,0.0830352451482835,0.0007468139740657,clayton,90,[569]
+mean_fractal_dimension,"['mean_smoothness', 'mean_symmetry']","['mean_symmetry', 'mean_smoothness', 'mean_fractal_dimension']",simplified,1,0.011150631320309,0.011150631320309,0.0,clayton,180,[569]
+mean_fractal_dimension,"['mean_smoothness', 'radius_error']","['radius_error', 'mean_smoothness', 'mean_fractal_dimension']",simplified,1,0.1087047189885793,0.1087047189885793,0.0014588649055075,clayton,90,[569]
+mean_fractal_dimension,"['mean_smoothness', 'texture_error']","['mean_smoothness', 'texture_error', 'mean_fractal_dimension']",quantile_binned,5,0.1366894420904974,0.1580292065315197,0.0213397644410222,gumbel,0,"[114, 114, 113, 114, 114]"
+mean_fractal_dimension,"['mean_smoothness', 'worst_radius']","['worst_radius', 'mean_smoothness', 'mean_fractal_dimension']",quantile_binned,4,0.2884606100328484,0.3230143220565497,0.0345537120237012,gaussian,0,"[142, 142, 141, 144]"
+mean_fractal_dimension,"['mean_smoothness', 'worst_texture']","['mean_smoothness', 'worst_texture', 'mean_fractal_dimension']",simplified,1,0.1638297431196441,0.1638297431196441,0.0010697927863597,frank,0,[569]
+mean_fractal_dimension,"['mean_compactness', 'mean_concavity']","['mean_concavity', 'mean_compactness', 'mean_fractal_dimension']",quantile_binned,6,0.1371303084487938,0.1500155160439366,0.0128852075951428,gumbel,270,"[95, 95, 94, 95, 95, 95]"
+mean_fractal_dimension,"['mean_compactness', 'mean_concave_points']","['mean_concave_points', 'mean_compactness', 'mean_fractal_dimension']",quantile_binned,3,0.2383835271868577,0.2684072373636383,0.0300237101767806,gaussian,0,"[190, 189, 190]"
+mean_fractal_dimension,"['mean_compactness', 'mean_symmetry']","['mean_symmetry', 'mean_compactness', 'mean_fractal_dimension']",simplified,1,0.0166009383987104,0.0166009383987104,0.0001165284859224,clayton,180,[569]
+mean_fractal_dimension,"['mean_compactness', 'radius_error']","['mean_compactness', 'radius_error', 'mean_fractal_dimension']",simplified,1,0.2603547540527536,0.2603547540527536,0.0044647756445839,gumbel,0,[569]
+mean_fractal_dimension,"['mean_compactness', 'texture_error']","['mean_compactness', 'texture_error', 'mean_fractal_dimension']",simplified,1,0.1253957957336492,0.1253957957336492,0.0001024692599937,gumbel,0,[569]
+mean_fractal_dimension,"['mean_compactness', 'worst_radius']","['mean_compactness', 'worst_radius', 'mean_fractal_dimension']",quantile_binned,6,0.6826935069484062,0.711598162404411,0.0289046554560047,gumbel,0,"[95, 95, 94, 95, 94, 96]"
+mean_fractal_dimension,"['mean_compactness', 'worst_texture']","['worst_texture', 'mean_compactness', 'mean_fractal_dimension']",simplified,1,0.0107251881335584,0.0107251881335584,0.0026237338776183,clayton,270,[569]
+mean_fractal_dimension,"['mean_concave_points', 'mean_concavity']","['mean_concave_points', 'mean_concavity', 'mean_fractal_dimension']",quantile_binned,2,-0.0028716051559525,0.0430376918240062,0.0459092969799588,gaussian,0,"[284, 285]"
+mean_fractal_dimension,"['mean_concavity', 'mean_symmetry']","['mean_symmetry', 'mean_concavity', 'mean_fractal_dimension']",quantile_binned,4,0.0454130397126378,0.0727586674594119,0.027345627746774,gaussian,0,"[142, 142, 142, 143]"
+mean_fractal_dimension,"['mean_concavity', 'radius_error']","['mean_concavity', 'radius_error', 'mean_fractal_dimension']",quantile_binned,5,0.0930776892545556,0.1004276847875717,0.0073499955330161,clayton,180,"[114, 114, 113, 114, 114]"
+mean_fractal_dimension,"['mean_concavity', 'texture_error']","['mean_concavity', 'texture_error', 'mean_fractal_dimension']",quantile_binned,5,0.0351168345998658,0.043424661643486,0.0083078270436202,clayton,180,"[114, 114, 113, 114, 114]"
+mean_fractal_dimension,"['mean_concavity', 'worst_radius']","['worst_radius', 'mean_concavity', 'mean_fractal_dimension']",simplified,1,0.4473954041900845,0.4473954041900845,0.0015123155816671,gaussian,0,[569]
+mean_fractal_dimension,"['mean_concavity', 'worst_texture']","['worst_texture', 'mean_concavity', 'mean_fractal_dimension']",simplified,1,0.007423696945356,0.007423696945356,0.0017234834055052,clayton,270,[569]
+mean_fractal_dimension,"['mean_concave_points', 'mean_symmetry']","['mean_symmetry', 'mean_concave_points', 'mean_fractal_dimension']",quantile_binned,6,0.0851937448361525,0.1036120874035389,0.0184183425673864,gumbel,0,"[95, 95, 94, 95, 95, 95]"
+mean_fractal_dimension,"['mean_concave_points', 'radius_error']","['radius_error', 'mean_concave_points', 'mean_fractal_dimension']",quantile_binned,2,0.0299743780742179,0.0368327857125467,0.0068584076383287,clayton,90,"[284, 285]"
+mean_fractal_dimension,"['mean_concave_points', 'texture_error']","['texture_error', 'mean_concave_points', 'mean_fractal_dimension']",simplified,1,0.0106172726652094,0.0106172726652094,0.0013404095531012,clayton,180,[569]
+mean_fractal_dimension,"['mean_concave_points', 'worst_radius']","['worst_radius', 'mean_concave_points', 'mean_fractal_dimension']",simplified,1,0.4977844984963965,0.4977844984963965,0.0,gumbel,90,[569]
+mean_fractal_dimension,"['mean_concave_points', 'worst_texture']","['mean_concave_points', 'worst_texture', 'mean_fractal_dimension']",simplified,1,0.0119175195185506,0.0119175195185506,0.0,clayton,180,[569]
+mean_fractal_dimension,"['mean_symmetry', 'radius_error']","['mean_symmetry', 'radius_error', 'mean_fractal_dimension']",simplified,1,0.1252175969587704,0.1252175969587704,0.0024108435017845,gumbel,0,[569]
+mean_fractal_dimension,"['mean_symmetry', 'texture_error']","['mean_symmetry', 'texture_error', 'mean_fractal_dimension']",simplified,1,0.0730834095053667,0.0730834095053667,0.0041846220706066,gumbel,0,[569]
+mean_fractal_dimension,"['mean_symmetry', 'worst_radius']","['mean_symmetry', 'worst_radius', 'mean_fractal_dimension']",simplified,1,0.1804772646202991,0.1804772646202991,0.0,gumbel,0,[569]
+mean_fractal_dimension,"['mean_symmetry', 'worst_texture']","['mean_symmetry', 'worst_texture', 'mean_fractal_dimension']",simplified,1,0.0755311419401235,0.0755311419401235,0.0,gumbel,0,[569]
+mean_fractal_dimension,"['radius_error', 'texture_error']","['texture_error', 'radius_error', 'mean_fractal_dimension']",simplified,1,0.0250609792423965,0.0250609792423965,0.0008984714655874,gaussian,0,[569]
+mean_fractal_dimension,"['radius_error', 'worst_radius']","['radius_error', 'worst_radius', 'mean_fractal_dimension']",simplified,1,0.0251151967433706,0.0251151967433706,6.566552418971541e-05,clayton,180,[569]
+mean_fractal_dimension,"['radius_error', 'worst_texture']","['radius_error', 'worst_texture', 'mean_fractal_dimension']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+mean_fractal_dimension,"['texture_error', 'worst_radius']","['worst_radius', 'texture_error', 'mean_fractal_dimension']",quantile_binned,5,0.0979418788581435,0.1040205460235475,0.006078667165404,gaussian,0,"[114, 114, 113, 114, 114]"
+mean_fractal_dimension,"['texture_error', 'worst_texture']","['texture_error', 'worst_texture', 'mean_fractal_dimension']",simplified,1,0.0407958074168248,0.0407958074168248,0.004509626649743,gaussian,0,[569]
+mean_fractal_dimension,"['worst_radius', 'worst_texture']","['worst_radius', 'worst_texture', 'mean_fractal_dimension']",simplified,1,0.1040494744712517,0.1040494744712517,0.0,gaussian,0,[569]
+radius_error,"['mean_radius', 'mean_texture']","['mean_texture', 'mean_radius', 'radius_error']",quantile_binned,6,-0.0182481646895425,-0.0103486519107553,0.0078995127787871,clayton,0,"[95, 94, 95, 95, 95, 95]"
+radius_error,"['mean_radius', 'mean_smoothness']","['mean_smoothness', 'mean_radius', 'radius_error']",quantile_binned,2,0.0936898028257478,0.1071243808807703,0.0134345780550225,gaussian,0,"[284, 285]"
+radius_error,"['mean_compactness', 'mean_radius']","['mean_compactness', 'mean_radius', 'radius_error']",quantile_binned,6,0.0549116378735951,0.0711846067977329,0.0162729689241377,gumbel,0,"[95, 94, 95, 95, 95, 95]"
+radius_error,"['mean_concavity', 'mean_radius']","['mean_concavity', 'mean_radius', 'radius_error']",quantile_binned,2,0.0391467322902527,0.0516303310830358,0.0124835987927831,student,0,"[284, 285]"
+radius_error,"['mean_concave_points', 'mean_radius']","['mean_radius', 'mean_concave_points', 'radius_error']",quantile_binned,2,0.0119155758577071,0.0307686337660551,0.018853057908348,gumbel,0,"[284, 285]"
+radius_error,"['mean_radius', 'mean_symmetry']","['mean_symmetry', 'mean_radius', 'radius_error']",quantile_binned,6,0.0639413857123372,0.0693983415735472,0.0054569558612099,gumbel,0,"[95, 94, 95, 95, 95, 95]"
+radius_error,"['mean_fractal_dimension', 'mean_radius']","['mean_fractal_dimension', 'mean_radius', 'radius_error']",quantile_binned,3,0.0348305672648054,0.04008859231936,0.0052580250545546,clayton,180,"[189, 190, 190]"
+radius_error,"['mean_radius', 'texture_error']","['texture_error', 'mean_radius', 'radius_error']",simplified,1,0.0793526478885722,0.0793526478885722,0.0026409701548639,gumbel,180,[569]
+radius_error,"['mean_radius', 'worst_radius']","['worst_radius', 'mean_radius', 'radius_error']",quantile_binned,5,0.1006723743830524,0.1213183754595557,0.0206460010765032,gumbel,180,"[114, 114, 113, 114, 114]"
+radius_error,"['mean_radius', 'worst_texture']","['worst_texture', 'mean_radius', 'radius_error']",quantile_binned,6,-0.0117870451180286,-0.0054521696888279,0.0063348754292007,clayton,0,"[95, 94, 95, 95, 95, 95]"
+radius_error,"['mean_smoothness', 'mean_texture']","['mean_smoothness', 'mean_texture', 'radius_error']",simplified,1,0.1104029552101753,0.1104029552101753,0.0039289937773724,gaussian,0,[569]
+radius_error,"['mean_compactness', 'mean_texture']","['mean_texture', 'mean_compactness', 'radius_error']",quantile_binned,4,-0.0025907054215138,0.0078131639570977,0.0104038693786115,frank,0,"[142, 142, 141, 144]"
+radius_error,"['mean_concavity', 'mean_texture']","['mean_concavity', 'mean_texture', 'radius_error']",simplified,1,0.1895196945690005,0.1895196945690005,0.0021536090680273,clayton,180,[569]
+radius_error,"['mean_concave_points', 'mean_texture']","['mean_concave_points', 'mean_texture', 'radius_error']",quantile_binned,6,0.3125258900630711,0.3223804288297597,0.0098545387666886,clayton,180,"[95, 95, 94, 94, 96, 95]"
+radius_error,"['mean_symmetry', 'mean_texture']","['mean_symmetry', 'mean_texture', 'radius_error']",simplified,1,0.0836459974005427,0.0836459974005427,0.0,gumbel,0,[569]
+radius_error,"['mean_fractal_dimension', 'mean_texture']","['mean_fractal_dimension', 'mean_texture', 'radius_error']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+radius_error,"['mean_texture', 'texture_error']","['texture_error', 'mean_texture', 'radius_error']",quantile_binned,4,0.0142010221183109,0.0214961624857636,0.0072951403674526,gaussian,0,"[141, 143, 142, 143]"
+radius_error,"['mean_texture', 'worst_radius']","['mean_texture', 'worst_radius', 'radius_error']",quantile_binned,6,-0.0145415181640438,-0.0042579433051361,0.0102835748589077,clayton,0,"[95, 95, 94, 95, 94, 96]"
+radius_error,"['mean_texture', 'worst_texture']","['worst_texture', 'mean_texture', 'radius_error']",simplified,1,-0.0062780079126266,-0.0062780079126266,0.0006666333863875,clayton,270,[569]
+radius_error,"['mean_compactness', 'mean_smoothness']","['mean_smoothness', 'mean_compactness', 'radius_error']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+radius_error,"['mean_concavity', 'mean_smoothness']","['mean_smoothness', 'mean_concavity', 'radius_error']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+radius_error,"['mean_concave_points', 'mean_smoothness']","['mean_concave_points', 'mean_smoothness', 'radius_error']",quantile_binned,4,0.2590418592885339,0.2670304039591754,0.0079885446706414,clayton,180,"[142, 142, 141, 144]"
+radius_error,"['mean_smoothness', 'mean_symmetry']","['mean_smoothness', 'mean_symmetry', 'radius_error']",quantile_binned,6,0.0515469514573282,0.0599877358650167,0.0084407844076884,gaussian,0,"[95, 95, 93, 96, 95, 95]"
+radius_error,"['mean_fractal_dimension', 'mean_smoothness']","['mean_fractal_dimension', 'mean_smoothness', 'radius_error']",simplified,1,0.1087047189884787,0.1087047189884787,0.0014588649062722,clayton,270,[569]
+radius_error,"['mean_smoothness', 'texture_error']","['texture_error', 'mean_smoothness', 'radius_error']",simplified,1,0.0105043550326811,0.0105043550326811,0.0033174662659323,gumbel,180,[569]
+radius_error,"['mean_smoothness', 'worst_radius']","['mean_smoothness', 'worst_radius', 'radius_error']",quantile_binned,4,0.079084714937137,0.091139260125733,0.012054545188596,gaussian,0,"[141, 143, 142, 143]"
+radius_error,"['mean_smoothness', 'worst_texture']","['worst_texture', 'mean_smoothness', 'radius_error']",quantile_binned,4,0.0006590812551851,0.0091068710149334,0.0084477897597482,frank,0,"[142, 142, 141, 144]"
+radius_error,"['mean_compactness', 'mean_concavity']","['mean_concavity', 'mean_compactness', 'radius_error']",quantile_binned,3,0.0617169292451402,0.1005038732786361,0.0387869440334958,clayton,180,"[190, 189, 190]"
+radius_error,"['mean_compactness', 'mean_concave_points']","['mean_concave_points', 'mean_compactness', 'radius_error']",quantile_binned,3,0.1908479853673977,0.2077077320536484,0.0168597466862506,clayton,180,"[190, 189, 190]"
+radius_error,"['mean_compactness', 'mean_symmetry']","['mean_symmetry', 'mean_compactness', 'radius_error']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+radius_error,"['mean_compactness', 'mean_fractal_dimension']","['mean_fractal_dimension', 'mean_compactness', 'radius_error']",quantile_binned,3,0.1234412283398183,0.1446955070316287,0.0212542786918104,clayton,270,"[190, 189, 190]"
+radius_error,"['mean_compactness', 'texture_error']","['texture_error', 'mean_compactness', 'radius_error']",quantile_binned,6,0.0156126188048931,0.0247512370601973,0.0091386182553041,gumbel,180,"[95, 95, 94, 95, 95, 95]"
+radius_error,"['mean_compactness', 'worst_radius']","['mean_compactness', 'worst_radius', 'radius_error']",simplified,1,0.0272315959736552,0.0272315959736552,0.0015175179661914,gumbel,0,[569]
+radius_error,"['mean_compactness', 'worst_texture']","['mean_compactness', 'worst_texture', 'radius_error']",simplified,1,0.1599231180517217,0.1599231180517217,0.0037536346201342,gumbel,0,[569]
+radius_error,"['mean_concave_points', 'mean_concavity']","['mean_concavity', 'mean_concave_points', 'radius_error']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+radius_error,"['mean_concavity', 'mean_symmetry']","['mean_concavity', 'mean_symmetry', 'radius_error']",quantile_binned,5,0.1566608639270808,0.1791951615717636,0.0225342976446828,clayton,180,"[114, 112, 115, 114, 114]"
+radius_error,"['mean_concavity', 'mean_fractal_dimension']","['mean_concavity', 'mean_fractal_dimension', 'radius_error']",quantile_binned,4,0.2695722404011504,0.2770446976675132,0.0074724572663628,clayton,180,"[142, 142, 141, 144]"
+radius_error,"['mean_concavity', 'texture_error']","['texture_error', 'mean_concavity', 'radius_error']",quantile_binned,5,0.0145880519580702,0.045254647180847,0.0306665952227768,gaussian,0,"[114, 114, 113, 114, 114]"
+radius_error,"['mean_concavity', 'worst_radius']","['mean_concavity', 'worst_radius', 'radius_error']",quantile_binned,4,0.0116981103179194,0.0235979384539337,0.0118998281360143,gumbel,0,"[141, 143, 142, 143]"
+radius_error,"['mean_concavity', 'worst_texture']","['mean_concavity', 'worst_texture', 'radius_error']",quantile_binned,3,0.2080470033513745,0.2171309268033439,0.0090839234519694,clayton,180,"[190, 189, 190]"
+radius_error,"['mean_concave_points', 'mean_symmetry']","['mean_symmetry', 'mean_concave_points', 'radius_error']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+radius_error,"['mean_concave_points', 'mean_fractal_dimension']","['mean_fractal_dimension', 'mean_concave_points', 'radius_error']",quantile_binned,2,0.0299743780742179,0.0368327857125467,0.0068584076383287,clayton,270,"[284, 285]"
+radius_error,"['mean_concave_points', 'texture_error']","['texture_error', 'mean_concave_points', 'radius_error']",quantile_binned,4,0.0358015993540883,0.0607453530878561,0.0249437537337677,gaussian,0,"[141, 143, 142, 143]"
+radius_error,"['mean_concave_points', 'worst_radius']","['mean_concave_points', 'worst_radius', 'radius_error']",quantile_binned,4,0.0582587583168468,0.0661831451521734,0.0079243868353266,gumbel,0,"[141, 143, 142, 143]"
+radius_error,"['mean_concave_points', 'worst_texture']","['worst_texture', 'mean_concave_points', 'radius_error']",simplified,1,-0.0134422081379709,-0.0134422081379709,0.0005429848352553,clayton,0,[569]
+radius_error,"['mean_fractal_dimension', 'mean_symmetry']","['mean_fractal_dimension', 'mean_symmetry', 'radius_error']",simplified,1,0.0406701317795042,0.0406701317795042,0.0035295225805881,clayton,270,[569]
+radius_error,"['mean_symmetry', 'texture_error']","['texture_error', 'mean_symmetry', 'radius_error']",quantile_binned,3,0.038571272074003,0.0455385588361987,0.0069672867621957,gumbel,180,"[190, 189, 190]"
+radius_error,"['mean_symmetry', 'worst_radius']","['mean_symmetry', 'worst_radius', 'radius_error']",simplified,1,0.0478029205333711,0.0478029205333711,0.0,gumbel,0,[569]
+radius_error,"['mean_symmetry', 'worst_texture']","['mean_symmetry', 'worst_texture', 'radius_error']",simplified,1,0.0805919355318257,0.0805919355318257,0.0049980803986238,gumbel,0,[569]
+radius_error,"['mean_fractal_dimension', 'texture_error']","['texture_error', 'mean_fractal_dimension', 'radius_error']",simplified,1,0.0368934826207695,0.0368934826207695,0.0,gumbel,180,[569]
+radius_error,"['mean_fractal_dimension', 'worst_radius']","['mean_fractal_dimension', 'worst_radius', 'radius_error']",simplified,1,0.0251151967435643,0.0251151967435643,6.566552354139027e-05,clayton,180,[569]
+radius_error,"['mean_fractal_dimension', 'worst_texture']","['mean_fractal_dimension', 'worst_texture', 'radius_error']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+radius_error,"['texture_error', 'worst_radius']","['texture_error', 'worst_radius', 'radius_error']",simplified,1,0.0964413109404386,0.0964413109404386,0.0014778815564419,gaussian,0,[569]
+radius_error,"['texture_error', 'worst_texture']","['texture_error', 'worst_texture', 'radius_error']",simplified,1,0.0200887971771063,0.0200887971771063,0.0025798742935956,gaussian,0,[569]
+radius_error,"['worst_radius', 'worst_texture']","['worst_texture', 'worst_radius', 'radius_error']",quantile_binned,4,-0.0097146045446293,-0.0012654429818841,0.0084491615627451,clayton,0,"[141, 143, 142, 143]"
+texture_error,"['mean_radius', 'mean_texture']","['mean_radius', 'mean_texture', 'texture_error']",simplified,1,0.0447641175842475,0.0447641175842475,0.0039857773259201,frank,0,[569]
+texture_error,"['mean_radius', 'mean_smoothness']","['mean_radius', 'mean_smoothness', 'texture_error']",quantile_binned,5,0.0019199215590913,0.0081467929930993,0.0062268714340079,clayton,270,"[114, 114, 113, 113, 115]"
+texture_error,"['mean_compactness', 'mean_radius']","['mean_compactness', 'mean_radius', 'texture_error']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+texture_error,"['mean_concavity', 'mean_radius']","['mean_radius', 'mean_concavity', 'texture_error']",simplified,1,0.0289312733183413,0.0289312733183413,0.001740328330385,gaussian,0,[569]
+texture_error,"['mean_concave_points', 'mean_radius']","['mean_radius', 'mean_concave_points', 'texture_error']",simplified,1,0.037210582658856,0.037210582658856,0.0011773911286004,gaussian,0,[569]
+texture_error,"['mean_radius', 'mean_symmetry']","['mean_radius', 'mean_symmetry', 'texture_error']",simplified,1,-0.0071532076278009,-0.0071532076278009,0.0037400939138643,clayton,270,[569]
+texture_error,"['mean_fractal_dimension', 'mean_radius']","['mean_fractal_dimension', 'mean_radius', 'texture_error']",quantile_binned,4,0.0112858879010655,0.0223739827517006,0.0110880948506351,gumbel,0,"[142, 142, 141, 144]"
+texture_error,"['mean_radius', 'radius_error']","['radius_error', 'mean_radius', 'texture_error']",simplified,1,0.0793526478885722,0.0793526478885722,0.0026409701548639,gumbel,180,[569]
+texture_error,"['mean_radius', 'worst_radius']","['mean_radius', 'worst_radius', 'texture_error']",simplified,1,0.0123167046045975,0.0123167046045975,0.002795832208373,clayton,180,[569]
+texture_error,"['mean_radius', 'worst_texture']","['mean_radius', 'worst_texture', 'texture_error']",quantile_binned,5,0.0576754428629942,0.0673937725715344,0.0097183297085402,frank,0,"[114, 114, 113, 114, 114]"
+texture_error,"['mean_smoothness', 'mean_texture']","['mean_smoothness', 'mean_texture', 'texture_error']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+texture_error,"['mean_compactness', 'mean_texture']","['mean_compactness', 'mean_texture', 'texture_error']",simplified,1,0.0112284900217347,0.0112284900217347,0.0007693167886576,gumbel,90,[569]
+texture_error,"['mean_concavity', 'mean_texture']","['mean_concavity', 'mean_texture', 'texture_error']",simplified,1,0.0062941083597351,0.0062941083597351,0.0005572633974914,gumbel,90,[569]
+texture_error,"['mean_concave_points', 'mean_texture']","['mean_concave_points', 'mean_texture', 'texture_error']",simplified,1,0.0022751827946049,0.0022751827946049,0.0043173383085489,gumbel,90,[569]
+texture_error,"['mean_symmetry', 'mean_texture']","['mean_symmetry', 'mean_texture', 'texture_error']",quantile_binned,4,0.002124904639727,0.008326437611578,0.006201532971851,clayton,180,"[141, 143, 142, 143]"
+texture_error,"['mean_fractal_dimension', 'mean_texture']","['mean_fractal_dimension', 'mean_texture', 'texture_error']",simplified,1,0.0382984081169899,0.0382984081169899,0.0,gaussian,0,[569]
+texture_error,"['mean_texture', 'radius_error']","['mean_texture', 'radius_error', 'texture_error']",simplified,1,0.1289347399316539,0.1289347399316539,0.0,gaussian,0,[569]
+texture_error,"['mean_texture', 'worst_radius']","['worst_radius', 'mean_texture', 'texture_error']",simplified,1,0.0402755812877726,0.0402755812877726,0.0042213305323721,gaussian,0,[569]
+texture_error,"['mean_texture', 'worst_texture']","['mean_texture', 'worst_texture', 'texture_error']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+texture_error,"['mean_compactness', 'mean_smoothness']","['mean_compactness', 'mean_smoothness', 'texture_error']",quantile_binned,5,0.0107165028851031,0.023004811104739,0.0122883082196358,clayton,270,"[114, 114, 113, 113, 115]"
+texture_error,"['mean_concavity', 'mean_smoothness']","['mean_concavity', 'mean_smoothness', 'texture_error']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+texture_error,"['mean_concave_points', 'mean_smoothness']","['mean_concave_points', 'mean_smoothness', 'texture_error']",quantile_binned,5,0.0064066583742572,0.0160849196795373,0.0096782613052801,clayton,270,"[114, 114, 113, 113, 115]"
+texture_error,"['mean_smoothness', 'mean_symmetry']","['mean_smoothness', 'mean_symmetry', 'texture_error']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+texture_error,"['mean_fractal_dimension', 'mean_smoothness']","['mean_smoothness', 'mean_fractal_dimension', 'texture_error']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+texture_error,"['mean_smoothness', 'radius_error']","['mean_smoothness', 'radius_error', 'texture_error']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+texture_error,"['mean_smoothness', 'worst_radius']","['worst_radius', 'mean_smoothness', 'texture_error']",quantile_binned,5,0.0070599872013729,0.0168822722685503,0.0098222850671773,clayton,270,"[114, 114, 113, 113, 115]"
+texture_error,"['mean_smoothness', 'worst_texture']","['mean_smoothness', 'worst_texture', 'texture_error']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+texture_error,"['mean_compactness', 'mean_concavity']","['mean_compactness', 'mean_concavity', 'texture_error']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+texture_error,"['mean_compactness', 'mean_concave_points']","['mean_concave_points', 'mean_compactness', 'texture_error']",simplified,1,-0.002086910191861,-0.002086910191861,0.0,clayton,270,[569]
+texture_error,"['mean_compactness', 'mean_symmetry']","['mean_symmetry', 'mean_compactness', 'texture_error']",simplified,1,-0.0155378197839996,-0.0155378197839996,0.0043024596594124,clayton,180,[569]
+texture_error,"['mean_compactness', 'mean_fractal_dimension']","['mean_compactness', 'mean_fractal_dimension', 'texture_error']",simplified,1,-0.0018936268188016,-0.0018936268188016,0.0,gumbel,90,[569]
+texture_error,"['mean_compactness', 'radius_error']","['mean_compactness', 'radius_error', 'texture_error']",simplified,1,0.0069623903399501,0.0069623903399501,0.0018651998719396,gumbel,90,[569]
+texture_error,"['mean_compactness', 'worst_radius']","['mean_compactness', 'worst_radius', 'texture_error']",quantile_binned,2,0.0027303995531723,0.0124997054533683,0.009769305900196,gumbel,0,"[284, 285]"
+texture_error,"['mean_compactness', 'worst_texture']","['mean_compactness', 'worst_texture', 'texture_error']",simplified,1,0.0117191063222528,0.0117191063222528,0.0047111183449715,gumbel,90,[569]
+texture_error,"['mean_concave_points', 'mean_concavity']","['mean_concavity', 'mean_concave_points', 'texture_error']",quantile_binned,5,-0.0127817594013843,0.0020810636686116,0.0148628230699959,clayton,180,"[114, 114, 113, 114, 114]"
+texture_error,"['mean_concavity', 'mean_symmetry']","['mean_symmetry', 'mean_concavity', 'texture_error']",simplified,1,-0.0148203115937022,-0.0148203115937022,0.0,clayton,180,[569]
+texture_error,"['mean_concavity', 'mean_fractal_dimension']","['mean_concavity', 'mean_fractal_dimension', 'texture_error']",simplified,1,0.0014311916085266,0.0014311916085266,0.0,clayton,270,[569]
+texture_error,"['mean_concavity', 'radius_error']","['mean_concavity', 'radius_error', 'texture_error']",quantile_binned,4,0.0019819530031542,0.0113806948151324,0.0093987418119782,clayton,270,"[142, 142, 142, 143]"
+texture_error,"['mean_concavity', 'worst_radius']","['mean_concavity', 'worst_radius', 'texture_error']",quantile_binned,3,0.0065336031458185,0.0228881454311732,0.0163545422853547,clayton,180,"[190, 189, 190]"
+texture_error,"['mean_concavity', 'worst_texture']","['mean_concavity', 'worst_texture', 'texture_error']",quantile_binned,6,0.0104789467925378,0.0179345507519765,0.0074556039594386,gumbel,90,"[95, 95, 94, 95, 95, 95]"
+texture_error,"['mean_concave_points', 'mean_symmetry']","['mean_symmetry', 'mean_concave_points', 'texture_error']",simplified,1,-0.0121547048955255,-0.0121547048955255,0.0048301225870163,clayton,180,[569]
+texture_error,"['mean_concave_points', 'mean_fractal_dimension']","['mean_concave_points', 'mean_fractal_dimension', 'texture_error']",simplified,1,-0.0046042765549579,-0.0046042765549579,0.0,clayton,270,[569]
+texture_error,"['mean_concave_points', 'radius_error']","['mean_concave_points', 'radius_error', 'texture_error']",simplified,1,0.0127790664115903,0.0127790664115903,0.0,gumbel,90,[569]
+texture_error,"['mean_concave_points', 'worst_radius']","['mean_concave_points', 'worst_radius', 'texture_error']",quantile_binned,3,0.0294025349560654,0.0421845475221769,0.0127820125661115,clayton,180,"[190, 189, 190]"
+texture_error,"['mean_concave_points', 'worst_texture']","['mean_concave_points', 'worst_texture', 'texture_error']",quantile_binned,6,0.001752615350861,0.0083642298719532,0.0066116145210921,gumbel,90,"[95, 95, 94, 95, 95, 95]"
+texture_error,"['mean_fractal_dimension', 'mean_symmetry']","['mean_symmetry', 'mean_fractal_dimension', 'texture_error']",simplified,1,-0.0178586270707297,-0.0178586270707297,0.0,gumbel,0,[569]
+texture_error,"['mean_symmetry', 'radius_error']","['mean_symmetry', 'radius_error', 'texture_error']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+texture_error,"['mean_symmetry', 'worst_radius']","['worst_radius', 'mean_symmetry', 'texture_error']",simplified,1,-0.0085878618734829,-0.0085878618734829,0.0030906724118441,clayton,270,[569]
+texture_error,"['mean_symmetry', 'worst_texture']","['worst_texture', 'mean_symmetry', 'texture_error']",simplified,1,0.2136571026606783,0.2136571026606783,0.0019291702242858,gumbel,180,[569]
+texture_error,"['mean_fractal_dimension', 'radius_error']","['mean_fractal_dimension', 'radius_error', 'texture_error']",simplified,1,0.0250609792423603,0.0250609792423603,0.0008984714650636,gaussian,0,[569]
+texture_error,"['mean_fractal_dimension', 'worst_radius']","['mean_fractal_dimension', 'worst_radius', 'texture_error']",quantile_binned,2,0.0086699408104045,0.0142209839361744,0.0055510431257698,gumbel,0,"[284, 285]"
+texture_error,"['mean_fractal_dimension', 'worst_texture']","['mean_fractal_dimension', 'worst_texture', 'texture_error']",simplified,1,0.0407958074168478,0.0407958074168478,0.0045096266492905,gaussian,0,[569]
+texture_error,"['radius_error', 'worst_radius']","['worst_radius', 'radius_error', 'texture_error']",simplified,1,0.06677432823136,0.06677432823136,0.0,gaussian,0,[569]
+texture_error,"['radius_error', 'worst_texture']","['radius_error', 'worst_texture', 'texture_error']",simplified,1,0.0200887971769959,0.0200887971769959,0.0025798742936475,gaussian,0,[569]
+texture_error,"['worst_radius', 'worst_texture']","['worst_radius', 'worst_texture', 'texture_error']",quantile_binned,5,0.0717629310252599,0.0812188374175355,0.0094559063922755,frank,0,"[114, 114, 113, 114, 114]"
+worst_radius,"['mean_radius', 'mean_texture']","['mean_texture', 'mean_radius', 'worst_radius']",quantile_binned,3,-0.0296117729268273,-0.0219034003844705,0.0077083725423567,gaussian,0,"[189, 190, 190]"
+worst_radius,"['mean_radius', 'mean_smoothness']","['mean_smoothness', 'mean_radius', 'worst_radius']",simplified,1,0.039568279453946,0.039568279453946,0.0012866145377714,gumbel,0,[569]
+worst_radius,"['mean_compactness', 'mean_radius']","['mean_compactness', 'mean_radius', 'worst_radius']",quantile_binned,3,0.0405322764372073,0.0538325167039995,0.0133002402667922,gaussian,0,"[189, 190, 190]"
+worst_radius,"['mean_concavity', 'mean_radius']","['mean_concavity', 'mean_radius', 'worst_radius']",quantile_binned,3,0.0414936137124346,0.058516449704558,0.0170228359921233,frank,0,"[189, 190, 190]"
+worst_radius,"['mean_concave_points', 'mean_radius']","['mean_concave_points', 'mean_radius', 'worst_radius']",quantile_binned,3,0.0449883520861562,0.0515652171544148,0.0065768650682585,gumbel,0,"[189, 190, 190]"
+worst_radius,"['mean_radius', 'mean_symmetry']","['mean_symmetry', 'mean_radius', 'worst_radius']",simplified,1,0.0267652647038371,0.0267652647038371,0.0,clayton,180,[569]
+worst_radius,"['mean_fractal_dimension', 'mean_radius']","['mean_radius', 'mean_fractal_dimension', 'worst_radius']",quantile_binned,5,1.6321967969546325,1.640808216396719,0.0086114194420867,gumbel,180,"[114, 114, 113, 114, 114]"
+worst_radius,"['mean_radius', 'radius_error']","['radius_error', 'mean_radius', 'worst_radius']",quantile_binned,5,0.1006723743830524,0.1213183754595557,0.0206460010765032,gumbel,180,"[114, 114, 113, 114, 114]"
+worst_radius,"['mean_radius', 'texture_error']","['texture_error', 'mean_radius', 'worst_radius']",simplified,1,0.0118851734600135,0.0118851734600135,0.00486927757753,clayton,90,[569]
+worst_radius,"['mean_radius', 'worst_texture']","['mean_radius', 'worst_texture', 'worst_radius']",quantile_binned,2,1.6713589010259864,1.6836757007287264,0.01231679970274,student,0,"[284, 285]"
+worst_radius,"['mean_smoothness', 'mean_texture']","['mean_smoothness', 'mean_texture', 'worst_radius']",quantile_binned,3,0.0114938013534227,0.0312887843984771,0.0197949830450544,frank,0,"[190, 188, 191]"
+worst_radius,"['mean_compactness', 'mean_texture']","['mean_compactness', 'mean_texture', 'worst_radius']",quantile_binned,2,0.0710548387703588,0.080514242566066,0.0094594037957072,frank,0,"[284, 285]"
+worst_radius,"['mean_concavity', 'mean_texture']","['mean_concavity', 'mean_texture', 'worst_radius']",simplified,1,0.2203055377095954,0.2203055377095954,0.0016964121224445,gumbel,0,[569]
+worst_radius,"['mean_concave_points', 'mean_texture']","['mean_concave_points', 'mean_texture', 'worst_radius']",quantile_binned,3,0.4038552406594239,0.4156046462595689,0.0117494056001449,gumbel,0,"[190, 188, 191]"
+worst_radius,"['mean_symmetry', 'mean_texture']","['mean_texture', 'mean_symmetry', 'worst_radius']",simplified,1,0.0407964028567357,0.0407964028567357,0.0,frank,0,[569]
+worst_radius,"['mean_fractal_dimension', 'mean_texture']","['mean_texture', 'mean_fractal_dimension', 'worst_radius']",simplified,1,0.0549410043367234,0.0549410043367234,0.0,frank,0,[569]
+worst_radius,"['mean_texture', 'radius_error']","['mean_texture', 'radius_error', 'worst_radius']",quantile_binned,5,0.0118519633430697,0.0260534515120029,0.0142014881689332,gaussian,0,"[114, 114, 113, 114, 114]"
+worst_radius,"['mean_texture', 'texture_error']","['mean_texture', 'texture_error', 'worst_radius']",simplified,1,0.1060782298916162,0.1060782298916162,0.0,frank,0,[569]
+worst_radius,"['mean_texture', 'worst_texture']","['worst_texture', 'mean_texture', 'worst_radius']",simplified,1,0.0059965170296042,0.0059965170296042,0.0,clayton,0,[569]
+worst_radius,"['mean_compactness', 'mean_smoothness']","['mean_compactness', 'mean_smoothness', 'worst_radius']",quantile_binned,2,0.1469329169322643,0.1578076566417356,0.0108747397094712,frank,0,"[284, 285]"
+worst_radius,"['mean_concavity', 'mean_smoothness']","['mean_smoothness', 'mean_concavity', 'worst_radius']",simplified,1,0.0213636807435269,0.0213636807435269,0.0,frank,0,[569]
+worst_radius,"['mean_concave_points', 'mean_smoothness']","['mean_smoothness', 'mean_concave_points', 'worst_radius']",quantile_binned,4,0.1700790736371271,0.1821120446358097,0.0120329709986825,frank,0,"[141, 143, 142, 143]"
+worst_radius,"['mean_smoothness', 'mean_symmetry']","['mean_smoothness', 'mean_symmetry', 'worst_radius']",simplified,1,0.0166994899211332,0.0166994899211332,0.0036169770013155,clayton,0,[569]
+worst_radius,"['mean_fractal_dimension', 'mean_smoothness']","['mean_fractal_dimension', 'mean_smoothness', 'worst_radius']",quantile_binned,4,0.2884606100329069,0.3230143220563438,0.0345537120234368,gaussian,0,"[142, 142, 141, 144]"
+worst_radius,"['mean_smoothness', 'radius_error']","['mean_smoothness', 'radius_error', 'worst_radius']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+worst_radius,"['mean_smoothness', 'texture_error']","['texture_error', 'mean_smoothness', 'worst_radius']",quantile_binned,5,0.0070599872014005,0.0168822722694656,0.009822285068065,clayton,90,"[114, 114, 113, 113, 115]"
+worst_radius,"['mean_smoothness', 'worst_texture']","['mean_smoothness', 'worst_texture', 'worst_radius']",quantile_binned,2,0.0222940225372872,0.029804623841854,0.0075106013045668,gaussian,0,"[284, 285]"
+worst_radius,"['mean_compactness', 'mean_concavity']","['mean_concavity', 'mean_compactness', 'worst_radius']",quantile_binned,3,0.1857983775050133,0.1970116420611479,0.0112132645561346,gumbel,0,"[190, 189, 190]"
+worst_radius,"['mean_compactness', 'mean_concave_points']","['mean_compactness', 'mean_concave_points', 'worst_radius']",simplified,1,0.1304741686208858,0.1304741686208858,0.0041191977694267,gaussian,0,[569]
+worst_radius,"['mean_compactness', 'mean_symmetry']","['mean_symmetry', 'mean_compactness', 'worst_radius']",simplified,1,-0.0197332552876894,-0.0197332552876894,0.0019059134862481,gaussian,0,[569]
+worst_radius,"['mean_compactness', 'mean_fractal_dimension']","['mean_compactness', 'mean_fractal_dimension', 'worst_radius']",simplified,1,0.6637391494839867,0.6637391494839867,0.0,gaussian,0,[569]
+worst_radius,"['mean_compactness', 'radius_error']","['mean_compactness', 'radius_error', 'worst_radius']",simplified,1,0.0024982649101475,0.0024982649101475,0.0,gaussian,0,[569]
+worst_radius,"['mean_compactness', 'texture_error']","['texture_error', 'mean_compactness', 'worst_radius']",quantile_binned,2,0.0011709039445358,0.0083967583328553,0.0072258543883194,clayton,90,"[284, 285]"
+worst_radius,"['mean_compactness', 'worst_texture']","['worst_texture', 'mean_compactness', 'worst_radius']",simplified,1,0.0052673553778499,0.0052673553778499,0.0048461659057371,gaussian,0,[569]
+worst_radius,"['mean_concave_points', 'mean_concavity']","['mean_concavity', 'mean_concave_points', 'worst_radius']",quantile_binned,4,0.043819877724108,0.0508751962701867,0.0070553185460786,clayton,90,"[141, 143, 142, 143]"
+worst_radius,"['mean_concavity', 'mean_symmetry']","['mean_symmetry', 'mean_concavity', 'worst_radius']",quantile_binned,4,0.0078697133909613,0.0137978291493912,0.0059281157584298,frank,0,"[142, 142, 142, 143]"
+worst_radius,"['mean_concavity', 'mean_fractal_dimension']","['mean_fractal_dimension', 'mean_concavity', 'worst_radius']",simplified,1,0.447395404190076,0.447395404190076,0.0015123155816474,gaussian,0,[569]
+worst_radius,"['mean_concavity', 'radius_error']","['mean_concavity', 'radius_error', 'worst_radius']",simplified,1,0.0708970303086804,0.0708970303086804,0.0029693060134521,gumbel,180,[569]
+worst_radius,"['mean_concavity', 'texture_error']","['mean_concavity', 'texture_error', 'worst_radius']",quantile_binned,5,0.2756326342526647,0.3000500093523843,0.0244173750997196,gumbel,0,"[114, 114, 113, 114, 114]"
+worst_radius,"['mean_concavity', 'worst_texture']","['mean_concavity', 'worst_texture', 'worst_radius']",simplified,1,0.2259322210380317,0.2259322210380317,0.0,gumbel,0,[569]
+worst_radius,"['mean_concave_points', 'mean_symmetry']","['mean_symmetry', 'mean_concave_points', 'worst_radius']",quantile_binned,4,0.0341422855028961,0.0427202648366673,0.0085779793337712,gaussian,0,"[141, 143, 142, 143]"
+worst_radius,"['mean_concave_points', 'mean_fractal_dimension']","['mean_fractal_dimension', 'mean_concave_points', 'worst_radius']",simplified,1,0.4977844984963965,0.4977844984963965,0.0,gumbel,270,[569]
+worst_radius,"['mean_concave_points', 'radius_error']","['mean_concave_points', 'radius_error', 'worst_radius']",simplified,1,0.1442172109853692,0.1442172109853692,0.0,gaussian,0,[569]
+worst_radius,"['mean_concave_points', 'texture_error']","['mean_concave_points', 'texture_error', 'worst_radius']",quantile_binned,5,0.479241027481181,0.4856936860027694,0.0064526585215883,gumbel,0,"[114, 114, 113, 114, 114]"
+worst_radius,"['mean_concave_points', 'worst_texture']","['mean_concave_points', 'worst_texture', 'worst_radius']",quantile_binned,2,0.4214578401636748,0.427316333317908,0.0058584931542332,gumbel,0,"[284, 285]"
+worst_radius,"['mean_fractal_dimension', 'mean_symmetry']","['mean_fractal_dimension', 'mean_symmetry', 'worst_radius']",quantile_binned,4,0.193856926743486,0.2051020737710899,0.0112451470276039,gaussian,0,"[140, 143, 143, 143]"
+worst_radius,"['mean_symmetry', 'radius_error']","['mean_symmetry', 'radius_error', 'worst_radius']",quantile_binned,5,0.0130477955007473,0.0203505306871418,0.0073027351863945,clayton,90,"[114, 114, 113, 114, 114]"
+worst_radius,"['mean_symmetry', 'texture_error']","['texture_error', 'mean_symmetry', 'worst_radius']",simplified,1,-0.008587861872266,-0.008587861872266,0.0030906724115636,clayton,90,[569]
+worst_radius,"['mean_symmetry', 'worst_texture']","['worst_texture', 'mean_symmetry', 'worst_radius']",simplified,1,0.035408993222314,0.035408993222314,0.0,frank,0,[569]
+worst_radius,"['mean_fractal_dimension', 'radius_error']","['mean_fractal_dimension', 'radius_error', 'worst_radius']",quantile_binned,4,0.125060941354778,0.1315114901287952,0.0064505487740172,gumbel,270,"[142, 142, 142, 143]"
+worst_radius,"['mean_fractal_dimension', 'texture_error']","['mean_fractal_dimension', 'texture_error', 'worst_radius']",quantile_binned,5,0.0979418788581449,0.10402054602402,0.0060786671658751,gaussian,0,"[114, 114, 113, 114, 114]"
+worst_radius,"['mean_fractal_dimension', 'worst_texture']","['worst_texture', 'mean_fractal_dimension', 'worst_radius']",simplified,1,0.0474441835200369,0.0474441835200369,0.0,frank,0,[569]
+worst_radius,"['radius_error', 'texture_error']","['texture_error', 'radius_error', 'worst_radius']",simplified,1,0.0667743282312377,0.0667743282312377,0.0,gaussian,0,[569]
+worst_radius,"['radius_error', 'worst_texture']","['worst_texture', 'radius_error', 'worst_radius']",quantile_binned,5,0.0261605581780002,0.0487652661662135,0.0226047079882132,gaussian,0,"[114, 114, 113, 114, 114]"
+worst_radius,"['texture_error', 'worst_texture']","['texture_error', 'worst_texture', 'worst_radius']",quantile_binned,5,0.0717629310252018,0.0812188374172241,0.0094559063920222,frank,0,"[114, 114, 113, 114, 114]"
+worst_texture,"['mean_radius', 'mean_texture']","['mean_texture', 'mean_radius', 'worst_texture']",quantile_binned,3,0.818538694725799,0.8320173363958859,0.0134786416700869,gaussian,0,"[189, 190, 190]"
+worst_texture,"['mean_radius', 'mean_smoothness']","['mean_smoothness', 'mean_radius', 'worst_texture']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+worst_texture,"['mean_compactness', 'mean_radius']","['mean_radius', 'mean_compactness', 'worst_texture']",quantile_binned,6,0.0158534118793719,0.0228465867615807,0.0069931748822087,gaussian,0,"[95, 95, 94, 95, 95, 95]"
+worst_texture,"['mean_concavity', 'mean_radius']","['mean_radius', 'mean_concavity', 'worst_texture']",simplified,1,0.0008485194265866,0.0008485194265866,2.722472246477101e-05,clayton,0,[569]
+worst_texture,"['mean_concave_points', 'mean_radius']","['mean_concave_points', 'mean_radius', 'worst_texture']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+worst_texture,"['mean_radius', 'mean_symmetry']","['mean_radius', 'mean_symmetry', 'worst_texture']",simplified,1,0.030967510544348,0.030967510544348,0.0,frank,0,[569]
+worst_texture,"['mean_fractal_dimension', 'mean_radius']","['mean_radius', 'mean_fractal_dimension', 'worst_texture']",simplified,1,0.0380048419645919,0.0380048419645919,0.0,frank,0,[569]
+worst_texture,"['mean_radius', 'radius_error']","['mean_radius', 'radius_error', 'worst_texture']",quantile_binned,5,0.021863855389116,0.0420051320211005,0.0201412766319845,gaussian,0,"[114, 114, 113, 114, 114]"
+worst_texture,"['mean_radius', 'texture_error']","['mean_radius', 'texture_error', 'worst_texture']",quantile_binned,5,0.0909494426049281,0.1026169077178746,0.0116674651129464,frank,0,"[114, 114, 113, 114, 114]"
+worst_texture,"['mean_radius', 'worst_radius']","['mean_radius', 'worst_radius', 'worst_texture']",simplified,1,-0.0052390383642464,-0.0052390383642464,0.0,gaussian,0,[569]
+worst_texture,"['mean_smoothness', 'mean_texture']","['mean_smoothness', 'mean_texture', 'worst_texture']",quantile_binned,3,0.002128255169443,0.0098385545175724,0.0077102993481293,gaussian,0,"[190, 188, 191]"
+worst_texture,"['mean_compactness', 'mean_texture']","['mean_compactness', 'mean_texture', 'worst_texture']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+worst_texture,"['mean_concavity', 'mean_texture']","['mean_texture', 'mean_concavity', 'worst_texture']",quantile_binned,6,0.7926864515974421,0.8193187826117017,0.0266323310142595,gaussian,0,"[95, 95, 94, 95, 95, 95]"
+worst_texture,"['mean_concave_points', 'mean_texture']","['mean_concave_points', 'mean_texture', 'worst_texture']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+worst_texture,"['mean_symmetry', 'mean_texture']","['mean_symmetry', 'mean_texture', 'worst_texture']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+worst_texture,"['mean_fractal_dimension', 'mean_texture']","['mean_fractal_dimension', 'mean_texture', 'worst_texture']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+worst_texture,"['mean_texture', 'radius_error']","['mean_texture', 'radius_error', 'worst_texture']",simplified,1,0.8584043756763359,0.8584043756763359,0.0,gaussian,0,[569]
+worst_texture,"['mean_texture', 'texture_error']","['texture_error', 'mean_texture', 'worst_texture']",simplified,1,0.0442843430856792,0.0442843430856792,0.0046909230896562,frank,0,[569]
+worst_texture,"['mean_texture', 'worst_radius']","['mean_texture', 'worst_radius', 'worst_texture']",quantile_binned,5,0.821577301900599,0.843211793491625,0.021634491591026,gaussian,0,"[114, 114, 113, 114, 114]"
+worst_texture,"['mean_compactness', 'mean_smoothness']","['mean_smoothness', 'mean_compactness', 'worst_texture']",simplified,1,0.0150739393312245,0.0150739393312245,0.0023306069496766,clayton,90,[569]
+worst_texture,"['mean_concavity', 'mean_smoothness']","['mean_smoothness', 'mean_concavity', 'worst_texture']",simplified,1,0.010156312529896,0.010156312529896,0.0019773974335414,clayton,90,[569]
+worst_texture,"['mean_concave_points', 'mean_smoothness']","['mean_smoothness', 'mean_concave_points', 'worst_texture']",simplified,1,0.0101602258032683,0.0101602258032683,0.0006819928426652,clayton,90,[569]
+worst_texture,"['mean_smoothness', 'mean_symmetry']","['mean_smoothness', 'mean_symmetry', 'worst_texture']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+worst_texture,"['mean_fractal_dimension', 'mean_smoothness']","['mean_smoothness', 'mean_fractal_dimension', 'worst_texture']",simplified,1,0.0104041233837826,0.0104041233837826,0.0,frank,0,[569]
+worst_texture,"['mean_smoothness', 'radius_error']","['mean_smoothness', 'radius_error', 'worst_texture']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+worst_texture,"['mean_smoothness', 'texture_error']","['mean_smoothness', 'texture_error', 'worst_texture']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+worst_texture,"['mean_smoothness', 'worst_radius']","['mean_smoothness', 'worst_radius', 'worst_texture']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+worst_texture,"['mean_compactness', 'mean_concavity']","['mean_compactness', 'mean_concavity', 'worst_texture']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+worst_texture,"['mean_compactness', 'mean_concave_points']","['mean_concave_points', 'mean_compactness', 'worst_texture']",quantile_binned,5,-0.0098779032250919,-0.0039149720654331,0.0059629311596588,frank,0,"[114, 114, 113, 114, 114]"
+worst_texture,"['mean_compactness', 'mean_symmetry']","['mean_symmetry', 'mean_compactness', 'worst_texture']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+worst_texture,"['mean_compactness', 'mean_fractal_dimension']","['mean_fractal_dimension', 'mean_compactness', 'worst_texture']",simplified,1,0.0107251881347002,0.0107251881347002,0.0026237338773074,clayton,90,[569]
+worst_texture,"['mean_compactness', 'radius_error']","['radius_error', 'mean_compactness', 'worst_texture']",simplified,1,-0.0104553221795091,-0.0104553221795091,0.0028512392161156,clayton,0,[569]
+worst_texture,"['mean_compactness', 'texture_error']","['mean_compactness', 'texture_error', 'worst_texture']",simplified,1,0.0229431808218475,0.0229431808218475,0.0,frank,0,[569]
+worst_texture,"['mean_compactness', 'worst_radius']","['worst_radius', 'mean_compactness', 'worst_texture']",simplified,1,0.0052673553791732,0.0052673553791732,0.0048461659061625,gaussian,0,[569]
+worst_texture,"['mean_concave_points', 'mean_concavity']","['mean_concavity', 'mean_concave_points', 'worst_texture']",quantile_binned,5,0.0389991863398643,0.0608954929417517,0.0218963066018873,frank,0,"[114, 114, 113, 114, 114]"
+worst_texture,"['mean_concavity', 'mean_symmetry']","['mean_symmetry', 'mean_concavity', 'worst_texture']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+worst_texture,"['mean_concavity', 'mean_fractal_dimension']","['mean_fractal_dimension', 'mean_concavity', 'worst_texture']",simplified,1,0.0074236969450113,0.0074236969450113,0.0017234834028182,clayton,90,[569]
+worst_texture,"['mean_concavity', 'radius_error']","['radius_error', 'mean_concavity', 'worst_texture']",simplified,1,-0.0172750011838134,-0.0172750011838134,0.0,clayton,0,[569]
+worst_texture,"['mean_concavity', 'texture_error']","['mean_concavity', 'texture_error', 'worst_texture']",quantile_binned,2,0.0444204771550823,0.0507887172696762,0.0063682401145939,frank,0,"[283, 286]"
+worst_texture,"['mean_concavity', 'worst_radius']","['worst_radius', 'mean_concavity', 'worst_texture']",simplified,1,-0.0014188251992051,-0.0014188251992051,0.0,gaussian,0,[569]
+worst_texture,"['mean_concave_points', 'mean_symmetry']","['mean_symmetry', 'mean_concave_points', 'worst_texture']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+worst_texture,"['mean_concave_points', 'mean_fractal_dimension']","['mean_concave_points', 'mean_fractal_dimension', 'worst_texture']",simplified,1,0.0216128736734251,0.0216128736734251,0.0,frank,0,[569]
+worst_texture,"['mean_concave_points', 'radius_error']","['mean_concave_points', 'radius_error', 'worst_texture']",quantile_binned,2,0.0092302548516845,0.0191429705040031,0.0099127156523185,frank,0,"[284, 285]"
+worst_texture,"['mean_concave_points', 'texture_error']","['mean_concave_points', 'texture_error', 'worst_texture']",simplified,1,0.015393223013939,0.015393223013939,0.0032539081202184,frank,0,[569]
+worst_texture,"['mean_concave_points', 'worst_radius']","['mean_concave_points', 'worst_radius', 'worst_texture']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+worst_texture,"['mean_fractal_dimension', 'mean_symmetry']","['mean_fractal_dimension', 'mean_symmetry', 'worst_texture']",simplified,1,-0.0037621866799503,-0.0037621866799503,0.0027712037402441,clayton,90,[569]
+worst_texture,"['mean_symmetry', 'radius_error']","['mean_symmetry', 'radius_error', 'worst_texture']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+worst_texture,"['mean_symmetry', 'texture_error']","['mean_symmetry', 'texture_error', 'worst_texture']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+worst_texture,"['mean_symmetry', 'worst_radius']","['worst_radius', 'mean_symmetry', 'worst_texture']",simplified,1,0.0354089932249179,0.0354089932249179,0.0,frank,0,[569]
+worst_texture,"['mean_fractal_dimension', 'radius_error']","['mean_fractal_dimension', 'radius_error', 'worst_texture']",simplified,1,0.0,0.0,0.0,indep,0,[569]
+worst_texture,"['mean_fractal_dimension', 'texture_error']","['mean_fractal_dimension', 'texture_error', 'worst_texture']",simplified,1,0.0248922020868226,0.0248922020868226,0.0012133919910129,gumbel,270,[569]
+worst_texture,"['mean_fractal_dimension', 'worst_radius']","['worst_radius', 'mean_fractal_dimension', 'worst_texture']",simplified,1,0.047444183519941,0.047444183519941,0.0,frank,0,[569]
+worst_texture,"['radius_error', 'texture_error']","['radius_error', 'texture_error', 'worst_texture']",simplified,1,-0.0092173280945425,-0.0092173280945425,0.0,frank,0,[569]
+worst_texture,"['radius_error', 'worst_radius']","['worst_radius', 'radius_error', 'worst_texture']",quantile_binned,5,0.0261605581789581,0.0487652661659333,0.0226047079869752,gaussian,0,"[114, 114, 113, 114, 114]"
+worst_texture,"['texture_error', 'worst_radius']","['worst_radius', 'texture_error', 'worst_texture']",simplified,1,0.1038686791158915,0.1038686791158915,0.0014532954606594,frank,0,[569]

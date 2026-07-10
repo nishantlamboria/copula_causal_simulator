@@ -5,7 +5,7 @@ from itertools import combinations
 from pathlib import Path
 import pickle
 import re
-from typing import Any, Literal
+from typing import Any, Literal, Sequence
 
 import numpy as np
 import pandas as pd
@@ -19,11 +19,25 @@ except ImportError as exc:
         "    pip install pyvinecopulib\n"
     ) from exc
 
+from copula_causal_sim.copulas.non_simplified import (
+    FittedBinnedConditionalCopula,
+    compute_conditional_coordinates,
+    fit_binned_conditional_copula,
+    fit_fixed_family_rotation_bicop,
+    normalize_candidate_bin_counts,
+    select_number_of_quantile_bins,
+    selected_bin_diagnostics,
+)
+
 
 OrderStrategy = Literal[
     "heldout_conditional_loglik",
     "bic",
     "fixed",
+]
+ConditionalModelStrategy = Literal[
+    "simplified",
+    "adaptive_quantile_bins",
 ]
 
 
@@ -112,6 +126,19 @@ def _validate_order_strategy(order_strategy: str) -> OrderStrategy:
     if normalized not in allowed:
         raise ValueError(
             f"Unsupported order strategy {order_strategy!r}. "
+            f"Expected one of {sorted(allowed)}."
+        )
+    return normalized  # type: ignore[return-value]
+
+
+def _validate_conditional_model_strategy(
+    strategy: str,
+) -> ConditionalModelStrategy:
+    normalized = str(strategy).strip().lower()
+    allowed = {"simplified", "adaptive_quantile_bins"}
+    if normalized not in allowed:
+        raise ValueError(
+            f"Unsupported conditional model strategy {strategy!r}. "
             f"Expected one of {sorted(allowed)}."
         )
     return normalized  # type: ignore[return-value]
@@ -506,6 +533,21 @@ class ConditionalVineRecord:
     alternative_order_score: float | None
     order_score_margin: float | None
 
+    conditional_model_strategy_requested: str
+    conditional_model_type: str
+    simplifying_assumption_selected: bool
+    selected_number_bins: int
+    conditional_family: str | None
+    conditional_rotation: int | None
+    simplified_validation_score: float | None
+    selected_validation_score: float | None
+    score_improvement_over_simplified: float | None
+    conditional_bin_edges: list[float]
+    conditional_bin_counts: list[int]
+    conditional_bin_model_files: list[str]
+    conditional_tau_diagnostics: list[dict[str, Any]]
+    conditional_model_metadata: dict[str, Any]
+
     model_file: str
     model_format: str
 
@@ -557,6 +599,12 @@ class ConditionalVineLibrary:
     order_validation_fraction: float
     order_selection_seed: int
     minimum_validation_rows: int
+    conditional_model_strategy: str
+    conditional_candidate_bin_counts: list[int]
+    conditional_minimum_bin_size: int
+    conditional_validation_fraction: float
+    conditional_selection_seed: int
+    conditional_minimum_score_improvement: float
     records: list[ConditionalVineRecord]
 
     def to_dataframe(self) -> pd.DataFrame:
@@ -577,9 +625,20 @@ class ConditionalVineLibrary:
             "order_validation_fraction": self.order_validation_fraction,
             "order_selection_seed": self.order_selection_seed,
             "minimum_validation_rows": self.minimum_validation_rows,
+            "conditional_model_strategy": self.conditional_model_strategy,
+            "conditional_candidate_bin_counts": self.conditional_candidate_bin_counts,
+            "conditional_minimum_bin_size": self.conditional_minimum_bin_size,
+            "conditional_validation_fraction": self.conditional_validation_fraction,
+            "conditional_selection_seed": self.conditional_selection_seed,
+            "conditional_minimum_score_improvement": (
+                self.conditional_minimum_score_improvement
+            ),
             "records": [asdict(record) for record in self.records],
             "implementation": (
                 "explicit_3d_dvine_bicop_hfunctions_flexible_parent_order_v1"
+            ),
+            "conditional_implementation": (
+                "adaptive_quantile_binned_conditional_copula_v1"
             ),
         }
 
@@ -850,6 +909,20 @@ def _empty_failed_record(
         selected_order_score=selected_order_score,
         alternative_order_score=alternative_order_score,
         order_score_margin=order_score_margin,
+        conditional_model_strategy_requested="not_completed",
+        conditional_model_type="failed",
+        simplifying_assumption_selected=True,
+        selected_number_bins=1,
+        conditional_family=None,
+        conditional_rotation=None,
+        simplified_validation_score=None,
+        selected_validation_score=None,
+        score_improvement_over_simplified=None,
+        conditional_bin_edges=[],
+        conditional_bin_counts=[],
+        conditional_bin_model_files=[],
+        conditional_tau_diagnostics=[],
+        conditional_model_metadata={},
         model_file=str(c13_path),
         model_format="explicit_3d_dvine_bicop_json",
         bicop_parent_1_parent_2_file=str(c12_path),
@@ -896,23 +969,48 @@ def fit_one_conditional_vine(
     order_validation_fraction: float = 0.20,
     order_selection_seed: int = 42,
     minimum_validation_rows: int = 50,
+    conditional_model_strategy: str = "adaptive_quantile_bins",
+    conditional_candidate_bin_counts: Sequence[int] = (1, 2, 3, 4, 5, 6),
+    conditional_minimum_bin_size: int = 75,
+    conditional_validation_fraction: float = 0.20,
+    conditional_selection_seed: int = 42,
+    conditional_minimum_score_improvement: float = 0.005,
 ) -> ConditionalVineRecord:
-    """Fit one two-parent local mechanism with data-driven parent ordering.
+    """Fit a flexible-order two-parent mechanism with optional adaptive bins.
 
-    The parent set is fixed by the DAG. The procedure compares only the two
-    admissible D-vine representations ``P1--P2--X`` and ``P2--P1--X``.
+    The supplied DAG parent set is never changed.  First, the two admissible
+    D-vine parent orders are compared.  For the selected order ``A--B--X``,
+    the method can then compare the simplifying assumption (one global
+    ``C(A,X|B)``) against equal-frequency, piecewise-constant conditional
+    copulas indexed by ``U_B``.
     """
     model_dir = Path(model_dir)
     model_dir.mkdir(parents=True, exist_ok=True)
 
     strategy = _validate_order_strategy(order_strategy)
+    conditional_strategy = _validate_conditional_model_strategy(
+        conditional_model_strategy
+    )
+    conditional_candidates = normalize_candidate_bin_counts(
+        conditional_candidate_bin_counts
+    )
+    if conditional_minimum_bin_size < 1:
+        raise ValueError("conditional_minimum_bin_size must be positive.")
+    if not 0.0 < conditional_validation_fraction < 1.0:
+        raise ValueError(
+            "conditional_validation_fraction must lie strictly between 0 and 1."
+        )
+    if conditional_minimum_score_improvement < 0.0:
+        raise ValueError(
+            "conditional_minimum_score_improvement must be non-negative."
+        )
+
     canonical_parent_1, canonical_parent_2 = _canonical_parent_pair(
         parent_1,
         parent_2,
     )
     parent_set = [canonical_parent_1, canonical_parent_2]
 
-    default_selected_order = [canonical_parent_1, canonical_parent_2, child]
     selected_parent_1 = canonical_parent_1
     selected_parent_2 = canonical_parent_2
     selection_method = "not_completed"
@@ -926,8 +1024,6 @@ def fit_one_conditional_vine(
     training_size: int | None = None
     validation_size: int | None = None
 
-    # Placeholder paths are overwritten after selection. They are prepared
-    # here so a failed record still has deterministic paths.
     placeholder_name = (
         f"child_{_safe_filename(child)}"
         f"__given__{_safe_filename(selected_parent_1)}"
@@ -968,8 +1064,110 @@ def fit_one_conditional_vine(
         selected_parent_1, selected_parent_2 = selected_pair
         selected_order = [selected_parent_1, selected_parent_2, child]
 
-        # Order selection uses a split or BIC. Parameter estimation is always
-        # repeated on all observations for the selected order.
+        conditional_selection = None
+        conditional_metadata: dict[str, Any] = {
+            "selection_method": "simplified_requested",
+            "candidate_bin_counts": conditional_candidates,
+            "candidate_validation_scores": {"1": None},
+            "candidate_statuses": {"1": "selected_without_comparison"},
+            "candidate_errors": {"1": None},
+            "minimum_bin_size": int(conditional_minimum_bin_size),
+            "validation_fraction": float(conditional_validation_fraction),
+            "selection_seed": int(conditional_selection_seed),
+            "minimum_score_improvement": float(
+                conditional_minimum_score_improvement
+            ),
+            "fixed_family_across_bins": True,
+            "training_size": None,
+            "validation_size": None,
+            "raw_best_number_bins": 1,
+            "raw_best_validation_score": None,
+        }
+
+        if conditional_strategy == "adaptive_quantile_bins":
+            conditional_split = _make_train_validation_split(
+                u_df=u_df,
+                validation_fraction=conditional_validation_fraction,
+                seed=conditional_selection_seed,
+                minimum_validation_rows=max(
+                    20,
+                    min(50, int(conditional_minimum_bin_size)),
+                ),
+            )
+            if conditional_split is not None:
+                conditional_training_df, conditional_validation_df = (
+                    conditional_split
+                )
+                fitted_training_order = _fit_explicit_dvine_order(
+                    u_df=conditional_training_df,
+                    child=child,
+                    first_parent=selected_parent_1,
+                    second_parent=selected_parent_2,
+                    controls=controls,
+                    clip_eps=clip_eps,
+                )
+                conditional_selection = select_number_of_quantile_bins(
+                    fitted_training_order=fitted_training_order,
+                    training_df=conditional_training_df,
+                    validation_df=conditional_validation_df,
+                    candidate_bin_counts=conditional_candidates,
+                    minimum_bin_size=conditional_minimum_bin_size,
+                    minimum_score_improvement=(
+                        conditional_minimum_score_improvement
+                    ),
+                    clip_eps=clip_eps,
+                )
+                conditional_metadata = {
+                    "selection_method": conditional_selection.method,
+                    "candidate_bin_counts": conditional_candidates,
+                    "candidate_validation_scores": (
+                        conditional_selection.candidate_scores
+                    ),
+                    "candidate_statuses": (
+                        conditional_selection.candidate_statuses
+                    ),
+                    "candidate_errors": conditional_selection.candidate_errors,
+                    "minimum_bin_size": int(conditional_minimum_bin_size),
+                    "validation_fraction": float(
+                        conditional_validation_fraction
+                    ),
+                    "selection_seed": int(conditional_selection_seed),
+                    "minimum_score_improvement": float(
+                        conditional_minimum_score_improvement
+                    ),
+                    "fixed_family_across_bins": True,
+                    "training_size": conditional_selection.training_size,
+                    "validation_size": conditional_selection.validation_size,
+                    "raw_best_number_bins": (
+                        conditional_selection.raw_best_number_bins
+                    ),
+                    "raw_best_validation_score": (
+                        conditional_selection.raw_best_score
+                    ),
+                }
+            else:
+                conditional_metadata.update(
+                    {
+                        "selection_method": (
+                            "simplified_fallback_insufficient_validation_rows"
+                        ),
+                        "candidate_statuses": {
+                            str(value): (
+                                "selected_fallback" if value == 1 else "not_evaluated"
+                            )
+                            for value in conditional_candidates
+                        },
+                        "candidate_errors": {
+                            str(value): None for value in conditional_candidates
+                        },
+                        "candidate_validation_scores": {
+                            str(value): None for value in conditional_candidates
+                        },
+                    }
+                )
+
+        # First-tree models are always refitted on all observations after
+        # model selection.
         final_fit = _fit_explicit_dvine_order(
             u_df=u_df,
             child=child,
@@ -978,6 +1176,90 @@ def fit_one_conditional_vine(
             controls=controls,
             clip_eps=clip_eps,
         )
+
+        full_conditioning, full_w_first, full_w_child = (
+            compute_conditional_coordinates(
+                c_first_second=final_fit.c_first_second,
+                c_second_child=final_fit.c_second_child,
+                data=u_df,
+                first_parent=selected_parent_1,
+                second_parent=selected_parent_2,
+                child=child,
+                clip_eps=clip_eps,
+            )
+        )
+
+        if conditional_selection is None:
+            selected_number_bins = 1
+            conditional_family_enum = final_fit.c_first_child_given_second.family
+            conditional_family = _enum_to_string(conditional_family_enum)
+            conditional_rotation = int(
+                final_fit.c_first_child_given_second.rotation
+            )
+            simplified_validation_score = None
+            selected_validation_score = None
+            score_improvement = None
+        else:
+            selected_number_bins = conditional_selection.selected_number_bins
+            conditional_family_enum = conditional_selection.family_enum
+            conditional_family = conditional_selection.family
+            conditional_rotation = conditional_selection.rotation
+            simplified_validation_score = conditional_selection.simplified_score
+            selected_validation_score = conditional_selection.selected_score
+            score_improvement = (
+                conditional_selection.score_improvement_over_simplified
+            )
+
+        # Store a global model for backward compatibility and for direct
+        # comparison with the simplified model, even when bins are selected.
+        global_conditional_model = fit_fixed_family_rotation_bicop(
+            np.column_stack([full_w_first, full_w_child]),
+            family=conditional_family_enum,
+            rotation=conditional_rotation,
+            clip_eps=clip_eps,
+        )
+
+        if selected_number_bins == 1:
+            selected_conditional_model = FittedBinnedConditionalCopula(
+                family=conditional_family,
+                rotation=conditional_rotation,
+                bin_edges=np.asarray([0.0, 1.0], dtype=float),
+                bin_counts=[len(u_df)],
+                models=[global_conditional_model],
+            )
+        else:
+            try:
+                selected_conditional_model = fit_binned_conditional_copula(
+                    w_first=full_w_first,
+                    w_child=full_w_child,
+                    conditioning=full_conditioning,
+                    family=conditional_family_enum,
+                    rotation=conditional_rotation,
+                    n_bins=selected_number_bins,
+                    minimum_bin_size=conditional_minimum_bin_size,
+                    clip_eps=clip_eps,
+                )
+            except Exception as refit_error:
+                # A rare full-data refit failure must not make the complete
+                # local mechanism unusable. Fall back transparently to the
+                # simplified model and preserve the reason in metadata.
+                conditional_metadata["full_data_refit_fallback_error"] = (
+                    f"{type(refit_error).__name__}: {refit_error}"
+                )
+                selected_number_bins = 1
+                selected_validation_score = simplified_validation_score
+                selected_conditional_model = FittedBinnedConditionalCopula(
+                    family=conditional_family,
+                    rotation=conditional_rotation,
+                    bin_edges=np.asarray([0.0, 1.0], dtype=float),
+                    bin_counts=[len(u_df)],
+                    models=[global_conditional_model],
+                )
+
+        conditional_model_type = (
+            "simplified" if selected_number_bins == 1 else "quantile_binned"
+        )
+        simplifying_assumption_selected = selected_number_bins == 1
 
         model_name = (
             f"child_{_safe_filename(child)}"
@@ -992,14 +1274,59 @@ def fit_one_conditional_vine(
 
         c12_file = _save_bicop(final_fit.c_first_second, c12_path)
         c23_file = _save_bicop(final_fit.c_second_child, c23_path)
-        c13_file = _save_bicop(
-            final_fit.c_first_child_given_second,
-            c13_path,
-        )
+        c13_file = _save_bicop(global_conditional_model, c13_path)
+
+        conditional_bin_model_files: list[str] = []
+        if selected_number_bins == 1:
+            conditional_bin_model_files = [c13_file]
+        else:
+            for bin_index, model in enumerate(selected_conditional_model.models):
+                path = model_dir / (
+                    f"{model_name}__conditional_bin_{bin_index:02d}.json"
+                )
+                conditional_bin_model_files.append(_save_bicop(model, path))
 
         s12 = _bicop_summary(final_fit.c_first_second)
         s23 = _bicop_summary(final_fit.c_second_child)
-        s13 = _bicop_summary(final_fit.c_first_child_given_second)
+        s13 = _bicop_summary(global_conditional_model)
+
+        conditional_loglik = float(
+            np.sum(
+                selected_conditional_model.loglik_values(
+                    w_first=full_w_first,
+                    w_child=full_w_child,
+                    conditioning=full_conditioning,
+                    clip_eps=clip_eps,
+                )
+            )
+        )
+        loglik = (
+            _model_loglik(final_fit.c_first_second, final_fit.data_first_second)
+            + _model_loglik(final_fit.c_second_child, final_fit.data_second_child)
+            + conditional_loglik
+        )
+        npars = (
+            _model_npars(final_fit.c_first_second)
+            + _model_npars(final_fit.c_second_child)
+            + sum(_model_npars(model) for model in selected_conditional_model.models)
+        )
+        aic = -2.0 * loglik + 2.0 * npars
+        bic = -2.0 * loglik + np.log(len(u_df)) * npars
+
+        diagnostics = selected_bin_diagnostics(
+            model=selected_conditional_model,
+            w_first=full_w_first,
+            w_child=full_w_child,
+            conditioning=full_conditioning,
+        )
+        conditional_metadata.update(
+            {
+                "selected_number_bins": int(selected_number_bins),
+                "conditional_family": conditional_family,
+                "conditional_rotation": int(conditional_rotation),
+                "bin_model_summaries": selected_conditional_model.summaries(),
+            }
+        )
 
         u1 = _clip_u(
             u_df[selected_parent_1].to_numpy(dtype=float), eps=clip_eps
@@ -1013,7 +1340,7 @@ def fit_one_conditional_vine(
             f"C({selected_parent_1},{selected_parent_2})={s12['family']}; "
             f"C({selected_parent_2},{child})={s23['family']}; "
             f"C({selected_parent_1},{child}|{selected_parent_2})="
-            f"{s13['family']}"
+            f"{conditional_family} in {selected_number_bins} bin(s)"
         )
 
         return ConditionalVineRecord(
@@ -1051,8 +1378,32 @@ def fit_one_conditional_vine(
             selected_order_score=selected_score,
             alternative_order_score=alternative_score,
             order_score_margin=score_margin,
+            conditional_model_strategy_requested=conditional_strategy,
+            conditional_model_type=conditional_model_type,
+            simplifying_assumption_selected=simplifying_assumption_selected,
+            selected_number_bins=int(selected_number_bins),
+            conditional_family=conditional_family,
+            conditional_rotation=int(conditional_rotation),
+            simplified_validation_score=simplified_validation_score,
+            selected_validation_score=selected_validation_score,
+            score_improvement_over_simplified=score_improvement,
+            conditional_bin_edges=(
+                np.asarray(selected_conditional_model.bin_edges, dtype=float)
+                .reshape(-1)
+                .tolist()
+            ),
+            conditional_bin_counts=[
+                int(value) for value in selected_conditional_model.bin_counts
+            ],
+            conditional_bin_model_files=conditional_bin_model_files,
+            conditional_tau_diagnostics=diagnostics,
+            conditional_model_metadata=conditional_metadata,
             model_file=c13_file,
-            model_format="explicit_3d_dvine_bicop_json",
+            model_format=(
+                "explicit_3d_dvine_quantile_binned_bicop_json"
+                if selected_number_bins > 1
+                else "explicit_3d_dvine_bicop_json"
+            ),
             bicop_parent_1_parent_2_file=c12_file,
             bicop_parent_2_child_file=c23_file,
             bicop_parent_1_child_given_parent_2_file=c13_file,
@@ -1065,10 +1416,10 @@ def fit_one_conditional_vine(
             parameters_parent_1_parent_2=s12["parameters"],
             parameters_parent_2_child=s23["parameters"],
             parameters_parent_1_child_given_parent_2=s13["parameters"],
-            npars=float(final_fit.npars),
-            loglik=float(final_fit.loglik),
-            aic=float(final_fit.aic),
-            bic=float(final_fit.bic),
+            npars=float(npars),
+            loglik=float(loglik),
+            aic=float(aic),
+            bic=float(bic),
             kendall_parent_1_child=_safe_float(kendalltau(u1, uy)[0]),
             kendall_parent_2_child=_safe_float(kendalltau(u2, uy)[0]),
             kendall_parent_1_parent_2=_safe_float(kendalltau(u1, u2)[0]),
@@ -1078,7 +1429,8 @@ def fit_one_conditional_vine(
             pair_family_summary=pair_family_summary,
             vine_structure=(
                 f"explicit D-vine: {selected_parent_1} -- "
-                f"{selected_parent_2} -- {child}"
+                f"{selected_parent_2} -- {child}; conditional model="
+                f"{conditional_model_type} ({selected_number_bins} bin(s))"
             ),
             status="ok",
             error=None,
@@ -1096,7 +1448,7 @@ def fit_one_conditional_vine(
             model_dir / f"{model_name}__c_parent2_child.json",
             model_dir / f"{model_name}__c_parent1_child_given_parent2.json",
         )
-        return _empty_failed_record(
+        record = _empty_failed_record(
             dataset_id=dataset_id,
             child=child,
             parent_1=selected_parent_1,
@@ -1131,7 +1483,17 @@ def fit_one_conditional_vine(
             model_paths=failed_paths,
             error=f"{type(exc).__name__}: {exc}",
         )
-
+        record.conditional_model_strategy_requested = conditional_strategy
+        record.conditional_model_metadata = {
+            "candidate_bin_counts": conditional_candidates,
+            "minimum_bin_size": int(conditional_minimum_bin_size),
+            "validation_fraction": float(conditional_validation_fraction),
+            "selection_seed": int(conditional_selection_seed),
+            "minimum_score_improvement": float(
+                conditional_minimum_score_improvement
+            ),
+        }
+        return record
 
 def build_conditional_vine_library(
     u_df: pd.DataFrame,
@@ -1145,6 +1507,12 @@ def build_conditional_vine_library(
     order_validation_fraction: float = 0.20,
     order_selection_seed: int = 42,
     minimum_validation_rows: int = 50,
+    conditional_model_strategy: str = "adaptive_quantile_bins",
+    conditional_candidate_bin_counts: Sequence[int] = (1, 2, 3, 4, 5, 6),
+    conditional_minimum_bin_size: int = 75,
+    conditional_validation_fraction: float = 0.20,
+    conditional_selection_seed: int = 42,
+    conditional_minimum_score_improvement: float = 0.005,
     fixed_variable_order: bool | None = None,
     limit: int | None = None,
 ) -> ConditionalVineLibrary:
@@ -1168,6 +1536,12 @@ def build_conditional_vine_library(
         )
 
     strategy = _validate_order_strategy(order_strategy)
+    conditional_strategy = _validate_conditional_model_strategy(
+        conditional_model_strategy
+    )
+    conditional_candidates = normalize_candidate_bin_counts(
+        conditional_candidate_bin_counts
+    )
 
     controls, family_set_names = build_bicop_fit_controls(
         selection_criterion=selection_criterion,
@@ -1211,6 +1585,14 @@ def build_conditional_vine_library(
             order_validation_fraction=order_validation_fraction,
             order_selection_seed=order_selection_seed,
             minimum_validation_rows=minimum_validation_rows,
+            conditional_model_strategy=conditional_strategy,
+            conditional_candidate_bin_counts=conditional_candidates,
+            conditional_minimum_bin_size=conditional_minimum_bin_size,
+            conditional_validation_fraction=conditional_validation_fraction,
+            conditional_selection_seed=conditional_selection_seed,
+            conditional_minimum_score_improvement=(
+                conditional_minimum_score_improvement
+            ),
         )
 
         records.append(record)
@@ -1226,5 +1608,13 @@ def build_conditional_vine_library(
         order_validation_fraction=float(order_validation_fraction),
         order_selection_seed=int(order_selection_seed),
         minimum_validation_rows=int(minimum_validation_rows),
+        conditional_model_strategy=conditional_strategy,
+        conditional_candidate_bin_counts=conditional_candidates,
+        conditional_minimum_bin_size=int(conditional_minimum_bin_size),
+        conditional_validation_fraction=float(conditional_validation_fraction),
+        conditional_selection_seed=int(conditional_selection_seed),
+        conditional_minimum_score_improvement=float(
+            conditional_minimum_score_improvement
+        ),
         records=records,
     )
