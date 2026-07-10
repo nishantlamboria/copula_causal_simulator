@@ -82,11 +82,12 @@ class IndegreeTwoGenerator:
 
         two-parent node:
             U_child ~ C_child|parent1,parent2(. | U_parent1, U_parent2)
-            using an explicit 3D D-vine:
+            using the selected explicit 3D D-vine parent order:
 
-                parent_1 -- parent_2 -- child
+                selected_parent_1 -- selected_parent_2 -- child
 
-            with bivariate h-functions.
+            The DAG parent set is unchanged; only the statistical D-vine
+            representation is selected from the two admissible orders.
     """
 
     def __init__(
@@ -148,11 +149,54 @@ class IndegreeTwoGenerator:
                 continue
 
             child = record["child"]
-            parent_set = frozenset([record["parent_1"], record["parent_2"]])
+            stored_parent_set = record.get(
+                "parent_set",
+                [record["parent_1"], record["parent_2"]],
+            )
+            parent_set = frozenset(stored_parent_set)
 
-            lookup[(child, parent_set)] = record
+            key = (child, parent_set)
+            if key in lookup:
+                raise ValueError(
+                    "Duplicate conditional D-vine records for "
+                    f"child={child!r}, parents={sorted(parent_set)!r}."
+                )
+
+            lookup[key] = record
 
         return lookup
+
+    @staticmethod
+    def _selected_order_from_record(
+        record: dict[str, Any],
+    ) -> list[str]:
+        """Return and validate the stored D-vine order.
+
+        Older fixed-order metadata did not include ``selected_order``; for
+        those records the ordered ``parent_1``, ``parent_2``, ``child`` fields
+        remain the authoritative representation.
+        """
+        record_parent_1 = record["parent_1"]
+        record_parent_2 = record["parent_2"]
+        record_child = record["child"]
+
+        selected_order = record.get(
+            "selected_order",
+            [record_parent_1, record_parent_2, record_child],
+        )
+
+        expected = [record_parent_1, record_parent_2, record_child]
+        if (
+            not isinstance(selected_order, (list, tuple))
+            or len(selected_order) != 3
+            or list(selected_order) != expected
+        ):
+            raise ValueError(
+                "Conditional record has inconsistent selected-order metadata. "
+                f"Expected {expected!r}, got {selected_order!r}."
+            )
+
+        return list(selected_order)
 
     def _get_conditional_record(
         self,
@@ -239,6 +283,9 @@ class IndegreeTwoGenerator:
         record_parent_1 = record["parent_1"]
         record_parent_2 = record["parent_2"]
         record_child = record["child"]
+
+
+        self._selected_order_from_record(record)
 
         if record_child != child_name:
             raise RuntimeError(

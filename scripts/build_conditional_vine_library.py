@@ -21,7 +21,10 @@ from copula_causal_sim.copulas.conditional_vine_library import (
 
 def parse_args():
     parser = argparse.ArgumentParser(
-        description="Build conditional vine library for bounded-indegree generation."
+        description=(
+            "Build flexible-order conditional D-vine library for "
+            "bounded-indegree generation."
+        )
     )
 
     parser.add_argument(
@@ -43,7 +46,42 @@ def parse_args():
         type=str,
         default=None,
         choices=["aic", "bic", "mbic"],
-        help="Override copula selection criterion from config.",
+        help="Override pair-copula family selection criterion from config.",
+    )
+
+    parser.add_argument(
+        "--order-strategy",
+        type=str,
+        default=None,
+        choices=["heldout_conditional_loglik", "bic", "fixed"],
+        help=(
+            "Parent-order selection strategy. Defaults to "
+            "copula.vine_order_strategy in the dataset config."
+        ),
+    )
+
+    parser.add_argument(
+        "--order-validation-fraction",
+        type=float,
+        default=None,
+        help="Validation fraction for held-out conditional log-likelihood.",
+    )
+
+    parser.add_argument(
+        "--order-selection-seed",
+        type=int,
+        default=None,
+        help="Random seed for the deterministic train/validation split.",
+    )
+
+    parser.add_argument(
+        "--minimum-validation-rows",
+        type=int,
+        default=None,
+        help=(
+            "Minimum validation rows required for held-out selection. "
+            "Smaller datasets fall back to BIC."
+        ),
     )
 
     parser.add_argument(
@@ -51,15 +89,6 @@ def parse_args():
         type=int,
         default=None,
         help="Optional limit for smoke testing. Example: --limit 10",
-    )
-
-    parser.add_argument(
-        "--no-fixed-variable-order",
-        action="store_true",
-        help=(
-            "Allow automatic vine structure selection instead of requesting "
-            "fixed [parent_1, parent_2, child] order."
-        ),
     )
 
     return parser.parse_args()
@@ -73,11 +102,54 @@ def main() -> None:
 
     dataset_id = config["dataset_id"]
     clip_eps = float(config["data"].get("clip_eps", 1e-6))
+    copula_config = config.get("copula", {})
 
     selection_criterion = (
         args.selection_criterion
         if args.selection_criterion is not None
-        else config["copula"].get("selection_criterion", "bic")
+        else copula_config.get("selection_criterion", "bic")
+    )
+
+    order_strategy = (
+        args.order_strategy
+        if args.order_strategy is not None
+        else copula_config.get(
+            "vine_order_strategy",
+            "heldout_conditional_loglik",
+        )
+    )
+
+    order_validation_fraction = (
+        args.order_validation_fraction
+        if args.order_validation_fraction is not None
+        else float(
+            copula_config.get(
+                "vine_order_validation_fraction",
+                0.20,
+            )
+        )
+    )
+
+    order_selection_seed = (
+        args.order_selection_seed
+        if args.order_selection_seed is not None
+        else int(
+            copula_config.get(
+                "vine_order_selection_seed",
+                42,
+            )
+        )
+    )
+
+    minimum_validation_rows = (
+        args.minimum_validation_rows
+        if args.minimum_validation_rows is not None
+        else int(
+            copula_config.get(
+                "vine_order_minimum_validation_rows",
+                50,
+            )
+        )
     )
 
     artifact_dir = PROJECT_ROOT / config["outputs"]["artifact_dir"]
@@ -102,11 +174,15 @@ def main() -> None:
     table_dir.mkdir(parents=True, exist_ok=True)
     conditional_model_dir.mkdir(parents=True, exist_ok=True)
 
-    print("Building conditional vine library")
+    print("Building flexible-order conditional vine library")
     print(f"Dataset: {dataset_id}")
     print(f"Config: {config_path}")
     print(f"Parent set size: {args.parent_set_size}")
-    print(f"Selection criterion: {selection_criterion}")
+    print(f"Pair-family selection criterion: {selection_criterion}")
+    print(f"Order strategy: {order_strategy}")
+    print(f"Order validation fraction: {order_validation_fraction}")
+    print(f"Order selection seed: {order_selection_seed}")
+    print(f"Minimum validation rows: {minimum_validation_rows}")
     print(f"Model directory: {conditional_model_dir}")
 
     pseudo_path = artifact_dir / "pseudo_observations.csv"
@@ -124,17 +200,18 @@ def main() -> None:
     print(f"Pseudo-observation shape: {u_df.shape}")
     print(f"Columns: {list(u_df.columns)}")
 
-    fixed_variable_order = not args.no_fixed_variable_order
-
     library = build_conditional_vine_library(
         u_df=u_df,
         dataset_id=dataset_id,
         parent_set_size=args.parent_set_size,
         selection_criterion=selection_criterion,
-        allow_rotations=bool(config["copula"].get("allow_rotations", True)),
-        num_threads=int(config["copula"].get("num_threads", 1)),
+        allow_rotations=bool(copula_config.get("allow_rotations", True)),
+        num_threads=int(copula_config.get("num_threads", 1)),
         model_dir=conditional_model_dir,
-        fixed_variable_order=fixed_variable_order,
+        order_strategy=order_strategy,
+        order_validation_fraction=order_validation_fraction,
+        order_selection_seed=order_selection_seed,
+        minimum_validation_rows=minimum_validation_rows,
         limit=args.limit,
     )
 
@@ -154,9 +231,22 @@ def main() -> None:
     print(f"Library metadata saved to: {conditional_library_path}")
     print(f"Individual vine models saved in: {conditional_model_dir}")
 
+    if n_ok > 0:
+        display_columns = [
+            "child",
+            "parent_set",
+            "selected_order",
+            "order_selection_method",
+            "selected_order_score",
+            "alternative_order_score",
+            "order_score_margin",
+        ]
+        print("\nSelected-order examples:")
+        print(summary_df.loc[summary_df["status"] == "ok", display_columns].head(10))
+
     if n_failed > 0:
         print("\nFailed model examples:")
-        failed_cols = ["child", "parent_1", "parent_2", "error"]
+        failed_cols = ["child", "parent_set", "error"]
         print(summary_df.loc[summary_df["status"] == "failed", failed_cols].head(10))
 
 
