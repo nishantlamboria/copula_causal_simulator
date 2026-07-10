@@ -21,6 +21,19 @@ copula:
   vine_order_validation_fraction: 0.2
   vine_order_selection_seed: 42
   vine_order_minimum_validation_rows: 50
+  conditional_model_strategy: adaptive_quantile_bins
+  conditional_candidate_bin_counts:
+  - 1
+  - 2
+  - 3
+  - 4
+  - 5
+  - 6
+  conditional_minimum_bin_size: 75
+  conditional_validation_fraction: 0.2
+  conditional_selection_seed: 42
+  conditional_minimum_score_improvement: 0.005
+  conditional_fixed_family_across_bins: true
 outputs:
   artifact_dir: artifacts/libraries/breast_cancer
   table_dir: reports/tables/breast_cancer

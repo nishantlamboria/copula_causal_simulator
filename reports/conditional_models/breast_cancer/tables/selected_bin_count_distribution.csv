@@ -1,0 +1,7 @@
+conditional_model_type,selected_number_bins,number_mechanisms
+quantile_binned,2,40
+quantile_binned,3,49
+quantile_binned,4,57
+quantile_binned,5,63
+quantile_binned,6,45
+simplified,1,406

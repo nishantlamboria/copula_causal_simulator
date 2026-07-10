@@ -85,6 +85,56 @@ def parse_args():
     )
 
     parser.add_argument(
+        "--conditional-model-strategy",
+        type=str,
+        default=None,
+        choices=["simplified", "adaptive_quantile_bins"],
+        help=(
+            "Conditional-copula strategy. Defaults to "
+            "copula.conditional_model_strategy in the dataset config."
+        ),
+    )
+
+    parser.add_argument(
+        "--conditional-candidate-bin-counts",
+        type=int,
+        nargs="+",
+        default=None,
+        help="Candidate equal-frequency bin counts, for example: 1 2 3 4 5 6.",
+    )
+
+    parser.add_argument(
+        "--conditional-minimum-bin-size",
+        type=int,
+        default=None,
+        help="Minimum number of training observations in every quantile bin.",
+    )
+
+    parser.add_argument(
+        "--conditional-validation-fraction",
+        type=float,
+        default=None,
+        help="Validation fraction used to select the number of bins.",
+    )
+
+    parser.add_argument(
+        "--conditional-selection-seed",
+        type=int,
+        default=None,
+        help="Seed for conditional-model train/validation splitting.",
+    )
+
+    parser.add_argument(
+        "--conditional-minimum-score-improvement",
+        type=float,
+        default=None,
+        help=(
+            "Minimum mean held-out log-likelihood improvement required "
+            "before replacing the simplified model with multiple bins."
+        ),
+    )
+
+    parser.add_argument(
         "--limit",
         type=int,
         default=None,
@@ -152,6 +202,55 @@ def main() -> None:
         )
     )
 
+    conditional_model_strategy = (
+        args.conditional_model_strategy
+        if args.conditional_model_strategy is not None
+        else copula_config.get(
+            "conditional_model_strategy",
+            "adaptive_quantile_bins",
+        )
+    )
+
+    conditional_candidate_bin_counts = (
+        args.conditional_candidate_bin_counts
+        if args.conditional_candidate_bin_counts is not None
+        else list(
+            copula_config.get(
+                "conditional_candidate_bin_counts",
+                [1, 2, 3, 4, 5, 6],
+            )
+        )
+    )
+
+    conditional_minimum_bin_size = (
+        args.conditional_minimum_bin_size
+        if args.conditional_minimum_bin_size is not None
+        else int(copula_config.get("conditional_minimum_bin_size", 75))
+    )
+
+    conditional_validation_fraction = (
+        args.conditional_validation_fraction
+        if args.conditional_validation_fraction is not None
+        else float(copula_config.get("conditional_validation_fraction", 0.20))
+    )
+
+    conditional_selection_seed = (
+        args.conditional_selection_seed
+        if args.conditional_selection_seed is not None
+        else int(copula_config.get("conditional_selection_seed", 42))
+    )
+
+    conditional_minimum_score_improvement = (
+        args.conditional_minimum_score_improvement
+        if args.conditional_minimum_score_improvement is not None
+        else float(
+            copula_config.get(
+                "conditional_minimum_score_improvement",
+                0.005,
+            )
+        )
+    )
+
     artifact_dir = PROJECT_ROOT / config["outputs"]["artifact_dir"]
     table_dir = PROJECT_ROOT / config["outputs"]["table_dir"]
 
@@ -183,6 +282,15 @@ def main() -> None:
     print(f"Order validation fraction: {order_validation_fraction}")
     print(f"Order selection seed: {order_selection_seed}")
     print(f"Minimum validation rows: {minimum_validation_rows}")
+    print(f"Conditional model strategy: {conditional_model_strategy}")
+    print(f"Conditional candidate bins: {conditional_candidate_bin_counts}")
+    print(f"Conditional minimum bin size: {conditional_minimum_bin_size}")
+    print(f"Conditional validation fraction: {conditional_validation_fraction}")
+    print(f"Conditional selection seed: {conditional_selection_seed}")
+    print(
+        "Conditional minimum score improvement: "
+        f"{conditional_minimum_score_improvement}"
+    )
     print(f"Model directory: {conditional_model_dir}")
 
     pseudo_path = artifact_dir / "pseudo_observations.csv"
@@ -212,6 +320,14 @@ def main() -> None:
         order_validation_fraction=order_validation_fraction,
         order_selection_seed=order_selection_seed,
         minimum_validation_rows=minimum_validation_rows,
+        conditional_model_strategy=conditional_model_strategy,
+        conditional_candidate_bin_counts=conditional_candidate_bin_counts,
+        conditional_minimum_bin_size=conditional_minimum_bin_size,
+        conditional_validation_fraction=conditional_validation_fraction,
+        conditional_selection_seed=conditional_selection_seed,
+        conditional_minimum_score_improvement=(
+            conditional_minimum_score_improvement
+        ),
         limit=args.limit,
     )
 
@@ -240,6 +356,11 @@ def main() -> None:
             "selected_order_score",
             "alternative_order_score",
             "order_score_margin",
+            "conditional_model_type",
+            "selected_number_bins",
+            "simplified_validation_score",
+            "selected_validation_score",
+            "score_improvement_over_simplified",
         ]
         print("\nSelected-order examples:")
         print(summary_df.loc[summary_df["status"] == "ok", display_columns].head(10))
