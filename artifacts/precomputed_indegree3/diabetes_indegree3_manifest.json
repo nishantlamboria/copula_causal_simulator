@@ -7,7 +7,7 @@
   "model_json_files": 5040,
   "archive": "diabetes_indegree3.tar.gz",
   "archive_size_bytes": 834107,
-  "archive_sha256": "3759ae13cb4b605e784bcb55bf960cb005a0bef881fa6e42f4384df8b81bd572",
+  "archive_sha256": "e7c14a5f0d74741856c89297caab2d4f7231bc9925bb87601db0773e29fdef4d",
   "library_sha256": "7919a63f843b954e4fa5b1a592bd14cd4247ca2dfc588d5c5a0c0faaea021a28",
   "extract_into": "artifacts/libraries/diabetes",
   "included_files": [

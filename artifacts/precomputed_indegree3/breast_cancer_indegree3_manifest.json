@@ -7,7 +7,7 @@
   "model_json_files": 11880,
   "archive": "breast_cancer_indegree3.tar.gz",
   "archive_size_bytes": 2232043,
-  "archive_sha256": "5b8d3d0df7478015bf3d9dc7fe40a12e05ccf10367d207ca88b4735644756838",
+  "archive_sha256": "ca0b0657182c4e09ecca95106c892f460da5b476628f4e4d6d31fd003b8c3ccc",
   "library_sha256": "bd82c4c63cef141d818c4f5ac3267f77b09b0b7c1e94d61fa8fb2c90ca35fe0f",
   "extract_into": "artifacts/libraries/breast_cancer",
   "included_files": [

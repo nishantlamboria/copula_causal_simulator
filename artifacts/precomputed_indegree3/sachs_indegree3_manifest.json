@@ -6,8 +6,8 @@
   "failed_mechanisms": 0,
   "model_json_files": 7920,
   "archive": "sachs_indegree3.tar.gz",
-  "archive_size_bytes": 774247,
-  "archive_sha256": "d9e8f0f45696044dd9d47784db4ad9de4401623c4a9a8a2410afbb11f2d1b8bf",
+  "archive_size_bytes": 774245,
+  "archive_sha256": "a86bc66ed57f4fe6b43a1e7d61cc01d3811ed01c765d5e7c4be2d1e822ea3301",
   "library_sha256": "29150c4fdcbfa6ad74c43c2c8770b9ecc26b0518ce9d0ef506310b280df0cdf3",
   "extract_into": "artifacts/libraries/sachs",
   "included_files": [
