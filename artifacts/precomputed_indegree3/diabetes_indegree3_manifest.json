@@ -1,0 +1,19 @@
+{
+  "dataset": "diabetes",
+  "expected_mechanisms": 840,
+  "summary_rows": 840,
+  "successful_mechanisms": 840,
+  "failed_mechanisms": 0,
+  "model_json_files": 5040,
+  "archive": "diabetes_indegree3.tar.gz",
+  "archive_size_bytes": 834107,
+  "archive_sha256": "3759ae13cb4b605e784bcb55bf960cb005a0bef881fa6e42f4384df8b81bd572",
+  "library_sha256": "7919a63f843b954e4fa5b1a592bd14cd4247ca2dfc588d5c5a0c0faaea021a28",
+  "extract_into": "artifacts/libraries/diabetes",
+  "included_files": [
+    "conditional_vine_library_indegree3.pkl",
+    "conditional_vines_indegree3",
+    "conditional_vine_summary_indegree3.csv",
+    "pseudo_observations.csv"
+  ]
+}
