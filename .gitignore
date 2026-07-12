@@ -23,3 +23,19 @@ reports/figures/
 project_snapshot/
 project_snapshot.zip
 *_snapshot.zip
+
+# Local development
+configs/local/
+logs/
+indegree_three_patch.zip
+
+# Generated data and smoke-test outputs
+outputs/end_to_end/
+reports/local_smoke/
+reports/synthetic_validation/indegree_three_compact/
+
+# Raw multi-seed runs; aggregate tables and figures are retained
+reports/final_validation/indegree3_multiseed/n_*/
+
+# Resumable fitting checkpoints
+*.checkpoint.pkl
