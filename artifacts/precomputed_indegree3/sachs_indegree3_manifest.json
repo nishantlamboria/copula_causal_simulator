@@ -1,0 +1,19 @@
+{
+  "dataset": "sachs",
+  "expected_mechanisms": 1320,
+  "summary_rows": 1320,
+  "successful_mechanisms": 1320,
+  "failed_mechanisms": 0,
+  "model_json_files": 7920,
+  "archive": "sachs_indegree3.tar.gz",
+  "archive_size_bytes": 774245,
+  "archive_sha256": "a86bc66ed57f4fe6b43a1e7d61cc01d3811ed01c765d5e7c4be2d1e822ea3301",
+  "library_sha256": "29150c4fdcbfa6ad74c43c2c8770b9ecc26b0518ce9d0ef506310b280df0cdf3",
+  "extract_into": "artifacts/libraries/sachs",
+  "included_files": [
+    "conditional_vine_library_indegree3.pkl",
+    "conditional_vines_indegree3",
+    "conditional_vine_summary_indegree3.csv",
+    "pseudo_observations.csv"
+  ]
+}

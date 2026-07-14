@@ -1,0 +1,11 @@
+metric,value
+number_of_runs,15.0
+minimum_sample_size,500.0
+maximum_sample_size,2000.0
+overall_order_recovery_rate,1.0
+all_six_orders_scored_rate,1.0
+finite_output_rate,1.0
+unit_interval_rate,1.0
+mean_kendall_mae,0.0070262351678195435
+mean_energy_distance,0.0009266987576562377
+median_order_score_margin,0.0949630431141324
