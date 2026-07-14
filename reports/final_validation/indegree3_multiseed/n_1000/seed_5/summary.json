@@ -1,0 +1,24 @@
+{
+  "n": 1000,
+  "seed": 5,
+  "generating_order": [
+    "P1",
+    "P2",
+    "P3",
+    "X"
+  ],
+  "selected_order": [
+    "P1",
+    "P2",
+    "P3",
+    "X"
+  ],
+  "all_six_orders_scored": true,
+  "selected_order_score": 1.1192935109029039,
+  "second_best_order_score": 1.0627939108692996,
+  "order_score_margin": 0.056499600033604214,
+  "heldout_pairwise_kendall_mae": 0.00532460171014391,
+  "heldout_energy_distance_4d": 0.0005309358082827842,
+  "generated_values_finite": true,
+  "generated_values_in_unit_interval": true
+}
